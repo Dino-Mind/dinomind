@@ -1,0 +1,27 @@
+.history-box {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.history-box h3 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.history-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.history-box li {
+  margin-bottom: 5px;
+
+  a {
+    color: #007acc;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

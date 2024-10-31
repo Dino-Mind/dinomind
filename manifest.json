@@ -1,0 +1,45 @@
+{
+  "name": "Extension Test",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Ext Title while hover EXT's icon",
+    "default_icon": {
+      "400": "src/images/icon400.png",
+      "401": "src/images/icon400red.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background.ts",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "js": ["src/content/content_script.tsx"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "options_page": "options.html",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "background",
+    "contextMenus",
+    "bookmarks",
+    "tabs",
+    "storage",
+    "history",
+    "sidePanel"
+  ],
+  "host_permissions": ["https://generativeai.googleapis.com/*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["src/assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

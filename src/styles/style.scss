@@ -1,0 +1,79 @@
+body.content-shrink {
+  transform: translateX(-300px);
+  transition: transform 0.3s ease-in-out;
+}
+
+body.body-close-animation {
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+body.dark-overlay::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9997;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+body:not(.dark-overlay)::before {
+  opacity: 0;
+}
+
+.content-buttons {
+  display: inline-flex;
+  justify-content: start;
+  align-items: center;
+  position: fixed;
+  z-index: 9999;
+  margin: 5px !important;
+  padding: 5px !important;
+
+  bottom: 20px;
+  right: -100px;
+  height: 60px;
+  width: 160px;
+  background: #eaeaea;
+
+  border: none;
+  border-radius: 23px 0 0 23px;
+  transition: 0.3s ease, right 0.3s ease;
+
+  animation: glow 1.5s infinite alternate;
+
+  &:hover {
+    background: rgba(100, 100, 100, 0.3);
+    right: -40px;
+  }
+
+  .content-button-logo {
+    display: flex;
+
+    width: 40px;
+
+    margin-left: 10px;
+    transition: 0.3s ease, right 0.3s ease;
+
+    cursor: pointer;
+
+    &:hover {
+      width: 50px;
+    }
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 2px 0 10px rgba(190, 24, 255, 0.4),
+      -4px 0 15px rgba(255, 27, 198, 0.5), -6px 0 20px rgba(0, 200, 255, 0.6);
+  }
+  to {
+    box-shadow: -4px 0 10px rgba(190, 24, 255, 0.8),
+      -6px 0 15px rgba(255, 27, 198, 0.9), -8px 0 20px rgba(0, 200, 255, 0.8);
+  }
+}
