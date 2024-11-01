@@ -1,8 +1,16 @@
 .chatbox-container {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  height: 95vh;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  width: 95%;
+  height: 55%;
+  max-width: 600px;
+  max-height: 45%;
+  padding: 8px;
+  margin: 8px;
+  overflow: auto;
+  border: 1px solid #dfdfdf;
 
   .chat-messages {
     flex: 1;

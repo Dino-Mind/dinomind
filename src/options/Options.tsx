@@ -5,8 +5,8 @@ function Options() {
   console.log(`this is options page`);
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div>
+      <header>
         <h1>Title</h1>
         <button>button</button>
       </header>
