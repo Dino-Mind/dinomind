@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
+import { fetchGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
 import "./style.scss";
 
 interface Message {
@@ -23,29 +23,6 @@ const ChatBox: React.FC = () => {
     }
   };
 
-  const fetchGeminiResponse = async (userMessage: string) => {
-    setLoading(true);
-    try {
-      const genAI = new GoogleGenerativeAI(
-        import.meta.env.VITE_GEMINI_AI_API_KEY
-      );
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const result = await model.generateContent(userMessage);
-      const response = await result.response;
-      const text = await response.text();
-
-      setMessages((prevMessages) => [...prevMessages, { sender: "ai", text }]);
-    } catch (error) {
-      console.error("Error fetching AI response:", error);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "ai", text: "Error: Could not reach the AI service." },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const sendMessage = () => {
     if (!input.trim()) return;
 
@@ -54,9 +31,46 @@ const ChatBox: React.FC = () => {
       { sender: "user", text: input },
     ]);
 
-    fetchGeminiResponse(input);
+    const promptTemplate = `You are a helpful and friendly assistant. Here is a message from a user:
 
+    Message: "{userMessage}"
+    "Please format your response based on the type of question:
+      If the question is conversational (like a chat), respond in a friendly, conversational tone with shorter, direct sentences.
+      If the question is asking for a definition, description, or structured information, organize your answer with a title, paragraphs, and use lists where appropriate. Keep the response clear, easy to read, and well-structured."
+
+    Respond in a polite and conversational tone, and keep the answer organized and easy to understand.`;
+
+    fetchGeminiNanoResponse(input, promptTemplate, setLoading, setMessages);
     setInput("");
+  };
+
+  const renderMessage = (text: string) => {
+    const lines = text.split("\n");
+    return lines.map((line, index) => {
+      // Check if line is a title (e.g., surrounded by **)
+      if (/^\*\*(.*)\*\*$/.test(line)) {
+        const title = line.replace(/\*\*/g, "");
+        return (
+          <h2 key={index} className="message-title">
+            {title}
+          </h2>
+        );
+      }
+      // Check if line is a bullet point
+      if (/^[-*]\s/.test(line)) {
+        return (
+          <li key={index} className="message-list-item">
+            {line.replace(/^[-*]\s/, "")}
+          </li>
+        );
+      }
+      // Render as paragraph by default
+      return (
+        <p key={index} className="message-paragraph">
+          {line}
+        </p>
+      );
+    });
   };
 
   return (
@@ -64,7 +78,7 @@ const ChatBox: React.FC = () => {
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
-            <span>{message.text}</span>
+            {renderMessage(message.text)}
           </div>
         ))}
       </div>

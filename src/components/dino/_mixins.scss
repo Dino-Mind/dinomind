@@ -1,0 +1,22 @@
+@use "sass:list";
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+@function pixels($row, $columns, $color: #535353) {
+  $result: null;
+  $concat: " ";
+  @each $column in $columns {
+    @if list.index($columns, $column) > 1 {
+      $concat: ", ";
+    }
+    $result: #{$result}#{$concat}#{$column}em #{$row}em #{$color};
+  }
+  @return $result;
+}

@@ -7,7 +7,7 @@ function Options() {
   return (
     <div>
       <header>
-        <h1>Title</h1>
+        <h1>Title test</h1>
         <button>button</button>
       </header>
     </div>
