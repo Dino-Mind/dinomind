@@ -22,22 +22,21 @@ export const fetchHistoryItems = async (): Promise<{
           };
         });
 
-        // Sort by visitCount, take top 10 items
         const sortedHistoryItems = Object.values(urlToHistoryItem)
           .sort((a, b) => (b.visitCount ?? 0) - (a.visitCount ?? 0))
           .slice(0, 5);
 
-        // Create a concatenated string for summary text
-        const summaryText = sortedHistoryItems
-          .map(
-            (item) =>
-              `Title: ${item.title || "No Title"}, Visit Count: ${
-                item.visitCount
-              }`
-          )
-          .join(" | ");
+        const summaryText = sortedHistoryItems.length
+          ? sortedHistoryItems
+              .map(
+                (item) =>
+                  `Title: ${item.title || "No Title"}, Visit Count: ${
+                    item.visitCount
+                  }`
+              )
+              .join(" | ")
+          : "No recent history items found.";
 
-        // Return both sorted history items and the summary text
         resolve({ historyItems: sortedHistoryItems, summaryText });
       }
     );

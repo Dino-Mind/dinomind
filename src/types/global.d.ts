@@ -3,6 +3,6 @@ export {};
 
 declare global {
   interface Window {
-    ai: any; // Define a more specific type if possible
+    ai: any;
   }
 }

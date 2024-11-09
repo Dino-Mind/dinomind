@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { fetchGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
+import {
+  clearChatData,
+  loadChatData,
+  saveChatData,
+} from "../../utils/chatDataUtils";
+import { Message } from "../../types/messageType";
 import "./style.scss";
-
-interface Message {
-  sender: string;
-  text: string;
-}
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    loadChatData(setMessages);
+  }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
@@ -26,28 +31,19 @@ const ChatBox: React.FC = () => {
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: "user", text: input },
-    ]);
+    const userMessage = { sender: "user", text: input };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-    const promptTemplate = `You are a helpful and friendly assistant. Here is a message from a user:
+    saveChatData(userMessage);
 
-    Message: "{userMessage}"
-    "Please format your response based on the type of question:
-      If the question is conversational (like a chat), respond in a friendly, conversational tone with shorter, direct sentences.
-      If the question is asking for a definition, description, or structured information, organize your answer with a title, paragraphs, and use lists where appropriate. Keep the response clear, easy to read, and well-structured."
-
-    Respond in a polite and conversational tone, and keep the answer organized and easy to understand.`;
-
-    fetchGeminiNanoResponse(input, promptTemplate, setLoading, setMessages);
+    fetchGeminiNanoResponse(input, "chatbox", setLoading, setMessages);
     setInput("");
   };
 
-  const renderMessage = (text: string) => {
+  const renderMessage = (text: string | undefined) => {
+    if (!text) return null;
     const lines = text.split("\n");
     return lines.map((line, index) => {
-      // Check if line is a title (e.g., surrounded by **)
       if (/^\*\*(.*)\*\*$/.test(line)) {
         const title = line.replace(/\*\*/g, "");
         return (
@@ -56,7 +52,6 @@ const ChatBox: React.FC = () => {
           </h2>
         );
       }
-      // Check if line is a bullet point
       if (/^[-*]\s/.test(line)) {
         return (
           <li key={index} className="message-list-item">
@@ -64,7 +59,6 @@ const ChatBox: React.FC = () => {
           </li>
         );
       }
-      // Render as paragraph by default
       return (
         <p key={index} className="message-paragraph">
           {line}
@@ -94,6 +88,9 @@ const ChatBox: React.FC = () => {
         />
         <button onClick={sendMessage} disabled={loading || !input.trim()}>
           {loading ? "Sending..." : "Send"}
+        </button>
+        <button onClick={() => clearChatData(() => setMessages([]))}>
+          Clear Chat History
         </button>
       </div>
     </div>

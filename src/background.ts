@@ -1,5 +1,5 @@
 // Set the active tab
-let activeTab = "ChatBox";
+let activeTab = "Interest";
 
 const validComponents = ["ChatBox", "Content", "Interest"];
 
