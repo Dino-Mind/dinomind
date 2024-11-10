@@ -1,39 +1,47 @@
-// Set the active tab
-let activeTab = "Interest";
+import { configureStore } from "@reduxjs/toolkit";
+import rootReducer from "./redux/rootReducer";
+import { createWrapStore } from "webext-redux";
+import { setActiveTab } from "./redux/slices/uiSlice";
+
+const store = configureStore({
+  reducer: rootReducer,
+});
+const wrapStore = createWrapStore();
+wrapStore(store);
 
 const validComponents = ["ChatBox", "Content", "Interest"];
 
-// Listen for retrieving the active tab
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "SET_ACTIVE_TAB") {
     const requestedTab = message.payload;
 
     if (validComponents.includes(requestedTab)) {
-      activeTab = requestedTab;
-      sendResponse({ status: "success", activeTab });
+      store.dispatch(setActiveTab(requestedTab));
+      sendResponse({ status: "success", activeTab: requestedTab });
     } else {
       console.warn(`Invalid component name: ${requestedTab}`);
       sendResponse({ status: "error", message: "Invalid component name" });
     }
   } else if (message.type === "GET_ACTIVE_TAB") {
-    sendResponse({ activeTab });
+    const state = store.getState();
+    sendResponse({ activeTab: state.ui.activeTab });
   }
   return true;
 });
 
-//Set the extension icon
+// Set the extension icon
 chrome.runtime.onInstalled.addListener(() => {
   chrome.action.setIcon({ path: "src/assets/icons/icon400.png" });
 });
 
-//Set up Open-Close Panel
+// Set up Open-Close Panel behavior
 chrome.runtime.onInstalled.addListener(() => {
   chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
     .catch((error) => console.error(error));
 });
 
-//Listen Open-Close Panel
+// Listen for Open-Close Panel actions
 chrome.runtime.onMessage.addListener((message, sender) => {
   const tabId = sender.tab?.id;
 
