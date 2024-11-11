@@ -17,10 +17,7 @@ const proxyStore = new Store();
 
 const Sidepanel = () => {
   const dispatch = useDispatch();
-  const reduxActiveTab = useSelector((state: RootState) => state.ui.activeTab);
-  const [activeTab, setActiveTabState] = useState<TabName>(
-    reduxActiveTab as TabName
-  );
+  const activeTab = useSelector((state: RootState) => state.ui.activeTab);
 
   const componentMap: Record<TabName, JSX.Element> = {
     ChatBox: <ChatBox />,
@@ -33,17 +30,13 @@ const Sidepanel = () => {
   };
 
   useEffect(() => {
-    if (reduxActiveTab !== activeTab) {
-      setActiveTabState(reduxActiveTab as TabName);
-    }
-
     const unsubscribe = proxyStore.subscribe(() => {
       const state = proxyStore.getState();
       dispatch(setActiveTab(state.ui.activeTab as TabName));
     });
 
     return () => unsubscribe();
-  }, [reduxActiveTab, activeTab, dispatch]);
+  }, [dispatch]);
 
   return (
     <div className="sidepanel-container">
@@ -54,35 +47,33 @@ const Sidepanel = () => {
   );
 };
 
-proxyStore.ready().then(() => {
-  const SidepanelRoot = () => {
-    const [isStoreReady, setIsStoreReady] = useState(false);
+// Top-level component to handle proxystore(cause error if try immeadiately rendering) readiness then render the Sidepanel
+const SidepanelRoot = () => {
+  const [isStoreReady, setIsStoreReady] = useState(false);
 
-    useEffect(() => {
-      // We need to wait store to be ready ! (dispatch like functions causing errors otherwise)
-      proxyStore.ready().then(() => {
-        setIsStoreReady(true);
-      });
-    }, []);
+  useEffect(() => {
+    proxyStore.ready().then(() => {
+      setIsStoreReady(true);
+    });
+  }, []);
 
-    if (!isStoreReady) {
-      return <div>Loading...</div>;
-    }
+  if (!isStoreReady) {
+    return <div>Loading...</div>;
+  }
 
-    return (
-      <Provider store={proxyStore}>
-        <Sidepanel />
-      </Provider>
-    );
-  };
-
-  const sidePanelRoot = document.createElement("div");
-  sidePanelRoot.id = "sidepanel-root";
-  document.body.appendChild(sidePanelRoot);
-
-  ReactDOM.createRoot(sidePanelRoot).render(
-    <React.StrictMode>
-      <SidepanelRoot />
-    </React.StrictMode>
+  return (
+    <Provider store={proxyStore}>
+      <Sidepanel />
+    </Provider>
   );
-});
+};
+
+const sidePanelRoot = document.createElement("div");
+sidePanelRoot.id = "sidepanel-root";
+document.body.appendChild(sidePanelRoot);
+
+ReactDOM.createRoot(sidePanelRoot).render(
+  <React.StrictMode>
+    <SidepanelRoot />
+  </React.StrictMode>
+);

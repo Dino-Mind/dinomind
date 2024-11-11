@@ -107,40 +107,36 @@ const Interest: React.FC = () => {
       </div>
 
       <div className="history-item-container">
-        {historyItems.length > 0 ? (
-          historyItems.map((item) => (
-            <div key={item.id}>
-              <div className="history-item-cred">
-                <a
-                  className="item-title"
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {item.title || "No Title"}
-                </a>
-                <span className="item-url">{item.url}</span>
-              </div>
+        {historyItems?.map((item) => (
+          <div key={item.id}>
+            <div className="history-item-cred">
+              <a
+                className="item-title"
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {item.title || "No Title"}
+              </a>
+              <span className="item-url">{item.url}</span>
+            </div>
 
-              <div className="details">
-                <div className="detail-item">
-                  <strong>Visit Count:</strong>
-                  <span>{item.visitCount}</span>
-                </div>
-                <div className="detail-item">
-                  <strong>Last Visit:</strong>
-                  <span>
-                    {item.lastVisitTime
-                      ? new Date(item.lastVisitTime).toLocaleString()
-                      : "N/A"}
-                  </span>
-                </div>
+            <div className="details">
+              <div className="detail-item">
+                <strong>Visit Count:</strong>
+                <span>{item.visitCount}</span>
+              </div>
+              <div className="detail-item">
+                <strong>Last Visit:</strong>
+                <span>
+                  {item.lastVisitTime
+                    ? new Date(item.lastVisitTime).toLocaleString()
+                    : "N/A"}
+                </span>
               </div>
             </div>
-          ))
-        ) : (
-          <p>No recent history items available.</p>
-        )}
+          </div>
+        ))}
       </div>
     </div>
   );

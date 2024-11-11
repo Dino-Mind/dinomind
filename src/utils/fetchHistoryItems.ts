@@ -6,11 +6,11 @@ export const fetchHistoryItems = async (): Promise<{
 }> => {
   return new Promise((resolve) => {
     const urlToHistoryItem: { [url: string]: HistoryItem } = {};
-    const millisecondsPerWeek = 1000 * 60 * 60 * 24 * 7;
-    const oneWeekAgo = Date.now() - millisecondsPerWeek;
+    const millisecondsPerMonth = 1000 * 60 * 60 * 24 * 7 * 4;
+    const oneMonthAgo = Date.now() - millisecondsPerMonth;
 
     chrome.history.search(
-      { text: "", startTime: oneWeekAgo, maxResults: 50 },
+      { text: "", startTime: oneMonthAgo, maxResults: 10 },
       (historyItems) => {
         historyItems.forEach((item) => {
           urlToHistoryItem[item.url!] = {

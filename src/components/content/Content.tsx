@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
-import "./style.scss";
-import {
-  loadInterestData,
-  loadContentData,
-  saveContentData,
-} from "../../utils/chatDataUtils";
-import { fetchGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
+
+import { fetchContentTags } from "../../utils/fetchContentTags";
+import { loadContentAndInterestData } from "../../utils/contentDataUtils";
 import { Message } from "../../types/messageType";
+import "./style.scss";
 
 const Content: React.FC = () => {
   const [contentTags, setContentTags] = useState<string | null>(null);
@@ -17,33 +14,19 @@ const Content: React.FC = () => {
   const [aiLoading, setAiLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoading(true);
-
-    loadInterestData((savedTags) => {
-      setContentTags(savedTags || null);
-      setLoading(false);
-    });
-
-    loadContentData((savedContent) => {
-      setContentResponse(savedContent || null);
-    });
+    loadContentAndInterestData(setContentTags, setContentResponse, setLoading);
   }, []);
 
-  const generateContentTags = async () => {
+  const generateContentTags = () => {
     const inputMessage = contentTags || "Generate content tags";
-    setAiLoading(true);
 
-    const aiResponse = await fetchGeminiNanoResponse(
+    fetchContentTags(
       inputMessage,
-      "content",
+      setLoading,
       setAiLoading,
-      (newMessages) => {
-        setMessages(newMessages);
-      }
+      setMessages,
+      setContentResponse
     );
-
-    setContentResponse(aiResponse);
-    saveContentData(aiResponse);
   };
 
   return (
