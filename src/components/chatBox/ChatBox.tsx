@@ -1,17 +1,22 @@
-import React, { useState } from "react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import React, { useEffect, useState } from "react";
 
+import { fetchGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
+import {
+  clearChatData,
+  loadChatData,
+  saveChatData,
+} from "../../utils/chatDataUtils";
+import { Message } from "../../types/messageType";
 import "./style.scss";
-
-interface Message {
-  sender: string;
-  text: string;
-}
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    loadChatData(setMessages);
+  }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
@@ -23,40 +28,43 @@ const ChatBox: React.FC = () => {
     }
   };
 
-  const fetchGeminiResponse = async (userMessage: string) => {
-    setLoading(true);
-    try {
-      const genAI = new GoogleGenerativeAI(
-        import.meta.env.VITE_GEMINI_AI_API_KEY
-      );
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const result = await model.generateContent(userMessage);
-      const response = await result.response;
-      const text = await response.text();
-
-      setMessages((prevMessages) => [...prevMessages, { sender: "ai", text }]);
-    } catch (error) {
-      console.error("Error fetching AI response:", error);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: "ai", text: "Error: Could not reach the AI service." },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: "user", text: input },
-    ]);
+    const userMessage = { sender: "user", text: input };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-    fetchGeminiResponse(input);
+    saveChatData(userMessage);
 
+    fetchGeminiNanoResponse(input, "chatbox", setLoading, setMessages);
     setInput("");
+  };
+
+  const renderMessage = (text: string | undefined) => {
+    if (!text) return null;
+    const lines = text.split("\n");
+    return lines.map((line, index) => {
+      if (/^\*\*(.*)\*\*$/.test(line)) {
+        const title = line.replace(/\*\*/g, "");
+        return (
+          <h2 key={index} className="message-title">
+            {title}
+          </h2>
+        );
+      }
+      if (/^[-*]\s/.test(line)) {
+        return (
+          <li key={index} className="message-list-item">
+            {line.replace(/^[-*]\s/, "")}
+          </li>
+        );
+      }
+      return (
+        <p key={index} className="message-paragraph">
+          {line}
+        </p>
+      );
+    });
   };
 
   return (
@@ -64,7 +72,7 @@ const ChatBox: React.FC = () => {
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
-            <span>{message.text}</span>
+            {renderMessage(message.text)}
           </div>
         ))}
       </div>
@@ -80,6 +88,9 @@ const ChatBox: React.FC = () => {
         />
         <button onClick={sendMessage} disabled={loading || !input.trim()}>
           {loading ? "Sending..." : "Send"}
+        </button>
+        <button onClick={() => clearChatData(() => setMessages([]))}>
+          Clear Chat History
         </button>
       </div>
     </div>

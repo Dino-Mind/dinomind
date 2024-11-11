@@ -1,0 +1,157 @@
+@use "mixins" as mixinDino;
+
+// Colors
+$grey: #535353;
+$lightGrey: #dddddd;
+
+.dino-container {
+  display: flex;
+  width: 100px;
+  height: 100px;
+  transform: scale(0.15);
+}
+
+@include mixinDino.keyframes(eye) {
+  0% {
+    box-shadow: mixinDino.pixels(-9, (3));
+  }
+  5% {
+    box-shadow: 0 0 0 0 $grey;
+  }
+  50% {
+    box-shadow: mixinDino.pixels(0, (0));
+  }
+}
+
+@include mixinDino.keyframes(mouth) {
+  0% {
+    box-shadow: mixinDino.pixels(-5, (6, 7, 8));
+  }
+  50% {
+    box-shadow: mixinDino.pixels(-6, (5, 6, 7, 8));
+  }
+}
+
+@include mixinDino.keyframes(ground) {
+  0% {
+    box-shadow: mixinDino.pixels(
+        6,
+        (-12, -11, -10, -9, -8, -7, -6, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+      ),
+      mixinDino.pixels(8, (8, 9, 10)), mixinDino.pixels(9, (-7, -6)),
+      mixinDino.pixels(10, (6, 7)), mixinDino.pixels(11, (-10, -9));
+  }
+  15% {
+    box-shadow: mixinDino.pixels(
+        6,
+        (-12, -11, -10, -9, -8, -7, -6, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+      ),
+      mixinDino.pixels(8, (4, 5, 6)), mixinDino.pixels(9, (-12, -11)),
+      mixinDino.pixels(10, (2, 3)), mixinDino.pixels(11, (10, 11));
+  }
+  30% {
+    box-shadow: mixinDino.pixels(
+        6,
+        (-12, -11, -10, -9, -8, -7, -6, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+      ),
+      mixinDino.pixels(8, (0, 1, 2)), mixinDino.pixels(9, (8, 9)),
+      mixinDino.pixels(10, (-2, -1)), mixinDino.pixels(11, (6, 7));
+  }
+  45% {
+    box-shadow: mixinDino.pixels(
+        6,
+        (-12, -11, -10, -9, -8, -7, -6, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+      ),
+      mixinDino.pixels(8, (-4, -3, -2)), mixinDino.pixels(9, (4, 5)),
+      mixinDino.pixels(10, (-6, -5)), mixinDino.pixels(11, (2, 3));
+  }
+  60% {
+    box-shadow: mixinDino.pixels(
+        6,
+        (-12, -11, -10, -9, -8, -7, -6, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+      ),
+      mixinDino.pixels(8, (-8, -7, -6)), mixinDino.pixels(9, (0, 1)),
+      mixinDino.pixels(10, (-10, -9)), mixinDino.pixels(11, (-2, -1));
+  }
+  75% {
+    box-shadow: mixinDino.pixels(
+        6,
+        (-12, -11, -10, -9, -8, -7, -6, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+      ),
+      mixinDino.pixels(8, (-12, -11, -10)), mixinDino.pixels(9, (-4, -3)),
+      mixinDino.pixels(10, (10, 11)), mixinDino.pixels(11, (-6, -5));
+  }
+}
+
+@include mixinDino.keyframes(dino) {
+  0% {
+    // Rear leg up
+    box-shadow: mixinDino.pixels(-10, (2, 3, 4, 5, 6, 7, 8, 9)),
+      mixinDino.pixels(-9, (1, 2, 4, 5, 6, 7, 8, 9, 10)),
+      mixinDino.pixels(-8, (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+      mixinDino.pixels(-7, (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+      mixinDino.pixels(-6, (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+      mixinDino.pixels(-5, (1, 2, 3, 4, 5)),
+      mixinDino.pixels(-4, (0, 1, 2, 3, 4, 5)),
+      mixinDino.pixels(-3, (-9, -3, -2, -1, 0, 1, 2, 3, 4)),
+      mixinDino.pixels(-2, (-9, -2, -1, 0, 1, 2, 3, 4)),
+      mixinDino.pixels(-1, (-9, -8, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6)),
+      mixinDino.pixels(0, (-9, -8, -7, -4, -3, -2, -1, 0, 1, 2, 3, 4, 6)),
+      mixinDino.pixels(1, (-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4)),
+      mixinDino.pixels(2, (-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4)),
+      mixinDino.pixels(3, (-7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3)),
+      mixinDino.pixels(4, (-6, -5, -4, -3, -2, -1, 0, 1, 2)),
+      mixinDino.pixels(5, (-5, -4, -3, -2, -1, 0, 1)),
+      mixinDino.pixels(6, (-4, -3, 0, 1)), mixinDino.pixels(7, (-3, -2, 1)),
+      mixinDino.pixels(8, (1)), mixinDino.pixels(9, (1, 2));
+  }
+  50% {
+    // Front leg up
+    box-shadow: mixinDino.pixels(-10, (2, 3, 4, 5, 6, 7, 8, 9)),
+      mixinDino.pixels(-9, (1, 2, 4, 5, 6, 7, 8, 9, 10)),
+      mixinDino.pixels(-8, (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+      mixinDino.pixels(-7, (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+      mixinDino.pixels(-6, (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+      mixinDino.pixels(-5, (1, 2, 3, 4, 5)),
+      mixinDino.pixels(-4, (-3, -2, 0, 1, 2, 3, 4, 5)),
+      mixinDino.pixels(-3, (-9, -2, -1, 0, 1, 2, 3, 4)),
+      mixinDino.pixels(-2, (-9, -2, -1, 0, 1, 2, 3, 4)),
+      mixinDino.pixels(-1, (-9, -8, -3, -2, -1, 0, 1, 2, 3, 4)),
+      mixinDino.pixels(0, (-9, -8, -7, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6)),
+      mixinDino.pixels(
+        1,
+        (-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 6)
+      ),
+      mixinDino.pixels(2, (-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4)),
+      mixinDino.pixels(3, (-7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3)),
+      mixinDino.pixels(4, (-6, -5, -4, -3, -2, -1, 0, 1, 2)),
+      mixinDino.pixels(5, (-5, -4, -3, -2, -1, 0, 1)),
+      mixinDino.pixels(6, (-4, -3, -2, 1, 2)), mixinDino.pixels(7, (-4, -3)),
+      mixinDino.pixels(8, (-4)), mixinDino.pixels(9, (-4, -3));
+  }
+}
+
+// Animation and styling for each element
+.dino {
+  animation: dino 0.5s both infinite steps(1);
+  width: 1em;
+  height: 1em;
+}
+
+.eye {
+  animation: eye 4s both infinite steps(1);
+  width: 1em;
+  height: 1em;
+}
+
+.mouth {
+  animation: mouth 4s both infinite steps(1);
+  width: 1em;
+  height: 1em;
+}
+
+.ground {
+  animation: ground 0.55s both infinite steps(1);
+  width: 1em;
+  height: 1em;
+}

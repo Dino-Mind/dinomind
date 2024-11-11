@@ -1,0 +1,39 @@
+//Gradient Button
+.gradient-button {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  color: white;
+
+  &::before {
+    content: "";
+    background: linear-gradient(135deg, #ff80ab, #ff1744); /* Adjusted colors */
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+  }
+
+  > span {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Hover effect */
+  &:hover::before {
+    opacity: 0.8;
+  }
+
+  /* Override Ant Design’s styles */
+  &.ant-btn-primary {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: white !important;
+  }
+
+  &:active::before {
+    opacity: 0.6;
+  }
+}
