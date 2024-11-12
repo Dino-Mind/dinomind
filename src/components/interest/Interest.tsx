@@ -2,28 +2,35 @@ import React, { useEffect, useState } from "react";
 
 import { loadInterestData, clearInterestData } from "../../utils/chatDataUtils";
 import { fetchHistoryItems } from "../../utils/fetchHistoryItems";
-import { fetchGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
+import { useGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
 import { HistoryItem } from "../../types/historyItemType";
-import { Message } from "../../types/messageType";
+import { Message, Sender } from "../../types/messageType";
 import "./style.scss";
 
 const Interest: React.FC = () => {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [summaryText, setSummaryText] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const [hasLocalData, setHasLocalData] = useState<boolean>(false);
+  const { fetchGeminiNanoResponse, loading, messages: fetchedMessages} = useGeminiNanoResponse();
 
   useEffect(() => {
+    // TODO - lets move this into hooks and make it return as initial state
     loadInterestData((savedTags) => {
       if (savedTags) {
-        setMessages([{ sender: "ai", text: savedTags }]);
+        setMessages([{ sender: Sender.AI, text: savedTags }]);
         setHasLocalData(true);
       } else {
         setHasLocalData(false);
       }
     });
   }, []);
+
+  useEffect(() => {
+    if(fetchedMessages.length) {
+      setMessages((prevMessages) => [...prevMessages, ...fetchedMessages]);
+    }
+  },[fetchedMessages]);
 
   useEffect(() => {
     if (!hasLocalData && !summaryText) {
@@ -43,7 +50,7 @@ const Interest: React.FC = () => {
       summaryText !== "No recent history items found." &&
       !hasLocalData
     ) {
-      fetchGeminiNanoResponse(summaryText, "interest", setLoading, setMessages);
+      fetchGeminiNanoResponse(summaryText, "interest");
     }
   }, [summaryText, hasLocalData]);
 
@@ -51,7 +58,7 @@ const Interest: React.FC = () => {
     if (!summaryText || summaryText === "No recent history items found.") {
       setMessages([
         {
-          sender: "system",
+          sender: Sender.SYSTEM,
           text: "No recent URLs available to generate tags.",
         },
       ]);
@@ -61,7 +68,7 @@ const Interest: React.FC = () => {
     clearInterestData(() => {
       setMessages([]);
       setHasLocalData(false);
-      fetchGeminiNanoResponse(summaryText, "interest", setLoading, setMessages);
+      fetchGeminiNanoResponse(summaryText, "interest");
     });
   };
 

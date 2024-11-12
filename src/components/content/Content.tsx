@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 
-import { fetchContentTags } from "../../utils/fetchContentTags";
+import { useFetchContentTags } from "../../utils/fetchContentTags";
 import { loadContentAndInterestData } from "../../utils/contentDataUtils";
 import { Message } from "../../types/messageType";
 import "./style.scss";
@@ -9,31 +9,41 @@ import "./style.scss";
 const Content: React.FC = () => {
   const [contentTags, setContentTags] = useState<string | null>(null);
   const [contentResponse, setContentResponse] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [aiLoading, setAiLoading] = useState<boolean>(false);
+  const [loadingFromLocalStorage, setLoadingFromLocalStorage] = useState<boolean>(false);
+  const { 
+    fetchContentTags, loading, 
+    contentResponse: fetchedContentResponse, 
+    messages: fetchedContentTags
+  } = useFetchContentTags();
 
   useEffect(() => {
-    loadContentAndInterestData(setContentTags, setContentResponse, setLoading);
+    // TODO - lets move this into hooks and make it return as initial state
+    loadContentAndInterestData(setContentTags, setContentResponse, setLoadingFromLocalStorage);
   }, []);
+
+  useEffect(() => {
+    if (fetchedContentTags.length) {
+      // TODO - check types here possibly this is not working as expected
+      setContentTags(fetchedContentTags[0].text);
+    }
+  }, [fetchedContentTags]);
+
+  useEffect(() => {
+    if (fetchedContentResponse) {
+      setContentResponse(fetchedContentResponse);
+    }
+  }, [fetchedContentResponse]);
 
   const generateContentTags = () => {
     const inputMessage = contentTags || "Generate content tags";
-
-    fetchContentTags(
-      inputMessage,
-      setLoading,
-      setAiLoading,
-      setMessages,
-      setContentResponse
-    );
+    fetchContentTags(inputMessage);
   };
 
   return (
     <div className="content-container">
       <div className="content-box-title">Content Tags from AI</div>
 
-      {loading ? (
+      {loadingFromLocalStorage ? (
         <div className="loading">Loading content tags...</div>
       ) : contentTags ? (
         <div className="content-boxes">{contentTags}</div>
@@ -43,14 +53,14 @@ const Content: React.FC = () => {
 
       <button
         onClick={generateContentTags}
-        disabled={aiLoading}
+        disabled={loading}
         className="generate-content-button"
       >
-        {aiLoading ? "Generating..." : "Generate Content Tags"}
+        {loading ? "Generating..." : "Generate Content Tags"}
       </button>
 
       <div className="content-box-response">
-        {aiLoading ? "Loading content response from AI..." : contentResponse}
+        {loading ? "Loading content response from AI..." : contentResponse}
       </div>
     </div>
   );

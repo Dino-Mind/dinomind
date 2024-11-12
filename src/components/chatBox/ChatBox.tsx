@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from "react";
 
-import { fetchGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
+import { useGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
 import {
   clearChatData,
   loadChatData,
   saveChatData,
 } from "../../utils/chatDataUtils";
-import { Message } from "../../types/messageType";
+import { Message, Sender } from "../../types/messageType";
 import "./style.scss";
+import { MessageLine } from "../message-line/MessageLine";
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const { loading, messages: fetchedMessages, fetchGeminiNanoResponse } = useGeminiNanoResponse();
 
   useEffect(() => {
     loadChatData(setMessages);
   }, []);
+
+  useEffect(() => {
+    if (fetchedMessages.length) {
+      setMessages((prevMessages) => [...prevMessages, ...fetchedMessages]);
+    }
+  }, [fetchedMessages]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
@@ -29,42 +36,15 @@ const ChatBox: React.FC = () => {
   };
 
   const sendMessage = () => {
-    if (!input.trim()) return;
+    if (!input.trim()) {
+      return
+    }
 
-    const userMessage = { sender: "user", text: input };
+    const userMessage = { sender: Sender.USER , text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-
     saveChatData(userMessage);
-
-    fetchGeminiNanoResponse(input, "chatbox", setLoading, setMessages);
+    fetchGeminiNanoResponse(input, "chatbox");
     setInput("");
-  };
-
-  const renderMessage = (text: string | undefined) => {
-    if (!text) return null;
-    const lines = text.split("\n");
-    return lines.map((line, index) => {
-      if (/^\*\*(.*)\*\*$/.test(line)) {
-        const title = line.replace(/\*\*/g, "");
-        return (
-          <h2 key={index} className="message-title">
-            {title}
-          </h2>
-        );
-      }
-      if (/^[-*]\s/.test(line)) {
-        return (
-          <li key={index} className="message-list-item">
-            {line.replace(/^[-*]\s/, "")}
-          </li>
-        );
-      }
-      return (
-        <p key={index} className="message-paragraph">
-          {line}
-        </p>
-      );
-    });
   };
 
   return (
@@ -72,7 +52,7 @@ const ChatBox: React.FC = () => {
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
-            {renderMessage(message.text)}
+            <MessageLine text={message.text} />
           </div>
         ))}
       </div>

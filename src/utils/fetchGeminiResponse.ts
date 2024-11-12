@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Message } from "../types/messageType";
+import { useState } from "react";
+import { Message, Sender } from "../types/messageType";
 import {
   saveChatData,
   saveContentData,
@@ -32,71 +33,73 @@ const componentConfig: Record<
   },
 };
 
-export const fetchGeminiNanoResponse = (
-  userMessage: string,
-  component: ComponentType,
-  setLoading: (loading: boolean) => void,
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
-): Promise<string> => {
-  return new Promise((resolve) => {
-    (async () => {
-      if (!userMessage.trim()) {
-        console.warn("No data available to send to AI.");
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            sender: "system",
-            text: "No data available to generate content tags.",
-          },
-        ]);
-        resolve("No data available to generate content tags.");
-        return;
-      }
+export const useGeminiNanoResponse = () => {
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
 
-      setLoading(true);
-      const { promptTemplate, saveData } = componentConfig[component];
+  const handleError = (message: string, sender: Sender, resolve: (value: string | PromiseLike<string>) => void) => {
+    console.warn(message);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender, text: message },
+    ]);
+    resolve(message);
+  };
 
-      try {
-        if (!window.ai || !window.ai.languageModel) {
-          const errorMessage =
-            "Error: Gemini Nano is not available in this browser.";
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: "ai", text: errorMessage },
-          ]);
-          resolve(errorMessage);
+  const fetchGeminiNanoResponse = (
+    userMessage: string,
+    component: ComponentType
+  ): Promise<string> => {
+    return new Promise((resolve) => {
+      (async () => {
+
+
+        if (!userMessage.trim()) {
+          handleError("No data available to generate content tags.", Sender.SYSTEM, resolve);
           return;
         }
 
-        const prompt = promptTemplate.replace("{userMessage}", userMessage);
-        const session = await window.ai.languageModel.create({
-          temperature: 0.7,
-          topK: 3,
-        });
+        setLoading(true);
+        const { promptTemplate, saveData } = componentConfig[component];
 
-        const stream = await session.promptStreaming(prompt);
+        try {
+          if (!window.ai || !window.ai.languageModel) {
+            handleError("Error: Gemini Nano is not available in this browser.", Sender.AI, resolve);
+            return;
+          }
 
-        let responseText = "";
+          const prompt = promptTemplate.replace("{userMessage}", userMessage);
+          const session = await window.ai.languageModel.create({
+            temperature: 0.7,
+            topK: 3,
+          });
 
-        for await (const chunk of stream) {
-          responseText = chunk.trim();
+          const stream = await session.promptStreaming(prompt);
+
+          let responseText = "";
+
+          for await (const chunk of stream) {
+            responseText = chunk.trim();
+          }
+
+          const aiMessage: Message = { sender: Sender.AI, text: responseText };
+          setMessages((prevMessages) => [...prevMessages, aiMessage]);
+          saveData(component === "chatbox" ? aiMessage : responseText);
+          resolve(responseText);
+        } catch (error) {
+          console.error("Error fetching AI response:", error);
+          const errorMessage = "Error: Could not reach the AI service.";
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: Sender.AI, text: errorMessage },
+          ]);
+          resolve(errorMessage);
+        } finally {
+          setLoading(false);
         }
+      })();
+    });
+  };
 
-        const aiMessage: Message = { sender: "ai", text: responseText };
-        setMessages((prevMessages) => [...prevMessages, aiMessage]);
-        saveData(component === "chatbox" ? aiMessage : responseText);
-        resolve(responseText);
-      } catch (error) {
-        console.error("Error fetching AI response:", error);
-        const errorMessage = "Error: Could not reach the AI service.";
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "ai", text: errorMessage },
-        ]);
-        resolve(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  });
+  return { loading, messages, fetchGeminiNanoResponse };
 };
