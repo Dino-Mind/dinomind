@@ -1,32 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import { useFetchContentTags } from "../../utils/fetchContentTags";
-import { loadContentAndInterestData } from "../../utils/contentDataUtils";
-import { Message } from "../../types/messageType";
 import "./style.scss";
 
 const Content: React.FC = () => {
-  const [contentTags, setContentTags] = useState<string | null>(null);
   const [contentResponse, setContentResponse] = useState<string | null>(null);
-  const [loadingFromLocalStorage, setLoadingFromLocalStorage] = useState<boolean>(false);
-  const { 
-    fetchContentTags, loading, 
-    contentResponse: fetchedContentResponse, 
-    messages: fetchedContentTags
+
+  const {
+    fetchAndSetContentTags,
+    loading,
+    contentResponse: fetchedContentResponse,
+    interestTags,
   } = useFetchContentTags();
-
-  useEffect(() => {
-    // TODO - lets move this into hooks and make it return as initial state
-    loadContentAndInterestData(setContentTags, setContentResponse, setLoadingFromLocalStorage);
-  }, []);
-
-  useEffect(() => {
-    if (fetchedContentTags.length) {
-      // TODO - check types here possibly this is not working as expected
-      setContentTags(fetchedContentTags[0].text);
-    }
-  }, [fetchedContentTags]);
 
   useEffect(() => {
     if (fetchedContentResponse) {
@@ -35,18 +19,18 @@ const Content: React.FC = () => {
   }, [fetchedContentResponse]);
 
   const generateContentTags = () => {
-    const inputMessage = contentTags || "Generate content tags";
-    fetchContentTags(inputMessage);
+    const inputMessage = interestTags || "Generate content tags";
+    fetchAndSetContentTags(inputMessage);
   };
 
   return (
     <div className="content-container">
       <div className="content-box-title">Content Tags from AI</div>
 
-      {loadingFromLocalStorage ? (
+      {loading ? (
         <div className="loading">Loading content tags...</div>
-      ) : contentTags ? (
-        <div className="content-boxes">{contentTags}</div>
+      ) : interestTags ? (
+        <div className="content-boxes">{interestTags}</div>
       ) : (
         <div>No content tags available.</div>
       )}
