@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Message, Sender } from "../types/messageType";
-import {
-  saveChatData,
-  saveContentData,
-  saveInterestData,
-} from "./chatDataUtils";
+import { saveChatData, saveContentData, saveInterestData } from "./dataUtils";
 
 type ComponentType = "chatbox" | "interest" | "content";
 
@@ -37,12 +33,13 @@ export const useGeminiNanoResponse = () => {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const handleError = (message: string, sender: Sender, resolve: (value: string | PromiseLike<string>) => void) => {
+  const handleError = (
+    message: string,
+    sender: Sender,
+    resolve: (value: string | PromiseLike<string>) => void
+  ) => {
     console.warn(message);
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender, text: message },
-    ]);
+    setMessages((prevMessages) => [...prevMessages, { sender, text: message }]);
     resolve(message);
   };
 
@@ -52,10 +49,12 @@ export const useGeminiNanoResponse = () => {
   ): Promise<string> => {
     return new Promise((resolve) => {
       (async () => {
-
-
         if (!userMessage.trim()) {
-          handleError("No data available to generate content tags.", Sender.SYSTEM, resolve);
+          handleError(
+            "No data available to generate content tags.",
+            Sender.SYSTEM,
+            resolve
+          );
           return;
         }
 
@@ -64,7 +63,11 @@ export const useGeminiNanoResponse = () => {
 
         try {
           if (!window.ai || !window.ai.languageModel) {
-            handleError("Error: Gemini Nano is not available in this browser.", Sender.AI, resolve);
+            handleError(
+              "Error: Gemini Nano is not available in this browser.",
+              Sender.AI,
+              resolve
+            );
             return;
           }
 

@@ -5,7 +5,7 @@ import {
   clearChatData,
   loadChatData,
   saveChatData,
-} from "../../utils/chatDataUtils";
+} from "../../utils/dataUtils";
 import { Message, Sender } from "../../types/messageType";
 import "./style.scss";
 import { MessageLine } from "../message-line/MessageLine";
@@ -13,7 +13,11 @@ import { MessageLine } from "../message-line/MessageLine";
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
-  const { loading, messages: fetchedMessages, fetchGeminiNanoResponse } = useGeminiNanoResponse();
+  const {
+    loading,
+    messages: fetchedMessages,
+    fetchGeminiNanoResponse,
+  } = useGeminiNanoResponse();
 
   useEffect(() => {
     loadChatData(setMessages);
@@ -37,10 +41,10 @@ const ChatBox: React.FC = () => {
 
   const sendMessage = () => {
     if (!input.trim()) {
-      return
+      return;
     }
 
-    const userMessage = { sender: Sender.USER , text: input };
+    const userMessage = { sender: Sender.USER, text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     saveChatData(userMessage);
     fetchGeminiNanoResponse(input, "chatbox");
