@@ -1,5 +1,6 @@
 import { Message } from "../types/messageType";
 
+// Chat Data Management
 export const saveChatData = (newMessage: Message) => {
   chrome.storage.local.get("chatHistory", (result) => {
     const chatHistory = result.chatHistory || [];
@@ -19,6 +20,7 @@ export const clearChatData = (callback: () => void) => {
   chrome.storage.local.remove("chatHistory", callback);
 };
 
+// Interest Data Management
 export const saveInterestData = (tags: string) => {
   chrome.storage.local.set({ interestTags: tags });
 };
@@ -33,6 +35,7 @@ export const clearInterestData = (callback: () => void) => {
   chrome.storage.local.remove("interestTags", callback);
 };
 
+// Content Data Management
 export const saveContentData = (content: string) => {
   chrome.storage.local.set({ contentDatas: content });
 };

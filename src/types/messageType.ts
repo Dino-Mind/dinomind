@@ -1,5 +1,11 @@
 // types/messageType.ts (define a common type for messages)
 export interface Message {
-  sender: string;
+  sender: Sender;
   text: string;
+}
+
+export enum Sender {
+  SYSTEM = "system",
+  AI = "ai",
+  USER = "user",
 }
