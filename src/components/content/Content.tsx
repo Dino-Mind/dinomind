@@ -1,49 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useFetchContentTags } from "../../utils/fetchContentTags";
 import "./style.scss";
-import {
-  loadInterestData,
-  loadContentData,
-  saveContentData,
-} from "../../utils/chatDataUtils";
-import { fetchGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
-import { Message } from "../../types/messageType";
 
 const Content: React.FC = () => {
-  const [contentTags, setContentTags] = useState<string | null>(null);
   const [contentResponse, setContentResponse] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [aiLoading, setAiLoading] = useState<boolean>(false);
+
+  const {
+    fetchAndSetContentTags,
+    loading,
+    contentResponse: fetchedContentResponse,
+    interestTags,
+  } = useFetchContentTags();
 
   useEffect(() => {
-    setLoading(true);
+    if (fetchedContentResponse) {
+      setContentResponse(fetchedContentResponse);
+    }
+  }, [fetchedContentResponse]);
 
-    loadInterestData((savedTags) => {
-      setContentTags(savedTags || null);
-      setLoading(false);
-    });
-
-    loadContentData((savedContent) => {
-      setContentResponse(savedContent || null);
-    });
-  }, []);
-
-  const generateContentTags = async () => {
-    const inputMessage = contentTags || "Generate content tags";
-    setAiLoading(true);
-
-    const aiResponse = await fetchGeminiNanoResponse(
-      inputMessage,
-      "content",
-      setAiLoading,
-      (newMessages) => {
-        setMessages(newMessages);
-      }
-    );
-
-    setContentResponse(aiResponse);
-    saveContentData(aiResponse);
+  const generateContentTags = () => {
+    const inputMessage = interestTags || "Generate content tags";
+    fetchAndSetContentTags(inputMessage);
   };
 
   return (
@@ -52,22 +29,22 @@ const Content: React.FC = () => {
 
       {loading ? (
         <div className="loading">Loading content tags...</div>
-      ) : contentTags ? (
-        <div className="content-boxes">{contentTags}</div>
+      ) : interestTags ? (
+        <div className="content-boxes">{interestTags}</div>
       ) : (
         <div>No content tags available.</div>
       )}
 
       <button
         onClick={generateContentTags}
-        disabled={aiLoading}
+        disabled={loading}
         className="generate-content-button"
       >
-        {aiLoading ? "Generating..." : "Generate Content Tags"}
+        {loading ? "Generating..." : "Generate Content Tags"}
       </button>
 
       <div className="content-box-response">
-        {aiLoading ? "Loading content response from AI..." : contentResponse}
+        {loading ? "Loading content response from AI..." : contentResponse}
       </div>
     </div>
   );
