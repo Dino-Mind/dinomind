@@ -13,6 +13,7 @@ const Interest: React.FC = () => {
   const [loadingSummarization, setLoadingSummarization] =
     useState<boolean>(false);
 
+    // TODO bahadir custom hook
   useEffect(() => {
     // Step 1: Fetch History Data
     const fetchAndSaveHistory = async () => {
@@ -36,11 +37,11 @@ const Interest: React.FC = () => {
     setLoadingSummarization(false);
 
     // Load the saved interest data
-    loadInterestData((data) => setLocalSummaries(JSON.parse(data || "{}")));
+    loadInterestData((data) => setLocalSummaries(JSON.parse(data || "{}"))); //TODO bahadir
   };
 
   const handleClearInterestData = () => {
-    removeLocalStorageData("interestTags", () => setLocalSummaries(null));
+    removeLocalStorageData("interestData", () => setLocalSummaries(null));
   };
 
   return (
@@ -62,7 +63,7 @@ const Interest: React.FC = () => {
 
       {/* Interest Tags */}
       <div className="interest-summary">
-        <h3>Interest Tags</h3>
+        <h3>Interest Data</h3>
         {loadingSummarization ? (
           <p>Summarizing...</p>
         ) : localSummaries ? (
@@ -72,7 +73,7 @@ const Interest: React.FC = () => {
             </div>
           ))
         ) : (
-          <p>No interest tags available.</p>
+          <p>No interest data available.</p>
         )}
         <div className="summary-buttons">
           <button
@@ -89,53 +90,3 @@ const Interest: React.FC = () => {
 };
 
 export default Interest;
-
-// import React from "react";
-// import { useFetchInterestTags } from "../../utils/fetchInterestTags";
-// import "./style.scss";
-
-// const Interest: React.FC = () => {
-//   const {
-//     historyItems,
-//     interestTags,
-//     loadingHistory,
-//     loadingSummarization,
-//     refreshInterestTags,
-//   } = useFetchInterestTags();
-
-//   return (
-//     <div className="interest-container">
-//       {/* History Items */}
-//       <div className="history-items">
-//         <h3>History Items</h3>
-//         {loadingHistory ? (
-//           <p>Loading history...</p>
-//         ) : (
-//           historyItems.map((item) => (
-//             <div key={item.id} className="history-item">
-//               <p>{item.title || "No Title"}</p>
-//               <p>Visit Count: {item.visitCount}</p>
-//             </div>
-//           ))
-//         )}
-//       </div>
-
-//       {/* Interest Tags */}
-//       <div className="interest-tags">
-//         <h3>Interest Tags</h3>
-//         {loadingSummarization ? (
-//           <p>Summarizing...</p>
-//         ) : interestTags ? (
-//           <p>{interestTags}</p>
-//         ) : (
-//           <p>No interest tags available.</p>
-//         )}
-//         <button onClick={refreshInterestTags} disabled={loadingSummarization}>
-//           {loadingSummarization ? "Refreshing..." : "Refresh Tags"}
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Interest;

@@ -4,13 +4,13 @@ import { HistoryItem } from "../types/historyItemType";
 type StorageKey =
   | "chatHistory"
   | "historyData"
-  | "interestTags"
+  | "interestData"
   | "contentData";
 
 type StorageMap = {
   chatHistory: Message[];
   historyData: HistoryItem[];
-  interestTags: string;
+  interestData: string;
   contentData: string[];
 }
 
@@ -50,13 +50,13 @@ export const loadHistoryData = (
 };
 
 // Interest Data Management
-export const saveInterestData = (tags: string) => {
-  chrome.storage.local.set({ interestTags: tags });
+export const saveInterestData = (interestInput: string[]) => {
+  chrome.storage.local.set({ interestData: interestInput });
 };
 
-export const loadInterestData = (callback: (tags: string) => void) => {
-  chrome.storage.local.get("interestTags", (result) => {
-    callback(result.interestTags || "");
+export const loadInterestData = (callback: (interestInput: string[]) => void) => {
+  chrome.storage.local.get("interestData", (result) => {
+    callback(result.interestData || "");
   });
 };
 

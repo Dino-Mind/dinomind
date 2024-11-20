@@ -3,13 +3,13 @@ import { loadInterestData, saveContentData } from "../utils/dataUtils";
 import { useGeminiNanoResponse } from "../utils/fetchGeminiResponse";
 
 export const useGenerateContent = () => {
-  const [interestData, setInterestData] = useState<string | null>(null);
+  const [interestData, setInterestData] = useState<string[] | null>(null);
   const [generatedContent, setGeneratedContent] = useState<string[]>([]);
 
   const { fetchGeminiNanoResponse, loading } = useGeminiNanoResponse();
 
     useEffect(() => {
-    loadInterestData(setInterestData);
+        loadInterestData(setInterestData);
     }, []);
 
     const fetchGenerateContent = async () => {
@@ -18,9 +18,7 @@ export const useGenerateContent = () => {
         }
 
         const responses = await Promise.all(
-            interestData
-            .split(", ")
-            .map((tag) => fetchGeminiNanoResponse(tag, "content"))
+            interestData.map((tag) => fetchGeminiNanoResponse(tag, "content"))
         );
         setGeneratedContent(responses);
 
