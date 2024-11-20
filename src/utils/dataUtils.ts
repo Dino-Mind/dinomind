@@ -5,7 +5,14 @@ type StorageKey =
   | "chatHistory"
   | "historyData"
   | "interestTags"
-  | "contentDatas";
+  | "contentData";
+
+type StorageMap = {
+  chatHistory: Message[];
+  historyData: HistoryItem[];
+  interestTags: string;
+  contentData: string[];
+}
 
 export const saveChatData = (newMessage: Message) => {
   chrome.storage.local.get("chatHistory", (result) => {
@@ -53,14 +60,12 @@ export const loadInterestData = (callback: (tags: string) => void) => {
   });
 };
 
-// Content Data Management
-
-export const saveContentData = (content: string) => {
-  chrome.storage.local.set({ contentDatas: content });
+export const saveContentData = (content: string[]) => {
+  chrome.storage.local.set<StorageMap>({ contentData: content });
 };
 
 export const loadContentData = (callback: (content: string) => void) => {
-  chrome.storage.local.get("contentDatas", (result) => {
-    callback(result.contentDatas || "");
+  chrome.storage.local.get("contentData", (result) => {
+    callback(result.contentData || "");
   });
 };
