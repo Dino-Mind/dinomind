@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
 import { processSummarizedHistory } from "../../utils/fetchGeminiSummarize";
-import { loadInterestData, clearInterestData } from "../../utils/dataUtils";
+import { loadInterestData, removeLocalStorageData } from "../../utils/dataUtils";
 import { fetchHistoryItems } from "../../utils/fetchHistoryItems";
 
 const Interest: React.FC = () => {
@@ -40,8 +40,7 @@ const Interest: React.FC = () => {
   };
 
   const handleClearInterestData = () => {
-    // Clear interest data
-    clearInterestData(() => setLocalSummaries(null));
+    removeLocalStorageData("interestTags", () => setLocalSummaries(null));
   };
 
   return (

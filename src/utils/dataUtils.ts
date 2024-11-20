@@ -1,7 +1,12 @@
 import { Message } from "../types/messageType";
 import { HistoryItem } from "../types/historyItemType";
 
-// Chat Data Management
+type StorageKey =
+  | "chatHistory"
+  | "historyData"
+  | "interestTags"
+  | "contentDatas";
+
 export const saveChatData = (newMessage: Message) => {
   chrome.storage.local.get("chatHistory", (result) => {
     const chatHistory = result.chatHistory || [];
@@ -17,11 +22,12 @@ export const loadChatData = (callback: (chatHistory: Message[]) => void) => {
   });
 };
 
-export const clearChatData = (callback: () => void) => {
-  chrome.storage.local.remove("chatHistory", callback);
+export const removeLocalStorageData = (
+  name: StorageKey,
+  callback: () => void
+) => {
+  chrome.storage.local.remove(name, callback);
 };
-
-//history Data Management
 
 export const saveHistoryData = (historyItems: HistoryItem[]): void => {
   chrome.storage.local.set({ historyData: historyItems });
@@ -47,10 +53,6 @@ export const loadInterestData = (callback: (tags: string) => void) => {
   });
 };
 
-export const clearInterestData = (callback: () => void) => {
-  chrome.storage.local.remove("interestTags", callback);
-};
-
 // Content Data Management
 
 export const saveContentData = (content: string) => {
@@ -61,8 +63,4 @@ export const loadContentData = (callback: (content: string) => void) => {
   chrome.storage.local.get("contentDatas", (result) => {
     callback(result.contentDatas || "");
   });
-};
-
-export const clearContentData = (callback: () => void) => {
-  chrome.storage.local.remove("contentDatas", callback);
 };

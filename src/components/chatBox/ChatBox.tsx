@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
 import {
-  clearChatData,
+  removeLocalStorageData,
   loadChatData,
   saveChatData,
 } from "../../utils/dataUtils";
@@ -73,7 +73,7 @@ const ChatBox: React.FC = () => {
         <button onClick={sendMessage} disabled={loading || !input.trim()}>
           {loading ? "Sending..." : "Send"}
         </button>
-        <button onClick={() => clearChatData(() => setMessages([]))}>
+        <button onClick={() => removeLocalStorageData("chatHistory", () => setMessages([]))}>
           Clear Chat History
         </button>
       </div>

@@ -3,7 +3,7 @@ import { fetchHistoryItems } from "./fetchHistoryItems";
 import {
   loadInterestData,
   saveInterestData,
-  clearInterestData,
+  removeLocalStorageData,
 } from "./dataUtils";
 import { useGeminiNanoResponse } from "./fetchGeminiResponse";
 import { HistoryItem } from "../types/historyItemType";
@@ -35,7 +35,7 @@ export const useFetchInterestTags = () => {
   // Step 3: Summarize History Items and Save Interest Tags
   const refreshInterestTags = async () => {
     setLoadingSummarization(true);
-    clearInterestData(() => setInterestTags(null));
+    removeLocalStorageData("interestTags",() => setInterestTags(null));
 
     const summaries = await Promise.all(
       historyItems.map((item) =>
