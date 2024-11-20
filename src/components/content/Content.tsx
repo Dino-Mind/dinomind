@@ -8,7 +8,8 @@ const Content: React.FC = () => {
   const [generatedContent, setGeneratedContent] = useState<string[]>([]);
   const { fetchGeminiNanoResponse, loading } = useGeminiNanoResponse();
 
-  // Step 1: Load Interest Data  useEffect(() => {
+  // Step 1: Load Interest Data 
+   useEffect(() => {
     loadInterestData(setInterestData);
   }, []);
 
