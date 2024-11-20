@@ -10,12 +10,15 @@ export const fetchHistoryItems = async (): Promise<{
     const oneMonthAgo = Date.now() - millisecondsPerMonth;
 
     chrome.history.search(
-      { text: "", startTime: oneMonthAgo, maxResults: 10 },
+      { text: "", startTime: oneMonthAgo, maxResults: 1000 },
       (historyItems) => {
         historyItems.forEach((item) => {
+          const simplifiedUrl = new URL(item.url!).hostname;
+
           urlToHistoryItem[item.url!] = {
             id: item.id,
             url: item.url!,
+            simpleUrl: simplifiedUrl,
             title: item.title,
             lastVisitTime: item.lastVisitTime,
             visitCount: item.visitCount,
@@ -37,6 +40,11 @@ export const fetchHistoryItems = async (): Promise<{
               .join(" | ")
           : "No recent history items found.";
 
+        const stringifiedHistoryItems = sortedHistoryItems.map((item) =>
+          JSON.stringify(item)
+        );
+
+        console.log(stringifiedHistoryItems);
         resolve({ historyItems: sortedHistoryItems, summaryText });
       }
     );
