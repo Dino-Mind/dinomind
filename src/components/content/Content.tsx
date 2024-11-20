@@ -32,7 +32,6 @@ const Content: React.FC = () => {
 
   return (
     <div className="content-container">
-      {/* Interest Data */}
       <div className="interest-data">
         <h3>Interest Data</h3>
         <p>{interestData || "No interest data available."}</p>
