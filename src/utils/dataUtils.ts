@@ -1,4 +1,5 @@
 import { Message } from "../types/messageType";
+import { HistoryItem } from "../types/historyItemType";
 
 // Chat Data Management
 export const saveChatData = (newMessage: Message) => {
@@ -20,6 +21,21 @@ export const clearChatData = (callback: () => void) => {
   chrome.storage.local.remove("chatHistory", callback);
 };
 
+//history Data Management
+
+export const saveHistoryData = (historyItems: HistoryItem[]): void => {
+  chrome.storage.local.set({ historyData: historyItems });
+};
+
+export const loadHistoryData = (
+  callback: (historyItems: HistoryItem[]) => void
+): void => {
+  chrome.storage.local.get("historyData", (result) => {
+    const historyItems = result.historyData || [];
+    callback(historyItems);
+  });
+};
+
 // Interest Data Management
 export const saveInterestData = (tags: string) => {
   chrome.storage.local.set({ interestTags: tags });
@@ -36,6 +52,7 @@ export const clearInterestData = (callback: () => void) => {
 };
 
 // Content Data Management
+
 export const saveContentData = (content: string) => {
   chrome.storage.local.set({ contentDatas: content });
 };
