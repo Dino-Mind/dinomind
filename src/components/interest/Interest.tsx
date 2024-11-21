@@ -1,56 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useFetchedHistory } from "../../hooks/useFetchedHistory";
 import "./style.scss";
-import { processSummarizedHistory } from "../../utils/fetchGeminiSummarize";
-import {
-  loadInterestData,
-  removeLocalStorageData,
-} from "../../utils/dataUtils";
-import { fetchHistoryItems } from "../../utils/fetchHistoryItems";
 
 const Interest: React.FC = () => {
-  const [localSummaries, setLocalSummaries] = useState<{
-    [key: string]: string;
-  } | null>(null);
-  const [historyItems, setHistoryItems] = useState<any[]>([]);
-  const [loadingHistory, setLoadingHistory] = useState<boolean>(true);
-  const [loadingSummarization, setLoadingSummarization] =
-    useState<boolean>(false);
-
-  // TODO bahadir custom hook
-  useEffect(() => {
-    // Step 1: Fetch History Data
-    const fetchAndSaveHistory = async () => {
-      setLoadingHistory(true);
-      await fetchHistoryItems(); // Fetches and saves history data to local storage
-      setLoadingHistory(false);
-
-      // Load the saved history data
-      chrome.storage.local.get("historyData", (result) => {
-        setHistoryItems(result.historyData || []);
-      });
-    };
-
-    fetchAndSaveHistory();
-  }, []);
-
-  const handleSummarizeHistory = async () => {
-    // Step 2: Process Summarized History
-    setLoadingSummarization(true);
-    await processSummarizedHistory(); // Summarizes and saves interest data
-    setLoadingSummarization(false);
-
-    // Load the saved interest data
-    loadInterestData((data) => setLocalSummaries(JSON.parse(data || "{}"))); //TODO bahadir
-  };
-
-  const handleClearInterestData = () => {
-    removeLocalStorageData("interestData", () => setLocalSummaries(null));
-  };
+  const {
+    historyItems,
+    summaries,
+    loadingHistory,
+    loadingSummarization,
+    handleSummarizeHistory,
+    clearInterestData,
+  } = useFetchedHistory();
 
   return (
     <div className="interest-container">
       <div className="history-items">
-        <h3>History Items</h3>
+        <h3>History Items TEST</h3>
         {loadingHistory ? (
           <p>Loading history...</p>
         ) : (
@@ -67,8 +32,8 @@ const Interest: React.FC = () => {
         <h3>Interest Data</h3>
         {loadingSummarization ? (
           <p>Summarizing...</p>
-        ) : localSummaries ? (
-          Object.entries(localSummaries).map(([key, value]) => (
+        ) : summaries ? (
+          Object.entries(summaries).map(([key, value]) => (
             <div key={key}>
               <strong>{key}:</strong> {value}
             </div>
@@ -83,7 +48,7 @@ const Interest: React.FC = () => {
           >
             {loadingSummarization ? "Summarizing..." : "Summarize History"}
           </button>
-          <button onClick={handleClearInterestData}>Clear Interest Data</button>
+          <button onClick={clearInterestData}>Clear Interest Data</button>
         </div>
       </div>
     </div>

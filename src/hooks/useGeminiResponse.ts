@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { fetchGeminiResponse } from "../utils/fetchGeminiResponse";
-import { promptConfig } from "../utils/config/promptCongif";
+import { promptConfig } from "../utils/config/promptConfig";
 import { Message, Sender } from "../types/messageType";
 import { ComponentType } from "../types/componentType";
 

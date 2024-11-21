@@ -1,5 +1,5 @@
 import { ComponentType } from "../types/componentType";
-import { promptConfig } from "./config/promptCongif";
+import { promptConfig } from "./config/promptConfig";
 
 export const fetchGeminiResponse = async (
   userMessage: string,

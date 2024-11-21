@@ -6,6 +6,7 @@ type SaveDataFunction = {
   chatbox: (data: Message) => void;
   interest: (data: string[]) => void;
   content: (data: string[]) => void;
+  summarize: (data: string[]) => void;
 };
 
 export const promptConfig: Record<
@@ -25,5 +26,9 @@ export const promptConfig: Record<
   content: {
     promptTemplate: `Generate a one-sentence joke about this title: "{userMessage}"`,
     saveData: saveContentData,
+  },
+  summarize: {
+    promptTemplate: `Summarize the following text in plain and concise points: "{userMessage}"`,
+    saveData: saveInterestData,
   },
 };

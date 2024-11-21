@@ -1,10 +1,6 @@
 import { loadHistoryData, saveInterestData } from "./dataUtils";
+import { promptConfig } from "../utils/config/promptConfig";
 
-/**
- * Summarizes the given text using the AI Summarizer.
- * @param text - The text to summarize.
- * @returns A promise resolving to the summary.
- */
 export const summarizeText = async (text: string): Promise<string> => {
   if (!window.ai || !window.ai.summarizer) {
     throw new Error("AI Summarization is not supported in this browser.");
@@ -20,6 +16,7 @@ export const summarizeText = async (text: string): Promise<string> => {
   session.destroy();
   return summary;
 };
+
 export const processSummarizedHistory = async (): Promise<void> => {
   loadHistoryData(async (historyItems) => {
     if (!historyItems.length) {
@@ -28,24 +25,39 @@ export const processSummarizedHistory = async (): Promise<void> => {
     }
 
     try {
+      const { promptTemplate } = promptConfig["summarize"];
+
       const summaryPromises = historyItems.map(async (item) => {
         try {
-          const summary = await summarizeText(
-            `Title: ${item.title || "No Title"}, Visit Count: ${item.visitCount}`
+          const prompt = promptTemplate.replace(
+            "{userMessage}",
+            `Title: ${item.title || "No Title"}, Visit Count: ${
+              item.visitCount
+            }`
           );
+
+          const summary = await summarizeText(prompt);
           console.log("from_GEMINI_SUMMARIZE:", summary);
           return summary;
         } catch (error) {
-          console.log(`Error summarizing history item "${item.title || "No Title"}":`, error);
+          console.log(
+            `Error summarizing history item "${item.title || "No Title"}":`,
+            error
+          );
           return null;
         }
       });
-    
+
       const summaries = await Promise.all(summaryPromises);
-      const successfulSummaries = summaries.filter((summary) => summary !== null);
+      const successfulSummaries = summaries.filter(
+        (summary) => summary !== null
+      ) as string[];
       saveInterestData(successfulSummaries);
     } catch (error) {
-      console.error("Unexpected error during the summarization process:", error);
+      console.error(
+        "Unexpected error during the summarization process:",
+        error
+      );
     }
   });
 };

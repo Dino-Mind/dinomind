@@ -1,1 +1,1 @@
-export type ComponentType = "chatbox" | "interest" | "content";
+export type ComponentType = "chatbox" | "interest" | "content" | "summarize";

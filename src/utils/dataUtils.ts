@@ -12,7 +12,7 @@ type StorageMap = {
   historyData: HistoryItem[];
   interestData: string;
   contentData: string[];
-}
+};
 
 export const saveChatData = (newMessage: Message) => {
   chrome.storage.local.get("chatHistory", (result) => {
@@ -54,9 +54,11 @@ export const saveInterestData = (interestInput: string[]) => {
   chrome.storage.local.set({ interestData: interestInput });
 };
 
-export const loadInterestData = (callback: (interestInput: string[]) => void) => {
+export const loadInterestData = (
+  callback: (interestInput: string[]) => void
+) => {
   chrome.storage.local.get("interestData", (result) => {
-    callback(result.interestData || "");
+    callback(result.interestData || null);
   });
 };
 
