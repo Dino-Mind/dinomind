@@ -1,3 +1,4 @@
+import { saveHistoryData } from "./dataUtils";
 import { HistoryItem } from "../types/historyItemType";
 
 export const fetchHistoryItems = async (): Promise<{
@@ -10,12 +11,15 @@ export const fetchHistoryItems = async (): Promise<{
     const oneMonthAgo = Date.now() - millisecondsPerMonth;
 
     chrome.history.search(
-      { text: "", startTime: oneMonthAgo, maxResults: 10 },
-      (historyItems) => {
+      { text: "", startTime: oneMonthAgo, maxResults: 1000 },
+      async (historyItems) => {
         historyItems.forEach((item) => {
+          const simplifiedUrl = new URL(item.url!).hostname;
+
           urlToHistoryItem[item.url!] = {
             id: item.id,
             url: item.url!,
+            simpleUrl: simplifiedUrl,
             title: item.title,
             lastVisitTime: item.lastVisitTime,
             visitCount: item.visitCount,
@@ -26,18 +30,12 @@ export const fetchHistoryItems = async (): Promise<{
           .sort((a, b) => (b.visitCount ?? 0) - (a.visitCount ?? 0))
           .slice(0, 5);
 
-        const summaryText = sortedHistoryItems.length
-          ? sortedHistoryItems
-              .map(
-                (item) =>
-                  `Title: ${item.title || "No Title"}, Visit Count: ${
-                    item.visitCount
-                  }`
-              )
-              .join(" | ")
-          : "No recent history items found.";
+        saveHistoryData(sortedHistoryItems);
 
-        resolve({ historyItems: sortedHistoryItems, summaryText });
+        resolve({
+          historyItems: sortedHistoryItems,
+          summaryText: "Summaries saved to local storage.",
+        });
       }
     );
   });
