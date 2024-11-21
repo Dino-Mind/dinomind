@@ -20,12 +20,6 @@ export const summarizeText = async (text: string): Promise<string> => {
   session.destroy();
   return summary;
 };
-
-/**
- * Processes history data by summarizing each history item
- * and saving the summaries to interest data.
- */
-
 export const processSummarizedHistory = async (): Promise<void> => {
   loadHistoryData(async (historyItems) => {
     if (!historyItems.length) {
@@ -33,19 +27,25 @@ export const processSummarizedHistory = async (): Promise<void> => {
       return;
     }
 
-    for (const item of historyItems) {
-      try {
-        const summary = await summarizeText(
-          `Title: ${item.title || "No Title"}, Visit Count: ${item.visitCount}`
-        );
-        console.log("from_GEMINI_SUMMARIZE:", summary);
-        saveInterestData(summary);
-      } catch (error) {
-        console.error(
-          `Error summarizing history item "${item.title || "No Title"}":`,
-          error
-        );
-      }
+    try {
+      const summaryPromises = historyItems.map(async (item) => {
+        try {
+          const summary = await summarizeText(
+            `Title: ${item.title || "No Title"}, Visit Count: ${item.visitCount}`
+          );
+          console.log("from_GEMINI_SUMMARIZE:", summary);
+          return summary;
+        } catch (error) {
+          console.log(`Error summarizing history item "${item.title || "No Title"}":`, error);
+          return null;
+        }
+      });
+    
+      const summaries = await Promise.all(summaryPromises);
+      const successfulSummaries = summaries.filter((summary) => summary !== null);
+      saveInterestData(successfulSummaries);
+    } catch (error) {
+      console.error("Unexpected error during the summarization process:", error);
     }
   });
 };

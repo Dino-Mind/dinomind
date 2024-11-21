@@ -14,7 +14,7 @@ const componentConfig: Record<
     saveData: saveChatData,
   },
   interest: {
-    promptTemplate: `"{userMessage}" Generate content tags for each title in the specified format. For each title, provide only the following data separated by commas: "title", "visitCount", and "definition" in this exact format:
+    promptTemplate: `"{userMessage}" Generate content data for each title in the specified format. For each title, provide only the following data separated by commas: "title", "visitCount", and "definition" in this exact format:
     "{title},{visitCount},{definition}"
     List each entry as a separate item within curly braces, and separate items with commas. Do not add any additional text or labels. The output should look like this:
     
@@ -51,7 +51,7 @@ export const useGeminiNanoResponse = () => {
       (async () => {
         if (!userMessage.trim()) {
           handleError(
-            "No data available to generate content tags.",
+            "No data available to generate content data",
             Sender.SYSTEM,
             resolve
           );

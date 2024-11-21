@@ -4,8 +4,15 @@ import { HistoryItem } from "../types/historyItemType";
 type StorageKey =
   | "chatHistory"
   | "historyData"
-  | "interestTags"
-  | "contentDatas";
+  | "interestData"
+  | "contentData";
+
+type StorageMap = {
+  chatHistory: Message[];
+  historyData: HistoryItem[];
+  interestData: string;
+  contentData: string[];
+}
 
 export const saveChatData = (newMessage: Message) => {
   chrome.storage.local.get("chatHistory", (result) => {
@@ -43,24 +50,22 @@ export const loadHistoryData = (
 };
 
 // Interest Data Management
-export const saveInterestData = (tags: string) => {
-  chrome.storage.local.set({ interestTags: tags });
+export const saveInterestData = (interestInput: string[]) => {
+  chrome.storage.local.set({ interestData: interestInput });
 };
 
-export const loadInterestData = (callback: (tags: string) => void) => {
-  chrome.storage.local.get("interestTags", (result) => {
-    callback(result.interestTags || "");
+export const loadInterestData = (callback: (interestInput: string[]) => void) => {
+  chrome.storage.local.get("interestData", (result) => {
+    callback(result.interestData || "");
   });
 };
 
-// Content Data Management
-
-export const saveContentData = (content: string) => {
-  chrome.storage.local.set({ contentDatas: content });
+export const saveContentData = (content: string[]) => {
+  chrome.storage.local.set<StorageMap>({ contentData: content });
 };
 
 export const loadContentData = (callback: (content: string) => void) => {
-  chrome.storage.local.get("contentDatas", (result) => {
-    callback(result.contentDatas || "");
+  chrome.storage.local.get("contentData", (result) => {
+    callback(result.contentData || "");
   });
 };

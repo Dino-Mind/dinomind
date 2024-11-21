@@ -5,7 +5,7 @@ import { Store } from "webext-redux";
 import Header from "../layout/Header";
 import Body from "./Body";
 import Footer from "./Footer";
-import ChatBox from "../components/chatBox/ChatBox";
+import ChatBox from "../components/chat-box/ChatBox";
 import Content from "../components/content/Content";
 import Interest from "../components/interest/Interest";
 import { setActiveTab } from "../redux/slices/uiSlice";
