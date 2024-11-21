@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { loadInterestData, saveContentData } from "../utils/dataUtils";
 import { useGeminiResponse } from "./useGeminiResponse";
+import { handleError } from "../utils/error/errorHandler";
 
 export const useGenerateContent = () => {
   const [interestData, setInterestData] = useState<string[] | null>(null);
@@ -17,17 +18,21 @@ export const useGenerateContent = () => {
       return;
     }
 
-    const responses = await Promise.all(
-      interestData.map((tag) => fetchResponse(tag, "content"))
-    );
-    setGeneratedContent(responses);
+    try {
+      const responses = await Promise.all(
+        interestData.map((tag) => fetchResponse(tag, "content"))
+      );
+      setGeneratedContent(responses);
 
-    const contentArray: string[] = [];
-    responses.forEach((content) => {
-      contentArray.push(content);
-    });
+      const contentArray: string[] = [];
+      responses.forEach((content) => {
+        contentArray.push(content);
+      });
 
-    saveContentData(contentArray);
+      saveContentData(contentArray);
+    } catch (error) {
+      handleError(error, { logToConsole: true });
+    }
   };
 
   return {

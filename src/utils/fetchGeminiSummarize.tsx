@@ -1,5 +1,6 @@
 import { loadHistoryData, saveInterestData } from "./dataUtils";
 import { promptConfig } from "../utils/config/promptConfig";
+import { handleError } from "./error/errorHandler";
 
 export const summarizeText = async (text: string): Promise<string> => {
   if (!window.ai || !window.ai.summarizer) {
@@ -37,14 +38,15 @@ export const processSummarizedHistory = async (): Promise<void> => {
           );
 
           const summary = await summarizeText(prompt);
+
           console.log("from_GEMINI_SUMMARIZE:", summary);
+
           return summary;
         } catch (error) {
-          console.log(
-            `Error summarizing history item "${item.title || "No Title"}":`,
-            error
-          );
-          return null;
+          return handleError(error, {
+            logToConsole: true,
+            fallbackValue: "Error summarizing text.",
+          });
         }
       });
 

@@ -47,7 +47,6 @@ const Sidepanel = () => {
   );
 };
 
-// Top-level component to handle proxystore(cause error if try immeadiately rendering) readiness then render the Sidepanel
 const SidepanelRoot = () => {
   const [isStoreReady, setIsStoreReady] = useState(false);
 

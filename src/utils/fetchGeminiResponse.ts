@@ -1,19 +1,24 @@
 import { ComponentType } from "../types/componentType";
 import { promptConfig } from "./config/promptConfig";
+import { handleError } from "./error/errorHandler";
 
 export const fetchGeminiResponse = async (
   userMessage: string,
   component: ComponentType
 ): Promise<string> => {
   if (!userMessage.trim()) {
-    return "No data available to generate content data.";
+    return handleError("No data available to generate content data.", {
+      fallbackValue: "Error: No input provided.",
+    });
   }
 
   const { promptTemplate } = promptConfig[component];
 
   try {
     if (!window.ai || !window.ai.languageModel) {
-      return "Error: Gemini Nano is not available in this browser.";
+      return handleError("Gemini Nano is not available in this browser.", {
+        fallbackValue: "Error: AI service unavailable.",
+      });
     }
 
     const prompt = promptTemplate.replace("{userMessage}", userMessage);
@@ -32,7 +37,9 @@ export const fetchGeminiResponse = async (
 
     return responseText;
   } catch (error) {
-    console.error("Error fetching AI response:", error);
-    return "Error: Could not reach the AI service.";
+    return handleError(error, {
+      logToConsole: true,
+      fallbackValue: "Error: Could not reach the AI service.",
+    });
   }
 };

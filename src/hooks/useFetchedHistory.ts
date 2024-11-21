@@ -3,6 +3,7 @@ import { fetchHistoryItems } from "../utils/fetchHistoryItems";
 import { processSummarizedHistory } from "../utils/fetchGeminiSummarize";
 import { loadInterestData, removeLocalStorageData } from "../utils/dataUtils";
 import { HistoryItem } from "../types/historyItemType";
+import { handleError } from "../utils/error/errorHandler";
 
 export const useFetchedHistory = () => {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
@@ -20,7 +21,10 @@ export const useFetchedHistory = () => {
         setHistoryItems(result.historyData || []);
       });
     } catch (error) {
-      console.error("Error fetching history items:", error);
+      handleError(error, {
+        logToConsole: true,
+        fallbackValue: [],
+      });
     } finally {
       setLoadingHistory(false);
     }
@@ -43,7 +47,9 @@ export const useFetchedHistory = () => {
         }
       });
     } catch (error) {
-      console.error("Error summarizing history:", error);
+      handleError(error, {
+        logToConsole: true,
+      });
     } finally {
       setLoadingSummarization(false);
     }
