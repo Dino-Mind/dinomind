@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useGeminiNanoResponse } from "../../utils/fetchGeminiResponse";
+import { useGeminiResponse } from "../../hooks/useGeminiResponse";
 import {
   removeLocalStorageData,
   loadChatData,
@@ -16,8 +16,8 @@ const ChatBox: React.FC = () => {
   const {
     loading,
     messages: fetchedMessages,
-    fetchGeminiNanoResponse,
-  } = useGeminiNanoResponse();
+    fetchResponse,
+  } = useGeminiResponse();
 
   useEffect(() => {
     loadChatData(setMessages);
@@ -47,7 +47,7 @@ const ChatBox: React.FC = () => {
     const userMessage = { sender: Sender.USER, text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     saveChatData(userMessage);
-    fetchGeminiNanoResponse(input, "chatbox");
+    fetchResponse(input, "chatbox");
     setInput("");
   };
 
@@ -73,7 +73,11 @@ const ChatBox: React.FC = () => {
         <button onClick={sendMessage} disabled={loading || !input.trim()}>
           {loading ? "Sending..." : "Send"}
         </button>
-        <button onClick={() => removeLocalStorageData("chatHistory", () => setMessages([]))}>
+        <button
+          onClick={() =>
+            removeLocalStorageData("chatHistory", () => setMessages([]))
+          }
+        >
           Clear Chat History
         </button>
       </div>

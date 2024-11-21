@@ -3,7 +3,8 @@ import "./style.scss";
 import { useGenerateContent } from "../../hooks/useGenerateContent";
 
 const Content: React.FC = () => {
-  const {generatedContent, interestData, loading, fetchGenerateContent} = useGenerateContent()
+  const { generatedContent, interestData, loading, fetchGenerateContent } =
+    useGenerateContent();
 
   return (
     <div className="content-container">
@@ -12,7 +13,6 @@ const Content: React.FC = () => {
         <p>{interestData || "No interest data available."}</p>
       </div>
 
-      {/* Generate Content Tags */}
       <button
         onClick={fetchGenerateContent}
         disabled={loading}
@@ -21,7 +21,6 @@ const Content: React.FC = () => {
         {loading ? "Generating..." : "Generate Content Tags"}
       </button>
 
-      {/* Generated Content */}
       <div className="generated-content">
         <h3>Generated Content</h3>
         {generatedContent.length > 0 ? (

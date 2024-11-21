@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
 import { processSummarizedHistory } from "../../utils/fetchGeminiSummarize";
-import { loadInterestData, removeLocalStorageData } from "../../utils/dataUtils";
+import {
+  loadInterestData,
+  removeLocalStorageData,
+} from "../../utils/dataUtils";
 import { fetchHistoryItems } from "../../utils/fetchHistoryItems";
 
 const Interest: React.FC = () => {
@@ -13,7 +16,7 @@ const Interest: React.FC = () => {
   const [loadingSummarization, setLoadingSummarization] =
     useState<boolean>(false);
 
-    // TODO bahadir custom hook
+  // TODO bahadir custom hook
   useEffect(() => {
     // Step 1: Fetch History Data
     const fetchAndSaveHistory = async () => {
@@ -46,7 +49,6 @@ const Interest: React.FC = () => {
 
   return (
     <div className="interest-container">
-      {/* History Items */}
       <div className="history-items">
         <h3>History Items</h3>
         {loadingHistory ? (
@@ -61,7 +63,6 @@ const Interest: React.FC = () => {
         )}
       </div>
 
-      {/* Interest Tags */}
       <div className="interest-summary">
         <h3>Interest Data</h3>
         {loadingSummarization ? (

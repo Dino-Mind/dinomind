@@ -41,12 +41,3 @@ export const fetchHistoryItems = async (): Promise<{
   });
 };
 
-// for (const item of sortedHistoryItems) {
-//   const summary = await summarizeText(
-//     `Title: ${item.title || "No Title"}, Visit Count: ${
-//       item.visitCount
-//     }`
-//   );
-//   console.log("from_GEMINI_SUMMARIZE :", summary);
-//   saveInterestData(summary);
-// }
