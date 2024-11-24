@@ -21,7 +21,10 @@ export const useGeminiResponse = () => {
 
       if (component === "chatbox") {
         const aiMessage: Message = { sender: Sender.AI, text: responseText };
-        setMessages((prevMessages) => [...prevMessages, aiMessage]);
+        setMessages((prevMessages) => [
+          ...prevMessages.filter((msg) => msg.sender !== Sender.AI),
+          aiMessage,
+        ]);
         (saveData as (data: Message) => void)(aiMessage);
       } else {
         (saveData as (data: string[]) => void)([responseText]);

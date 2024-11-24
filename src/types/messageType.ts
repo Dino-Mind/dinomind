@@ -1,4 +1,3 @@
-// types/messageType.ts (define a common type for messages)
 export interface Message {
   sender: Sender;
   text: string;
