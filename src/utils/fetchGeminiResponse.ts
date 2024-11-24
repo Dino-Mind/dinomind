@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentType } from "../types/componentType";
 import { promptConfig } from "./config/promptConfig";
 import { handleError } from "./error/errorHandler";
+
+//TODO fix type any
+let session: any | null = null;
 
 export const fetchGeminiResponse = async (
   userMessage: string,
@@ -22,10 +26,12 @@ export const fetchGeminiResponse = async (
     }
 
     const prompt = promptTemplate.replace("{userMessage}", userMessage);
-    const session = await window.ai.languageModel.create({
-      temperature: 0.7,
-      topK: 3,
-    });
+    if (!session) {
+      session = await window.ai.languageModel.create({
+        temperature: 0.7,
+        topK: 3,
+      });
+    }
 
     const stream = await session.promptStreaming(prompt);
 

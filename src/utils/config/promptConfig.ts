@@ -14,7 +14,7 @@ export const promptConfig: Record<
   { promptTemplate: string; saveData: SaveDataFunction[ComponentType] }
 > = {
   chatbox: {
-    promptTemplate: `You are a helpful assistant. User message: "{userMessage}". Format based on type.`,
+    promptTemplate: `You are a helpful assistant. User message: "{userMessage}". limit message for 100 words.`,
     saveData: saveChatData,
   },
   interest: {
