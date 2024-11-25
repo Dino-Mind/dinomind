@@ -2,7 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./redux/rootReducer";
 import { createWrapStore } from "webext-redux";
 import { setActiveTab } from "./redux/slices/uiSlice";
-import { closeSidePanel, openSidePanel } from "./redux/slices/sidePanelSlice";
+import {
+  closeSidePanel,
+  openSidePanel,
+  saveChatHistory,
+} from "./redux/slices/sidePanelSlice";
 
 const store = configureStore({
   reducer: rootReducer,
@@ -106,23 +110,15 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       store.dispatch(openSidePanel());
       sendResponse({ status: "success", isOpen: true });
     });
-
-    //WORKING
-    const data4 = "DATA 4 openWithextIcon saved";
-    console.log("DATA 4 openWithextIcon action");
-    chrome.storage.local.set({ chatHistory4: data4 || [] });
   } else if (message.action === "closeSidePanel") {
     chrome.sidePanel.setOptions({
       tabId,
       enabled: false,
     });
 
+    store.dispatch(saveChatHistory());
     store.dispatch(closeSidePanel());
     sendResponse({ status: "success", isOpen: false });
-    //WORKING
-    const data5 = "DATA 5 closeWithextIcon saved";
-    console.log("DATA 5 closeWithextIcon action");
-    chrome.storage.local.set({ chatHistory5: data5 || [] });
   }
 
   return true;

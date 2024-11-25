@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface SidePanelState {
   isOpen: boolean;
@@ -7,6 +7,21 @@ export interface SidePanelState {
 const initialState: SidePanelState = {
   isOpen: false,
 };
+
+export const saveChatHistory = createAsyncThunk(
+  "sidePanel/saveChatHistory",
+  async () => {
+    return new Promise<void>((resolve) => {
+      chrome.storage.local.get("chatHistory", (data) => {
+        const chatHistory = data.chatHistory || [];
+        chrome.storage.local.set({ savedChatHistory: chatHistory }, () => {
+          console.log("Chat history saved on side panel close.");
+          resolve();
+        });
+      });
+    });
+  }
+);
 
 const sidePanelSlice = createSlice({
   name: "sidePanel",
@@ -21,6 +36,11 @@ const sidePanelSlice = createSlice({
     setSidePanelState(state, action: PayloadAction<boolean>) {
       state.isOpen = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(saveChatHistory.fulfilled, () => {
+      console.log("Chat history successfully saved.");
+    });
   },
 });
 

@@ -1,13 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { Store } from "webext-redux";
+import { closeSidePanel, openSidePanel } from "../redux/slices/sidePanelSlice";
+import { RootState } from "../redux/rootReducer";
 
-function Popup() {
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+const proxyStore = new Store();
+
+const Popup = () => {
+  const dispatch = useDispatch();
+  const isSidePanelOpen = useSelector(
+    (state: RootState) => state.sidePanel.isOpen
+  );
 
   const aiLogo = chrome.runtime.getURL("src/assets/ai-logo.svg");
   const aiLogoRed = chrome.runtime.getURL("src/assets/ai-logo-red.svg");
 
-  const toggleSidePanel = async () => {
+  const toggleSidePanel = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs[0];
       if (!activeTab?.id) {
@@ -18,26 +27,38 @@ function Popup() {
       if (isSidePanelOpen) {
         chrome.runtime.sendMessage(
           { action: "closeSidePanel", tabId: activeTab.id },
-          () => setIsSidePanelOpen(false)
+          () => {
+            dispatch(closeSidePanel());
+          }
         );
       } else {
         chrome.runtime.sendMessage(
           { action: "openSidePanel", tabId: activeTab.id },
-          () => setIsSidePanelOpen(true)
+          () => {
+            dispatch(openSidePanel());
+          }
         );
       }
     });
   };
 
   useEffect(() => {
-    chrome.runtime.sendMessage({ action: "getSidePanelState" }, (response) => {
-      if (response?.status === "success") {
-        setIsSidePanelOpen(response.isOpen);
-      } else {
-        console.error("Failed to fetch side panel state:", response?.message);
+    let lastKnownState = isSidePanelOpen;
+
+    const unsubscribe = proxyStore.subscribe(() => {
+      const state = proxyStore.getState() as RootState;
+      const currentSidePanelState = state.sidePanel.isOpen;
+
+      if (currentSidePanelState !== lastKnownState) {
+        lastKnownState = currentSidePanelState;
+        dispatch(currentSidePanelState ? openSidePanel() : closeSidePanel());
       }
     });
-  }, []);
+
+    return () => {
+      unsubscribe(); 
+    };
+  }, [dispatch]);
 
   return (
     <div style={{ height: 300, width: 300 }}>
@@ -54,10 +75,14 @@ function Popup() {
       </button>
     </div>
   );
-}
+};
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <Popup />
-  </React.StrictMode>
-);
+proxyStore.ready().then(() => {
+  ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+    <Provider store={proxyStore}>
+      <React.StrictMode>
+        <Popup />
+      </React.StrictMode>
+    </Provider>
+  );
+});
