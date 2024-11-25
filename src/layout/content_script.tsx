@@ -4,39 +4,31 @@ import ReactDOM from "react-dom/client";
 import "../styles/style.scss";
 
 function OpenSidePanelButton() {
-  const [isContentOpen, setIsContentOpen] = useState(false);
+  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
 
   const aiLogo = chrome.runtime.getURL("src/assets/ai-logo.svg");
   const aiLogoRed = chrome.runtime.getURL("src/assets/ai-logo-red.svg");
   const settingsLogo = chrome.runtime.getURL("src/assets/settings-logo.svg");
 
-  const openSidePanel = () => {
-    if (!isContentOpen) {
-      chrome.runtime.sendMessage({ action: "openSidePanel" });
-      setIsContentOpen(true);
-    } else {
+  const toggleSidePanel = () => {
+    if (isSidePanelOpen) {
       chrome.runtime.sendMessage({ action: "closeSidePanel" });
-      setIsContentOpen(false);
+      setIsSidePanelOpen(false);
+    } else {
+      chrome.runtime.sendMessage({ action: "openSidePanel" });
+      setIsSidePanelOpen(true);
     }
   };
 
   return (
     <button className="content-buttons">
-      {isContentOpen ? (
+      <button className="content-buttons" onClick={toggleSidePanel}>
         <img
-          src={aiLogoRed}
-          alt="AI_Logo_Red"
+          src={isSidePanelOpen ? aiLogoRed : aiLogo}
+          alt="AI Logo"
           className="content-button-logo"
-          onClick={openSidePanel}
         />
-      ) : (
-        <img
-          src={aiLogo}
-          alt="AI_Logo"
-          className="content-button-logo"
-          onClick={openSidePanel}
-        />
-      )}
+      </button>
       <img
         src={settingsLogo}
         alt="Settings Logo"
