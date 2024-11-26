@@ -9,6 +9,10 @@ import {
 import { Message, Sender } from "../../types/messageType";
 import "./style.scss";
 import { MessageLine } from "../message-line/MessageLine";
+import {
+  abortCurrentPrompt,
+  resetSession,
+} from "../../utils/fetchGeminiResponse";
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -60,7 +64,6 @@ const ChatBox: React.FC = () => {
           </div>
         ))}
       </div>
-
       <div className="chat-input">
         <input
           type="text"
@@ -73,13 +76,27 @@ const ChatBox: React.FC = () => {
         <button onClick={sendMessage} disabled={loading || !input.trim()}>
           {loading ? "Sending..." : "Send"}
         </button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          height: "40px",
+        }}
+      >
         <button
+          style={{
+            display: "flex",
+          }}
           onClick={() =>
             removeLocalStorageData("chatHistory", () => setMessages([]))
           }
         >
           Clear Chat History
         </button>
+        <button onClick={abortCurrentPrompt}>Stop Running Prompt</button>
+        <button onClick={resetSession}>Reset AI Session</button>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { promptConfig } from "../utils/config/promptConfig";
 import { handleError } from "./error/errorHandler";
 
 export const summarizeText = async (text: string): Promise<string> => {
-  if (!window.ai || !window.ai.summarizer) {
+  if (typeof window === "undefined" || !window.ai || !window.ai.summarizer) {
     throw new Error("AI Summarization is not supported in this browser.");
   }
 
