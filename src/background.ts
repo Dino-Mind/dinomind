@@ -58,10 +58,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     await chrome.sidePanel.open({ tabId });
 
     store.dispatch(openSidePanel());
-    const summarizeResult = await store.dispatch(
-      summarizeChatHistory({ currentTabId: tabId })
-    );
-    console.log("summarizeChatHistory result:", summarizeResult);
+    await store.dispatch(summarizeChatHistory({ currentTabId: tabId }));
 
     sendResponse({ status: "success", isOpen: true });
   } else if (message.action === "summarizeText") {

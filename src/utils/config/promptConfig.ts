@@ -1,4 +1,9 @@
-import { saveChatData, saveContentData, saveInterestData } from "../dataUtils";
+import {
+  saveChatData,
+  saveContentData,
+  saveInterestData,
+  saveSummaryData,
+} from "../dataUtils";
 import { ComponentType } from "../../types/componentType";
 import { Message } from "../../types/messageType";
 
@@ -6,15 +11,22 @@ type SaveDataFunction = {
   chatbox: (data: Message) => void;
   interest: (data: string[]) => void;
   content: (data: string[]) => void;
-  summarize: (data: string[]) => void;
+  summarize: (data: string) => void;
 };
 
 export const promptConfig: Record<
   ComponentType,
-  { promptTemplate: string; saveData: SaveDataFunction[ComponentType] }
+  {
+    promptTemplate: string;
+    continuedPromptTemplate?: string;
+    defaultPromptTemplate?: string;
+    saveData: SaveDataFunction[ComponentType];
+  }
 > = {
   chatbox: {
-    promptTemplate: `You are a helpful assistant. User message: "{userMessage}". limit message for 100 words.`,
+    promptTemplate: `You are a helpful assistant. User message: "{userMessage}". Limit response to 100 words.`,
+    continuedPromptTemplate: `You are a helpful assistant. Summary so far: "{summaryData}". User message: "{userMessage}". Limit response to 100 words.`,
+    defaultPromptTemplate: `Continue to chat with the user with a helpful attitude: "{userMessage}". Limit response to 100 words.`,
     saveData: saveChatData,
   },
   interest: {
@@ -28,7 +40,7 @@ export const promptConfig: Record<
     saveData: saveContentData,
   },
   summarize: {
-    promptTemplate: `Summarize the following text in plain and concise points: "{userMessage}"`,
-    saveData: saveInterestData,
+    promptTemplate: `Summarize the following conversation data in concise points: "{sessionData}" limit your response to 50 words`,
+    saveData: saveSummaryData,
   },
 };

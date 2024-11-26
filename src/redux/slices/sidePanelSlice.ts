@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { saveSummaryData } from "../../utils/dataUtils";
+import {
+  loadSessionData,
+  saveSessionData,
+  saveSummaryData,
+} from "../../utils/dataUtils";
+import { promptConfig } from "../../utils/config/promptConfig";
+import { Message } from "../../types/messageType";
 
 export interface SidePanelState {
   isOpen: boolean;
@@ -18,10 +24,8 @@ export const saveChatHistory = createAsyncThunk(
     return new Promise<void>((resolve) => {
       chrome.storage.local.get("chatHistory", (data) => {
         const chatHistory = data.chatHistory || [];
-        chrome.storage.local.set({ savedChatHistory: chatHistory }, () => {
-          console.log("Chat history saved on side panel close.");
-          resolve();
-        });
+        saveSessionData(chatHistory); // Use the new utility for saving session data
+        resolve();
       });
     });
   }
@@ -33,27 +37,34 @@ export const summarizeChatHistory = createAsyncThunk(
     const state: { sidePanel: SidePanelState } = getState() as any;
 
     if (!state.sidePanel.isOpen) {
+      console.log("Side panel is not open. Skipping chat summary.");
       return;
     }
 
-    const { chatHistory } = await new Promise<{
-      chatHistory: Array<{ sender: string; text: string }>;
-    }>((resolve) =>
-      chrome.storage.local.get("chatHistory", (data) => {
-        resolve({ chatHistory: data.chatHistory || [] });
-      })
+    // Fetch chat history from local storage
+    const sessionData = await new Promise<Message[]>((resolve) =>
+      loadSessionData((data) => resolve(data || []))
     );
 
-    //checking chatHistory with lenght because it may null or empty
-    if (chatHistory.length > 0) {
-      const fullChatText = chatHistory.map((entry) => entry.text).join(" ");
-      console.log("Full chat text for summary:", fullChatText);
+    if (sessionData.length > 0) {
+      // Combine session data into a single string
+      const formattedSessionData = sessionData
+        .map((entry) => `${entry.sender}: ${entry.text}`)
+        .join(" ");
+
+      // Get the prompt template from promptConfig
+      const { promptTemplate } = promptConfig.summarize;
+      const prompt = promptTemplate.replace(
+        "{sessionData}",
+        formattedSessionData
+      );
 
       try {
+        // Send message to content script for AI summarization
         const summary = await new Promise<string>((resolve, reject) => {
           chrome.tabs.sendMessage(
             currentTabId,
-            { action: "summarizeText", text: fullChatText },
+            { action: "summarizeText", text: prompt },
             (response) => {
               if (chrome.runtime.lastError) {
                 reject(new Error(chrome.runtime.lastError.message));
@@ -67,7 +78,7 @@ export const summarizeChatHistory = createAsyncThunk(
         });
 
         saveSummaryData(summary);
-        console.log("summary:", summary);
+        console.log("Summary saved:", summary);
 
         return summary;
       } catch (error) {

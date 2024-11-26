@@ -8,7 +8,8 @@ type StorageKey =
   | "contentData"
   | "chatSummary"
   | "chromeHistorySummary"
-  | "contentSummary";
+  | "contentSummary"
+  | "sessionData";
 
 type StorageMap = {
   chatHistory: Message[];
@@ -18,6 +19,7 @@ type StorageMap = {
   chatSummary: string;
   chromeHistorySummary: string;
   contentSummary: string;
+  sessionData: Message[];
 };
 
 export const removeLocalStorageData = (
@@ -40,6 +42,18 @@ export const loadChatData = (callback: (chatHistory: Message[]) => void) => {
   chrome.storage.local.get("chatHistory", (result) => {
     const chatHistory = result.chatHistory || [];
     callback(chatHistory);
+  });
+};
+
+// Session Data Management
+export const saveSessionData = (sessionData: Message[]) => {
+  chrome.storage.local.set({ sessionData });
+};
+
+export const loadSessionData = (callback: (sessionData: Message[]) => void) => {
+  chrome.storage.local.get("sessionData", (result) => {
+    const sessionData = result.sessionData || [];
+    callback(sessionData);
   });
 };
 
