@@ -6,6 +6,7 @@ import {
   closeSidePanel,
   openSidePanel,
   saveChatHistory,
+  summarizeChatHistory,
 } from "./redux/slices/sidePanelSlice";
 
 const store = configureStore({
@@ -14,90 +15,37 @@ const store = configureStore({
 const wrapStore = createWrapStore();
 wrapStore(store);
 
-const validComponents = ["ChatBox", "Content", "Interest"];
+// Track the current active tab ID
+let currentTabId: number | null = null;
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "SET_ACTIVE_TAB") {
-    const requestedTab = message.payload;
-
-    if (validComponents.includes(requestedTab)) {
-      store.dispatch(setActiveTab(requestedTab));
-      sendResponse({ status: "success", activeTab: requestedTab });
-    } else {
-      console.warn(`Invalid component name: ${requestedTab}`);
-      sendResponse({ status: "error", message: "Invalid component name" });
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  chrome.tabs.get(activeInfo.tabId, (tab) => {
+    if (chrome.runtime.lastError) {
+      return;
     }
-  } else if (message.type === "GET_ACTIVE_TAB") {
-    const state = store.getState();
-    sendResponse({ activeTab: state.ui.activeTab });
-  }
-  return true;
-});
-
-// Set the extension icon
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.action.setIcon({ path: "src/assets/icons/icon400.png" });
-});
-
-// Save chat data before the extension is closed
-// const saveChatHistory = () => {
-//   chrome.storage.local.get("chatHistory", (data) => {
-//     console.log("Saving... global action");
-//     // chrome.storage.local.set({ chatHistory2: data.chatHistory || [] });
-//   });
-// };
-
-//SAVING CHAT DATA
-// Listen for extension unload (popup or browser close)
-chrome.runtime.onSuspend.addListener(() => {
-  const data1 = "DATA 1 popup or browser close action saved";
-  console.log("DATA 1 popup or browser close action");
-  chrome.storage.local.set({ chatHistory1: data1 || [] });
-});
-
-// Listen for window closure
-chrome.windows.onRemoved.addListener(() => {
-  //WORKING
-  const data2 = "DATA 2 window closure saved";
-  console.log("DATA 2 window closure action");
-  chrome.storage.local.set({ chatHistory2: data2 || [] });
-});
-
-// Listen for tab closure
-chrome.tabs.onRemoved.addListener(() => {
-  //WORKING
-  const data3 = "DATA 3 tab closure saved";
-  console.log("DATA 3 tab closure action");
-  chrome.storage.local.set({ chatHistory3: data3 || [] });
-});
-
-//     //     // OPEN CLOSE sidepanel
-
-// DEV_NOTE: updated via popup able to control sidepanel behaviour && Tied with redux state management
-
-const getActiveTabId = async (): Promise<number | null> => {
-  return new Promise((resolve) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0];
-      if (activeTab?.id) {
-        resolve(activeTab.id);
-      } else {
-        resolve(null);
-      }
-    });
+    currentTabId = tab.id || null;
   });
-};
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (tab.active && changeInfo.url) {
+    currentTabId = tabId;
+  }
+});
+
+/////////////////////// OPEN CLOSE sidepanel ///////////////////////
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (tab.active && changeInfo.url) {
+    currentTabId = tabId;
+  }
+});
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  let tabId = message.tabId || sender.tab?.id;
+  const tabId = currentTabId || message.tabId || sender.tab?.id;
 
   if (!tabId) {
-    tabId = await getActiveTabId();
-    if (!tabId) {
-      console.error("No active tab found.");
-      sendResponse({ status: "error", message: "No active tab available." });
-      return true;
-    }
+    sendResponse({ status: "error", message: "No active tab available." });
+    return true;
   }
 
   if (message.action === "openSidePanel") {
@@ -106,10 +54,35 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       path: "sidepanel.html",
       enabled: true,
     });
-    chrome.sidePanel.open({ tabId }).then(() => {
-      store.dispatch(openSidePanel());
-      sendResponse({ status: "success", isOpen: true });
+
+    await chrome.sidePanel.open({ tabId });
+
+    store.dispatch(openSidePanel());
+    const summarizeResult = await store.dispatch(
+      summarizeChatHistory({ currentTabId: tabId })
+    );
+    console.log("summarizeChatHistory result:", summarizeResult);
+
+    sendResponse({ status: "success", isOpen: true });
+  } else if (message.action === "summarizeText") {
+    const summary = await new Promise<string>((resolve, reject) => {
+      chrome.tabs.sendMessage(
+        tabId,
+        { action: "summarizeText", text: message.text },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+          } else if (response.error) {
+            reject(new Error(response.error));
+          } else {
+            console.log("Summary received:", response.summary);
+            resolve(response.summary);
+          }
+        }
+      );
     });
+
+    sendResponse({ status: "success", summary });
   } else if (message.action === "closeSidePanel") {
     chrome.sidePanel.setOptions({
       tabId,
@@ -122,6 +95,47 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 
   return true;
+});
+
+//SAVING CHAT DATA
+// Listen for extension unload (popup or browser close)
+chrome.runtime.onSuspend.addListener(() => {
+  store.dispatch(saveChatHistory());
+});
+
+// Listen for window closure
+chrome.windows.onRemoved.addListener(() => {
+  store.dispatch(saveChatHistory());
+});
+
+// Listen for tab closure
+chrome.tabs.onRemoved.addListener(() => {
+  store.dispatch(saveChatHistory());
+});
+
+// Track the current active Component
+const validComponents = ["ChatBox", "Content", "Interest"];
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "SET_ACTIVE_TAB") {
+    const requestedTab = message.payload;
+
+    if (validComponents.includes(requestedTab)) {
+      store.dispatch(setActiveTab(requestedTab));
+      sendResponse({ status: "success", activeTab: requestedTab });
+    } else {
+      sendResponse({ status: "error", message: "Invalid component name" });
+    }
+  } else if (message.type === "GET_ACTIVE_TAB") {
+    const state = store.getState();
+    sendResponse({ activeTab: state.ui.activeTab });
+  }
+  return true;
+});
+
+// Set the extension icon
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.action.setIcon({ path: "src/assets/icons/icon400.png" });
 });
 
 export {};

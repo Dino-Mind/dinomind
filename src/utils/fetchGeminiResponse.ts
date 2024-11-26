@@ -3,8 +3,10 @@ import { ComponentType } from "../types/componentType";
 import { promptConfig } from "./config/promptConfig";
 import { handleError } from "./error/errorHandler";
 
-//TODO fix type any
 let session: any | null = null;
+let clonedSession: any | null = null;
+
+const controller = new AbortController();
 
 export const fetchGeminiResponse = async (
   userMessage: string,
@@ -26,6 +28,8 @@ export const fetchGeminiResponse = async (
     }
 
     const prompt = promptTemplate.replace("{userMessage}", userMessage);
+
+    // Create a session if it doesn't exist
     if (!session) {
       session = await window.ai.languageModel.create({
         temperature: 0.7,
@@ -33,7 +37,16 @@ export const fetchGeminiResponse = async (
       });
     }
 
-    const stream = await session.promptStreaming(prompt);
+    // Clone the session to preserve context for this specific interaction
+    if (!clonedSession) {
+      // clonedSession = await session.clone();
+      clonedSession = await session.clone({ signal: controller.signal });
+    }
+
+    // const stream = await clonedSession.promptStreaming(prompt);
+    const stream = await clonedSession.promptStreaming(prompt, {
+      signal: controller.signal,
+    });
 
     let responseText = "";
 
@@ -48,4 +61,19 @@ export const fetchGeminiResponse = async (
       fallbackValue: "Error: Could not reach the AI service.",
     });
   }
+};
+
+// Optional utility to reset the session if needed
+export const resetSession = async () => {
+  if (session) {
+    session.destroy();
+    session = null;
+    clonedSession = null;
+    console.log("Session reset successfully.");
+  }
+};
+
+export const abortCurrentPrompt = () => {
+  controller.abort();
+  console.log("Current prompt aborted.");
 };
