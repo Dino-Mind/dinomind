@@ -79,14 +79,14 @@ export const processSummarizedHistory = async (): Promise<void> => {
 };
 
 // process for maintaining the chat continuity
-export const processChatHistory = async (): Promise<string | null> => {
+export const processChatHistory = async (): Promise<string | null | undefined> => {
   const sessionData = await new Promise<Message[]>((resolve) =>
     loadSessionData((data) => resolve(data || []))
   );
 
   if (!sessionData.length) {
     console.log(
-      "[summarizeChatHistory3] - No sessionData found. Skipping summarization."
+      "[fetchGeminiSummarize-processChatHistory] - No sessionData found. Skipping summarization."
     );
     return null;
   }
@@ -96,25 +96,49 @@ export const processChatHistory = async (): Promise<string | null> => {
     .join(" ");
 
   console.log(
-    "[summarizeChatHistory3] - Formatted session data:",
+    "[fetchGeminiSummarize-processChatHistory] - Formatted session data:",
     formattedSessionData
   );
 
-  const { promptTemplate } = promptConfig.summarize;
-  const prompt = promptTemplate.replace("{sessionData}", formattedSessionData);
+  // Check Summarizer API availability
+  const canSummarize = await self.ai.summarizer.capabilities();
+  if (!canSummarize || canSummarize.available === "no") {
+    console.log("[processChatHistory] - Summarizer API is not available.");
+    return "Summarization is currently unavailable.";
+  }
 
-  console.log("[summarizeChatHistory3] - Generated prompt for AI:", prompt);
+  if (canSummarize.available === "readily") {
+    const { promptTemplate } = promptConfig.summarize;
+    const prompt = promptTemplate.replace(
+      "{sessionData}",
+      formattedSessionData
+    );
 
-  try {
-    const summary = await summarizeText(prompt);
-    console.log("[summarizeChatHistory3] - AI-generated summary:", summary);
+    console.log(
+      "[fetchGeminiSummarize-processChatHistory] - Generated prompt for AI:",
+      prompt
+    );
 
-    saveSummaryData(summary);
-    console.log("[summarizeChatHistory3] - Summary saved:", summary);
+    try {
+      const summary = await summarizeText(prompt);
+      console.log(
+        "[fetchGeminiSummarize-processChatHistory] - AI-generated summary:",
+        summary
+      );
 
-    return summary;
-  } catch (error) {
-    console.error("[summarizeChatHistory3] - Error summarizing text:", error);
-    return "Unable to summarize at this time.";
+      saveSummaryData(summary);
+      console.log(
+        "[fetchGeminiSummarize-processChatHistory] - Summary saved:",
+        summary
+      );
+
+      return summary;
+    } catch (error) {
+      console.error(
+        "[fetchGeminiSummarize-processChatHistory] - Error summarizing text:",
+        error
+      );
+      return "Unable to summarize at this time.";
+    }
   }
 };
