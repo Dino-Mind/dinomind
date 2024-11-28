@@ -4,7 +4,6 @@ import { createWrapStore } from "webext-redux";
 import { setActiveTab } from "./redux/slices/uiSlice";
 import {
   closeSidePanel,
-  openSidePanel,
   saveChatHistory,
   summarizeChatHistory,
 } from "./redux/slices/sidePanelSlice";
@@ -57,7 +56,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
     await chrome.sidePanel.open({ tabId });
 
-    store.dispatch(openSidePanel());
     const summarizeResult = await store.dispatch(
       summarizeChatHistory({ currentTabId: tabId })
     );

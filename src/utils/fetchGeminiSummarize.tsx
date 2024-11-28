@@ -1,12 +1,6 @@
-import {
-  loadHistoryData,
-  loadSessionData,
-  saveInterestData,
-  saveSummaryData,
-} from "./dataUtils";
+import { loadHistoryData, saveInterestData } from "./dataUtils";
 import { promptConfig } from "../utils/config/promptConfig";
 import { handleError } from "./error/errorHandler";
-import { Message } from "../types/messageType";
 
 export const summarizeText = async (text: string): Promise<string> => {
   if (typeof window === "undefined" || !window.ai || !window.ai.summarizer) {
@@ -40,7 +34,7 @@ export const processSummarizedHistory = async (): Promise<void> => {
     }
 
     try {
-      const { promptTemplate } = promptConfig["summarize"];
+      const { promptTemplate } = promptConfig["interest"];
 
       const summaryPromises = historyItems.map(async (item) => {
         try {
@@ -79,66 +73,66 @@ export const processSummarizedHistory = async (): Promise<void> => {
 };
 
 // process for maintaining the chat continuity
-export const processChatHistory = async (): Promise<string | null | undefined> => {
-  const sessionData = await new Promise<Message[]>((resolve) =>
-    loadSessionData((data) => resolve(data || []))
-  );
+// export const processChatHistory = async (): Promise<string | null | undefined> => {
+//   const sessionData = await new Promise<Message[]>((resolve) =>
+//     loadSessionData((data) => resolve(data || []))
+//   );
 
-  if (!sessionData.length) {
-    console.log(
-      "[fetchGeminiSummarize-processChatHistory] - No sessionData found. Skipping summarization."
-    );
-    return null;
-  }
+//   if (!sessionData.length) {
+//     console.log(
+//       "[fetchGeminiSummarize-processChatHistory] - No sessionData found. Skipping summarization."
+//     );
+//     return null;
+//   }
 
-  const formattedSessionData = sessionData
-    .map((entry) => `${entry.sender}: ${entry.text}`)
-    .join(" ");
+//   const formattedSessionData = sessionData
+//     .map((entry) => `${entry.sender}: ${entry.text}`)
+//     .join(" ");
 
-  console.log(
-    "[fetchGeminiSummarize-processChatHistory] - Formatted session data:",
-    formattedSessionData
-  );
+//   console.log(
+//     "[fetchGeminiSummarize-processChatHistory] - Formatted session data:",
+//     formattedSessionData
+//   );
 
-  // Check Summarizer API availability
-  const canSummarize = await self.ai.summarizer.capabilities();
-  if (!canSummarize || canSummarize.available === "no") {
-    console.log("[processChatHistory] - Summarizer API is not available.");
-    return "Summarization is currently unavailable.";
-  }
+//   // Check Summarizer API availability
+//   const canSummarize = await self.ai.summarizer.capabilities();
+//   if (!canSummarize || canSummarize.available === "no") {
+//     console.log("[processChatHistory] - Summarizer API is not available.");
+//     return "Summarization is currently unavailable.";
+//   }
 
-  if (canSummarize.available === "readily") {
-    const { promptTemplate } = promptConfig.summarize;
-    const prompt = promptTemplate.replace(
-      "{sessionData}",
-      formattedSessionData
-    );
+//   if (canSummarize.available === "readily") {
+//     const { promptTemplate } = promptConfig.summarize;
+//     const prompt = promptTemplate.replace(
+//       "{sessionData}",
+//       formattedSessionData
+//     );
 
-    console.log(
-      "[fetchGeminiSummarize-processChatHistory] - Generated prompt for AI:",
-      prompt
-    );
+//     console.log(
+//       "[fetchGeminiSummarize-processChatHistory] - Generated prompt for AI:",
+//       prompt
+//     );
 
-    try {
-      const summary = await summarizeText(prompt);
-      console.log(
-        "[fetchGeminiSummarize-processChatHistory] - AI-generated summary:",
-        summary
-      );
+//     try {
+//       const summary = await summarizeText(prompt);
+//       console.log(
+//         "[fetchGeminiSummarize-processChatHistory] - AI-generated summary:",
+//         summary
+//       );
 
-      saveSummaryData(summary);
-      console.log(
-        "[fetchGeminiSummarize-processChatHistory] - Summary saved:",
-        summary
-      );
+//       saveSummaryData(summary);
+//       console.log(
+//         "[fetchGeminiSummarize-processChatHistory] - Summary saved:",
+//         summary
+//       );
 
-      return summary;
-    } catch (error) {
-      console.error(
-        "[fetchGeminiSummarize-processChatHistory] - Error summarizing text:",
-        error
-      );
-      return "Unable to summarize at this time.";
-    }
-  }
-};
+//       return summary;
+//     } catch (error) {
+//       console.error(
+//         "[fetchGeminiSummarize-processChatHistory] - Error summarizing text:",
+//         error
+//       );
+//       return "Unable to summarize at this time.";
+//     }
+//   }
+// };
