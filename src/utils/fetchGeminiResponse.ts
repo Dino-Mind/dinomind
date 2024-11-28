@@ -3,7 +3,7 @@ import { ComponentType } from "../types/componentType";
 import { Message } from "../types/messageType";
 import { promptConfig } from "./config/promptConfig";
 import {
-  loadChatData,
+  loadSessionData,
   loadSummaryData,
   removeLocalStorageData,
 } from "./dataUtils";
@@ -24,8 +24,11 @@ export const fetchGeminiResponse = async (
     });
   }
 
-  const { promptTemplate, continuedPromptTemplate, defaultPromptTemplate } =
-    promptConfig[component];
+  const { promptTemplate, continuedPromptTemplate } = promptConfig[component];
+
+  let prompt: string;
+  const isChatbox = component === "chatbox";
+  const isContent = component === "content";
 
   try {
     if (!window.ai || !window.ai.languageModel) {
@@ -34,17 +37,21 @@ export const fetchGeminiResponse = async (
       });
     }
 
-    let prompt: string;
-
-    if (component === "chatbox") {
-      // Check for savedChatHistory to determine if the side panel was reopened
-      const savedChatHistory = await new Promise<Message[]>((resolve) =>
-        loadChatData((chatHistory) => resolve(chatHistory || []))
+    if (isChatbox) {
+      console.log("chatbox state on !!!!!!!!!!!!!!!!!!!!!!!!!");
+      const sessionData = await new Promise<Message[]>((resolve) =>
+        loadSessionData((sessionData) => {
+          resolve(sessionData || []);
+        })
       );
 
-      if (savedChatHistory.length > 0) {
+      if (!sessionData.length) {
+        prompt = promptTemplate.replace("{userMessage}", userMessage);
+      } else {
         const savedSummary = await new Promise<string>((resolve) =>
-          loadSummaryData((summary) => resolve(summary || ""))
+          loadSummaryData((summary) => {
+            resolve(summary || "");
+          })
         );
 
         prompt =
@@ -53,30 +60,29 @@ export const fetchGeminiResponse = async (
             .replace("{userMessage}", userMessage) ||
           promptTemplate.replace("{userMessage}", userMessage);
 
-        removeLocalStorageData("sessionData", () => {});
-        removeLocalStorageData("chatSummary", () => {});
-      } else {
-        // No savedChatHistory; check for initial or regular interaction
-        const chatHistory = await new Promise<Message[]>((resolve) =>
-          loadChatData((chatHistory) => resolve(chatHistory || []))
+        removeLocalStorageData("sessionData", () =>
+          console.log("[fetchGeminiResponse] - Cleared sessionData")
         );
-
-        if (chatHistory.length <= 0) {
-          // Regular interaction; use defaultPromptTemplate
-          prompt = defaultPromptTemplate
-            ? defaultPromptTemplate.replace("{userMessage}", userMessage)
-            : promptTemplate.replace("{userMessage}", userMessage);
-        } else {
-          // Initial interaction; use promptTemplate
-          prompt = promptTemplate.replace("{userMessage}", userMessage);
-        }
+        removeLocalStorageData("chatSummary", () =>
+          console.log("[fetchGeminiResponse] - Cleared chatSummary")
+        );
       }
-    } else {
-      // Other components use their specific promptTemplate
+    } else if (isContent) {
+      console.log("content state on !!!!!!!!!!!!!!!!!!!!!!!!!");
       prompt = promptTemplate.replace("{userMessage}", userMessage);
+      console.log(
+        "[fetchGeminiResponse] - Using isContent component promptTemplate:",
+        prompt
+      );
+    } else {
+      prompt = promptTemplate.replace("{userMessage}", userMessage);
+      console.log(
+        "[fetchGeminiResponse] - Using non-chatbox component promptTemplate:",
+        prompt
+      );
     }
 
-    // Create a session if it doesn't exist
+    // Create session if not existing
     if (!session) {
       session = await window.ai.languageModel.create({
         temperature: 0.7,
@@ -84,13 +90,11 @@ export const fetchGeminiResponse = async (
       });
     }
 
-    // Clone the session to preserve context for this specific interaction
+    // Clone the session for context preservation
     if (!clonedSession) {
-      // clonedSession = await session.clone();
       clonedSession = await session.clone({ signal: controller.signal });
     }
 
-    // const stream = await clonedSession.promptStreaming(prompt);
     const stream = await clonedSession.promptStreaming(prompt, {
       signal: controller.signal,
     });
@@ -110,17 +114,14 @@ export const fetchGeminiResponse = async (
   }
 };
 
-// Optional utility to reset the session if needed
 export const resetSession = async () => {
   if (session) {
     session.destroy();
     session = null;
     clonedSession = null;
-    console.log("Session reset successfully.");
   }
 };
 
 export const abortCurrentPrompt = () => {
   controller.abort();
-  console.log("Current prompt aborted.");
 };
