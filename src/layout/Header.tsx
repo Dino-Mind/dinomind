@@ -8,9 +8,9 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onTabSelect }) => (
   <div className="header-container">
-    <GradientButton tabName="Content" onTabSelect={onTabSelect} />
-    <GradientButton tabName="ChatBox" onTabSelect={onTabSelect} />
-    <GradientButton tabName="Interest" onTabSelect={onTabSelect} />
+    <GradientButton name="Content" onTabSelect={onTabSelect} />
+    <GradientButton name="ChatBox" onTabSelect={onTabSelect} />
+    <GradientButton name="Interest" onTabSelect={onTabSelect} />
   </div>
 );
 

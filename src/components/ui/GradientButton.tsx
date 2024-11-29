@@ -1,27 +1,25 @@
 import React from "react";
-import { Button } from "antd";
-import { ButtonProps } from "antd/es/button";
 
 import { TabName } from "../../types";
 import "./style.scss";
+import { Button, ButtonProps } from "./button";
 
 interface GradientButtonProps extends ButtonProps {
-  tabName: TabName;
+  name: TabName;
   onTabSelect: (tab: TabName) => void;
 }
 
 const GradientButton: React.FC<GradientButtonProps> = ({
-  tabName,
+  name,
   onTabSelect,
-  ...props
+
 }) => {
   return (
     <Button
-      {...props}
-      className="gradient-button"
-      onClick={() => onTabSelect(tabName)}
+    variant="secondary"
+      onClick={() => onTabSelect(name)}
     >
-      {tabName}
+      {name}
     </Button>
   );
 };
