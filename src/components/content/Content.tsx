@@ -1,39 +1,52 @@
 import React from "react";
-import "./style.scss";
-import { useGenerateContent } from "@/hooks/useGenerateContent";
+
 import { Button } from "../ui/button";
+import { useContentResponse } from "@/hooks/useContentResponse";
+import { useFetchedHistory } from "@/hooks/useFetchedHistory";
+import { CardsContainer } from "../ui/CardsContainer";
+import "./style.scss";
 
 const Content: React.FC = () => {
-  const { generatedContent, interestData, loading, fetchGenerateContent } =
-    useGenerateContent();
+  const { interestData, loading, fetchGenerateContent } = useContentResponse();
+
+  const { loadingSummarization, handleSummarizeHistory, clearInterestData } =
+    useFetchedHistory();
 
   return (
     <div className="content-container">
+      <div className="temporary-div">
+        <div className="temporary-text">
+          {interestData
+            ? "Interest data exists"
+            : "No interest data available."}
+        </div>
+        <div className="temporary-buttons">
+          <div>
+            <Button
+              onClick={fetchGenerateContent}
+              disabled={loading}
+              className="sync-button"
+            >
+              {loading ? "Syncing..." : "Sync Interest Data"}
+            </Button>
+          </div>
 
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
-      <div className="interest-data">
-        <h3>Interest Data</h3>
-        <p>{interestData || "No interest data available."}</p>
+          <div className="temporary-dev-buttons">
+            <button
+              className="sync-button"
+              onClick={handleSummarizeHistory}
+              disabled={loadingSummarization}
+            >
+              {loadingSummarization ? "Summarizing..." : "Summarize History"}
+            </button>
+            <button className="sync-button" onClick={clearInterestData}>
+              Clear Interest Data
+            </button>
+          </div>
+        </div>
       </div>
 
-      <Button
-        onClick={fetchGenerateContent}
-        disabled={loading}
-        className="generate-content-button"
-      >
-        {loading ? "Generating..." : "Generate Content Tags"}
-      </Button>
-
-      <div className="generated-content">
-        <h3>Generated Content</h3>
-        {generatedContent.length > 0 ? (
-          generatedContent.map((content, index) => <p key={index}>{content}</p>)
-        ) : (
-          <p>No content generated yet.</p>
-        )}
-      </div>
+      <CardsContainer />
     </div>
   );
 };

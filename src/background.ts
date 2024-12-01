@@ -1,3 +1,4 @@
+/// <reference types="chrome"/>
 import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./redux/rootReducer";
 import { createWrapStore } from "webext-redux";

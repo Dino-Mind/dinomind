@@ -13,15 +13,29 @@ import {
   abortCurrentPrompt,
   resetSession,
 } from "../../utils/fetchGeminiResponse";
+import { TextGenerateEffectFx } from "../ui/fx/textGenerateEffectFx";
+import { VanishInputFx } from "../ui/fx/vanishInputFx";
+import { BackgroundBeamsFx } from "../ui/fx/backgroundBeamsFx";
 
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
+  const [latestAIMessageIndex, setLatestAIMessageIndex] = useState<
+    number | null
+  >(null);
+
   const {
     loading,
     messages: fetchedMessages,
     fetchResponse,
   } = useGeminiResponse();
+
+  const placeholders = [
+    "Type your interest...",
+    "Ask me anything!",
+    "What do you like?",
+    "Let's create a content!",
+  ];
 
   useEffect(() => {
     loadChatData(setMessages);
@@ -30,17 +44,12 @@ const ChatBox: React.FC = () => {
   useEffect(() => {
     if (fetchedMessages.length) {
       setMessages((prevMessages) => [...prevMessages, ...fetchedMessages]);
+      setLatestAIMessageIndex(messages.length);
     }
   }, [fetchedMessages]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
-  };
-
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && !loading && input.trim()) {
-      sendMessage();
-    }
   };
 
   const sendMessage = () => {
@@ -55,49 +64,88 @@ const ChatBox: React.FC = () => {
     setInput("");
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    sendMessage();
+  };
+
   return (
     <div className="chatbox-container">
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
-            <MessageLine text={message.text} />
+            {message.sender === Sender.AI ? (
+              // Apply TextGenerateEffect only to the latest AI message
+              index === latestAIMessageIndex ? (
+                <TextGenerateEffectFx
+                  words={message.text || ""}
+                  duration={2}
+                  filter={false}
+                />
+              ) : (
+                // TODO !!! correct style match with ai response with effect
+                // Render older AI messages with static MessageLine
+                <MessageLine text={message.text} />
+              )
+            ) : (
+              // Render user messages with MessageLine
+              <MessageLine text={message.text} />
+            )}
           </div>
         ))}
       </div>
+
       <div className="chat-input">
-        <input
-          type="text"
-          value={input}
+        <VanishInputFx
+          loading={loading}
+          placeholders={placeholders}
           onChange={handleInputChange}
-          onKeyUp={handleKeyPress}
-          placeholder="Type your message..."
-          disabled={loading}
+          onSubmit={handleSubmit}
         />
-        <button onClick={sendMessage} disabled={loading || !input.trim()}>
-          {loading ? "Sending..." : "Send"}
-        </button>
       </div>
+
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
-          alignContent: "center",
+          flexDirection: "row",
+          width: "100%",
+          justifyContent: "space-around",
+          alignContent: "space-around",
+          fontSize: "8px",
+          zIndex: "20",
           height: "40px",
         }}
       >
         <button
           style={{
-            display: "flex",
+            color: "white",
           }}
-          onClick={() =>
-            removeLocalStorageData("chatHistory", () => setMessages([]))
-          }
+          onClick={() => {
+            removeLocalStorageData("chatHistory", () => setMessages([]));
+            setLatestAIMessageIndex(null);
+          }}
         >
           Clear Chat History
         </button>
-        <button onClick={abortCurrentPrompt}>Stop Running Prompt</button>
-        <button onClick={resetSession}>Reset AI Session</button>
+        <button
+          style={{
+            color: "white",
+          }}
+          onClick={abortCurrentPrompt}
+        >
+          Stop Running Prompt
+        </button>
+        <button
+          style={{
+            color: "white",
+          }}
+          onClick={resetSession}
+        >
+          Reset AI Session
+        </button>
       </div>
+
+      <BackgroundBeamsFx />
     </div>
   );
 };

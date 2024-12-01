@@ -1,18 +1,27 @@
 import React from "react";
 
+import { Tabs } from "../components/ui/Tabs";
 import { TabName } from "../types";
 import "../styles/style.scss";
 
 interface BodyProps {
-  activeTab: TabName;
   componentMap: Record<TabName, JSX.Element>;
 }
 
-const Body: React.FC<BodyProps> = ({ activeTab, componentMap }) => {
+const Body: React.FC<BodyProps> = ({ componentMap }) => {
+  const tabs: { title: string; value: TabName; content: JSX.Element }[] = [
+    { title: "Content", value: "Content", content: componentMap["Content"] },
+    { title: "Chat", value: "ChatBox", content: componentMap["ChatBox"] },
+  ];
+
   return (
-    <div className="body-container">
-      <div className="body-content">{componentMap[activeTab]}</div>
-    </div>
+    <Tabs
+      tabs={tabs}
+      containerClassName="tabs-container"
+      activeTabClassName="active-tab"
+      tabClassName="tab"
+      contentClassName="tab-content"
+    />
   );
 };
 

@@ -17,11 +17,11 @@ export const fetchHistoryItems = async (): Promise<{
           const simplifiedUrl = new URL(item.url!).hostname;
 
           urlToHistoryItem[item.url!] = {
-            id: item.id,
-            url: item.url!,
+            // id: item.id,
+            // url: item.url!,
             simpleUrl: simplifiedUrl,
             title: item.title,
-            lastVisitTime: item.lastVisitTime,
+            // lastVisitTime: item.lastVisitTime,
             visitCount: item.visitCount,
           };
         });

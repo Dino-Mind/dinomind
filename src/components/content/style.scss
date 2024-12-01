@@ -1,19 +1,17 @@
 .content-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   align-items: center;
 
-  width: 100%;
-  height: 100%;
+  width: 97%;
+  height: 97%;
+  background: linear-gradient(20deg, #0f0f0f, #3f3f3f);
 
-  background-color: #f3f4f6;
-  border-radius: 8px;
+  border: none;
+  border-radius: 1rem;
   font-family: Arial, sans-serif;
-
-  padding: 8px;
-  margin: 8px;
   overflow: auto;
-  border: 1px solid #dfdfdf;
 
   .content-box-title {
     font-weight: 600;
@@ -23,67 +21,30 @@
     color: #333;
   }
 
-  .history-item-container {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+  .temporary-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 99%;
 
-    margin-bottom: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-    width: 80%;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-
-    .history-item-cred {
+    .temporary-buttons {
       display: flex;
       flex-direction: column;
-      padding-top: 12px;
-      .item-title {
-        text-align: center;
-        font-weight: bold;
-        color: #007acc;
-        font-size: 1.1em;
-        margin-bottom: 8px;
-        text-decoration: none;
-        cursor: pointer;
-
-        &:hover {
-          color: #005fa3;
-        }
-      }
-
-      .item-url {
-        font-size: 0.9em;
-        color: #555;
-        text-align: center;
-        margin-bottom: 12px;
-        word-break: break-all;
-      }
-    }
-
-    .details {
-      background-color: #f9f9f9;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      padding: 12px;
-      display: flex;
+      align-items: center;
       justify-content: space-between;
-      font-size: 0.9em;
-      color: #666;
-
-      .detail-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        strong {
-          font-weight: bold;
-          color: #333;
-        }
-      }
+    }
+    .temporary-dev-buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      width: 90%;
+      min-width: 250px;
+      color: #fff;
+      border-bottom: 0.5px solid lightblue;
+    }
+    .temporary-text {
+      display: flex;
+      flex-direction: column;
     }
   }
 }

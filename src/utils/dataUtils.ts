@@ -84,14 +84,39 @@ export const loadInterestData = (
   });
 };
 
+// // Content Data Management
+// export const saveContentData = (content: string[]) => {
+//   chrome.storage.local.set<StorageMap>({ contentData: content });
+// };
+
+// export const loadContentData = (callback: (content: string[]) => void) => {
+//   chrome.storage.local.get("contentData", (result) => {
+//     callback(result.contentData || "");
+//   });
+// };
+
 // Content Data Management
 export const saveContentData = (content: string[]) => {
-  chrome.storage.local.set<StorageMap>({ contentData: content });
+  if (Array.isArray(content)) {
+    chrome.storage.local.set<StorageMap>({ contentData: content });
+  } else {
+    console.error("Invalid content data provided. Expected an array:", content);
+  }
 };
 
-export const loadContentData = (callback: (content: string) => void) => {
+export const loadContentData = (callback: (content: string[]) => void) => {
   chrome.storage.local.get("contentData", (result) => {
-    callback(result.contentData || "");
+    const content = result.contentData;
+
+    // Ensure the returned data is always an array
+    if (Array.isArray(content)) {
+      callback(content);
+    } else {
+      console.warn(
+        "Invalid content data found in storage. Defaulting to empty array."
+      );
+      callback([]); // Provide a fallback empty array
+    }
   });
 };
 

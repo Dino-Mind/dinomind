@@ -1,35 +1,30 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { Store } from "webext-redux";
-import Header from "../layout/Header";
+
 import Body from "./Body";
 import Footer from "./Footer";
 import ChatBox from "../components/chat-box/ChatBox";
 import Content from "../components/content/Content";
-import Interest from "../components/interest/Interest";
 import { setActiveTab } from "../redux/slices/uiSlice";
 import { TabName } from "../types";
-import { RootState } from "../redux/rootReducer";
 import "../styles/style.scss";
 
 const proxyStore = new Store();
 
 const Sidepanel = () => {
   const dispatch = useDispatch();
-  const activeTab = useSelector((state: RootState) => state.ui.activeTab);
 
   const componentMap: Record<TabName, JSX.Element> = {
     ChatBox: <ChatBox />,
     Content: <Content />,
-    Interest: <Interest />,
-  };
-
-  const handleTabSelect = (tab: TabName) => {
-    dispatch(setActiveTab(tab));
+    // Interest: <Interest />,
   };
 
   useEffect(() => {
+    dispatch(setActiveTab("Content"));
+
     const unsubscribe = proxyStore.subscribe(() => {
       const state = proxyStore.getState();
       dispatch(setActiveTab(state.ui.activeTab as TabName));
@@ -40,8 +35,7 @@ const Sidepanel = () => {
 
   return (
     <div className="sidepanel-container">
-      <Header onTabSelect={handleTabSelect} />
-      <Body activeTab={activeTab} componentMap={componentMap} />
+      <Body componentMap={componentMap} />
       <Footer />
     </div>
   );
@@ -52,6 +46,8 @@ const SidepanelRoot = () => {
 
   useEffect(() => {
     proxyStore.ready().then(() => {
+      console.log("Initial proxyStore state:", proxyStore.getState());
+
       setIsStoreReady(true);
     });
   }, []);

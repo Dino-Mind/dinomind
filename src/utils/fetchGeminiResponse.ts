@@ -28,7 +28,6 @@ export const fetchGeminiResponse = async (
 
   let prompt: string;
   const isChatbox = component === "chatbox";
-  const isContent = component === "content";
 
   try {
     if (!window.ai || !window.ai.languageModel) {
@@ -38,7 +37,6 @@ export const fetchGeminiResponse = async (
     }
 
     if (isChatbox) {
-      console.log("chatbox state on !!!!!!!!!!!!!!!!!!!!!!!!!");
       const sessionData = await new Promise<Message[]>((resolve) =>
         loadSessionData((sessionData) => {
           resolve(sessionData || []);
@@ -67,13 +65,6 @@ export const fetchGeminiResponse = async (
           console.log("[fetchGeminiResponse] - Cleared chatSummary")
         );
       }
-    } else if (isContent) {
-      console.log("content state on !!!!!!!!!!!!!!!!!!!!!!!!!");
-      prompt = promptTemplate.replace("{userMessage}", userMessage);
-      console.log(
-        "[fetchGeminiResponse] - Using isContent component promptTemplate:",
-        prompt
-      );
     } else {
       prompt = promptTemplate.replace("{userMessage}", userMessage);
       console.log(
@@ -82,7 +73,6 @@ export const fetchGeminiResponse = async (
       );
     }
 
-    // Create session if not existing
     if (!session) {
       session = await window.ai.languageModel.create({
         temperature: 0.7,
@@ -90,7 +80,6 @@ export const fetchGeminiResponse = async (
       });
     }
 
-    // Clone the session for context preservation
     if (!clonedSession) {
       clonedSession = await session.clone({ signal: controller.signal });
     }
@@ -100,9 +89,15 @@ export const fetchGeminiResponse = async (
     });
 
     let responseText = "";
+    let previousChunk = "";
 
     for await (const chunk of stream) {
-      responseText = chunk.trim();
+      const newChunk = chunk.startsWith(previousChunk)
+        ? chunk.slice(previousChunk.length)
+        : chunk;
+      console.log("chunk:", newChunk);
+      responseText += newChunk;
+      previousChunk = chunk;
     }
 
     return responseText;
