@@ -6,11 +6,12 @@ import {
 } from "../dataUtils";
 import { ComponentType } from "../../types/componentType";
 import { Message } from "../../types/messageType";
+import { Content } from "@/hooks/useContentResponse";
 
 type SaveDataFunction = {
   chatbox: (data: Message) => void;
   interest: (data: string[]) => void;
-  content: (data: string[]) => void;
+  content: (data: Content[]) => void;
   summarizeChat: (data: string) => void;
 };
 
@@ -29,7 +30,7 @@ export const promptConfig: Record<
     saveData: saveChatData,
   },
   interest: {
-    promptTemplate: `Generate content title for provided text : "{userMessage}". Generate your response with title and one sentenced simple definiton about that title exactly as in this format: "{title},{definition}". List each entry as a separate item within curly braces, and separate items with commas.`,
+    promptTemplate: `Generate content title for provided text : "{userMessage}". Generate your response with title and one sentenced simple definiton about that title exactly as in this format: "[title, definition]".`,
     saveData: saveInterestData,
   },
   content: {

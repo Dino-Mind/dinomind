@@ -1,10 +1,7 @@
 import { saveHistoryData } from "./dataUtils";
 import { HistoryItem } from "../types/historyItemType";
 
-export const fetchHistoryItems = async (): Promise<{
-  historyItems: HistoryItem[];
-  summaryText: string;
-}> => {
+export const fetchHistoryItems = async (): Promise<HistoryItem[]> => {
   return new Promise((resolve) => {
     const urlToHistoryItem: { [url: string]: HistoryItem } = {};
     const millisecondsPerMonth = 1000 * 60 * 60 * 24 * 7 * 4;
@@ -32,10 +29,7 @@ export const fetchHistoryItems = async (): Promise<{
 
         saveHistoryData(sortedHistoryItems);
 
-        resolve({
-          historyItems: sortedHistoryItems,
-          summaryText: "Summaries saved to local storage.",
-        });
+        resolve(sortedHistoryItems);
       }
     );
   });

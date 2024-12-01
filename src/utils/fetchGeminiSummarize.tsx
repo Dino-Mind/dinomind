@@ -1,6 +1,7 @@
-import { loadHistoryData, saveInterestData } from "./dataUtils";
+import { saveInterestData } from "./dataUtils";
 import { promptConfig } from "../utils/config/promptConfig";
 import { handleError } from "./error/errorHandler";
+import { HistoryItem } from "@/types/historyItemType";
 
 export const summarizeText = async (text: string): Promise<string> => {
   if (typeof window === "undefined" || !window.ai || !window.ai.summarizer) {
@@ -26,8 +27,9 @@ export const summarizeText = async (text: string): Promise<string> => {
   }
 };
 
-export const processSummarizedHistory = async (): Promise<void> => {
-  loadHistoryData(async (historyItems) => {
+export const createInterestData = async (historyItems: HistoryItem[]) => {
+
+  const handleHistoryData = async (historyItems: HistoryItem[]) => {
     if (!historyItems.length) {
       console.warn("No history items available to summarize.");
       return;
@@ -62,13 +64,23 @@ export const processSummarizedHistory = async (): Promise<void> => {
       const successfulSummaries = summaries.filter(
         (summary) => summary !== null
       ) as string[];
-      saveInterestData(successfulSummaries);
+      saveInterestData(successfulSummaries as string[]);
+
+      return successfulSummaries
+      // saveInterestData(successfulSummaries);
     } catch (error) {
       console.error(
         "Unexpected error during the summarization process:",
         error
       );
+      return [];
     }
+  }
+
+  return new Promise((resolve, reject) => {
+    handleHistoryData(historyItems)
+      .then((result) => resolve(result))
+      .catch((error) => reject(error));
   });
 };
 

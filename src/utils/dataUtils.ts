@@ -1,5 +1,6 @@
 import { Message } from "../types/messageType";
 import { HistoryItem } from "../types/historyItemType";
+import { Content } from "@/hooks/useContentResponse";
 
 type StorageKey =
   | "chatHistory"
@@ -15,7 +16,7 @@ type StorageMap = {
   chatHistory: Message[];
   historyData: HistoryItem[];
   interestData: string;
-  contentData: string[];
+  contentData: Content[];
   chatSummary: string;
   chromeHistorySummary: string;
   contentSummary: string;
@@ -66,7 +67,7 @@ export const loadHistoryData = (
   callback: (historyItems: HistoryItem[]) => void
 ): void => {
   chrome.storage.local.get("historyData", (result) => {
-    const historyItems = result.historyData || [];
+    const historyItems: HistoryItem[] = result.historyData || [];
     callback(historyItems);
   });
 };
@@ -96,7 +97,7 @@ export const loadInterestData = (
 // };
 
 // Content Data Management
-export const saveContentData = (content: string[]) => {
+export const saveContentData = (content: Content[]) => {
   if (Array.isArray(content)) {
     chrome.storage.local.set<StorageMap>({ contentData: content });
   } else {
@@ -104,7 +105,7 @@ export const saveContentData = (content: string[]) => {
   }
 };
 
-export const loadContentData = (callback: (content: string[]) => void) => {
+export const loadContentData = (callback: (content: Content[]) => void) => {
   chrome.storage.local.get("contentData", (result) => {
     const content = result.contentData;
 

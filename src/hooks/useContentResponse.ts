@@ -3,25 +3,29 @@ import { useDispatch } from "react-redux";
 
 import {
   loadContentData,
-  loadInterestData,
   saveContentData,
 } from "../utils/dataUtils";
 import { fetchContentResponse } from "../utils/fetchContentResponse";
 import { handleError } from "../utils/error/errorHandler";
 import { setIsContentChanged } from "@/redux/slices/uiSlice";
+import { generateId } from "@/utils/generateId";
+
+export type Content = {
+  id: string;
+  content: string;
+  tag: string;
+  summary?: string;
+}
 
 export const useContentResponse = () => {
   const dispatch = useDispatch();
-  const [interestData, setInterestData] = useState<string[] | null>(null);
-  const [generatedContent, setGeneratedContent] = useState<string[]>([]);
+  const [generatedContent, setGeneratedContent] = useState<Content[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadInterestData(setInterestData);
-  }, []);
+
 
   useEffect(() => {
-    loadContentData((content: string[]) => {
+    loadContentData((content: Content[]) => {
       if (content.length > 0) {
         setGeneratedContent(content);
       } else {
@@ -30,19 +34,24 @@ export const useContentResponse = () => {
     });
   }, []);
 
-  const fetchGenerateContent = async () => {
+  const fetchGenerateContent = async (interestData: string[]) => {
     if (!interestData) {
       console.log("No interest data available.");
       return;
     }
 
     setLoading(true);
-    const contentArray: string[] = [];
+    const contentArray: Content[] = [];
 
     try {
       for (const tag of interestData) {
         const response = await fetchContentResponse(tag, "content");
-        contentArray.push(response);
+        contentArray.push({
+          id: generateId(),
+          content: response,
+          tag: tag,
+          summary: "This content is about Arsenal from Premier League and their invincible season.",
+        });
       }
 
       saveContentData(contentArray);
@@ -59,7 +68,6 @@ export const useContentResponse = () => {
   };
 
   return {
-    interestData,
     generatedContent,
     loading,
     fetchGenerateContent,

@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { CardContainerHoverFx } from "./fx/cardContainerHoverFx";
 import { setIsContentChanged } from "@/redux/slices/uiSlice";
 import { RootState } from "@/redux/rootReducer";
+import { Content } from "@/hooks/useContentResponse";
 
 export function CardsContainer() {
   const dispatch = useDispatch();
@@ -13,11 +14,11 @@ export function CardsContainer() {
     (state: RootState) => state.ui.isContentChanged
   );
 
-  const [generatedContent, setGeneratedContent] = useState<string[]>([]);
+  const [generatedContent, setGeneratedContent] = useState<Content[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    loadContentData((content: string[]) => {
+    loadContentData((content: Content[]) => {
       if (content.length > 0) {
         setGeneratedContent(content);
       } else {
@@ -28,7 +29,7 @@ export function CardsContainer() {
 
   useEffect(() => {
     if (isContentChanged) {
-      loadContentData((content: string[]) => {
+      loadContentData((content: Content[]) => {
         if (content.length > 0) {
           setGeneratedContent(content);
         } else {
@@ -53,7 +54,8 @@ export function CardsContainer() {
           >
             <CardContainerHoverFx
               title={`Generated Content ${idx + 1}`}
-              description={content}
+              description={content.content}
+              tag={content.tag}
               hovered={hoveredIndex === idx}
             />
           </div>
