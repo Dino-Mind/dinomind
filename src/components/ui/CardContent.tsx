@@ -20,7 +20,7 @@ export const CardContent: React.FC<CardContentProps> = ({
   tag,
   onClose,
 }) => {
-  const [showChat, setShowChat] = useState(false); // Toggle AI Chat visibility
+  const [showChat, setShowChat] = useState(false);
   const words = tag.split(/\s+/).slice(1, 9); // Ignore the first "*"
 
   return (
@@ -81,7 +81,7 @@ export const CardContent: React.FC<CardContentProps> = ({
         )}
       </div>
 
-      <BackgroundBeamsFx className="pointer-events-none" />
+      <BackgroundBeamsFx />
     </div>
   );
 };

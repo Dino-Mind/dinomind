@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from "react";
-
-import { useGeminiResponse } from "../../hooks/useGeminiResponse";
-import {
-  removeLocalStorageData,
-  loadChatData,
-  saveChatData,
-} from "../../utils/dataUtils";
-import { Message, Sender } from "../../types/messageType";
+import React from "react";
+import { useChatWithAi } from "../../hooks/useChatWithAi";
 import "./style.scss";
-import {
-  abortCurrentPrompt,
-  resetSession,
-} from "../../utils/fetchGeminiResponse";
 import { TextGenerateEffectFx } from "../ui/fx/textGenerateEffectFx";
 import { VanishInputFx } from "../ui/fx/vanishInputFx";
 import { MessageLine } from "../message-line/MessageLine";
+import { Sender } from "@/types/messageType";
+
+interface ContentChatProps {
+  title: string;
+  description: string;
+  tag: string;
+  summary?: string;
+}
 
 interface ContentChatProps {
   title: string;
@@ -24,25 +21,17 @@ interface ContentChatProps {
 }
 //we may use title description,tag later
 //Todo : sen summary to chatPrompt
-const ContentChat: React.FC<ContentChatProps> = ({
-  //   title,
-  //   description,
-  //   tag,
-  summary,
-}) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState<string>("");
-  const [latestAIMessageIndex, setLatestAIMessageIndex] = useState<
-    number | null
-  >(null);
-
-  console.log(summary);
-
+const ContentChat: React.FC<ContentChatProps> = () => {
   const {
+    messages,
     loading,
-    messages: fetchedMessages,
-    fetchResponse,
-  } = useGeminiResponse();
+    latestAIMessageIndex,
+    handleInputChange,
+    handleSubmit,
+    clearChatHistory,
+    abortCurrentPrompt,
+    resetSession,
+  } = useChatWithAi("chatbox");
 
   const placeholders = [
     "Type your interest...",
@@ -50,38 +39,6 @@ const ContentChat: React.FC<ContentChatProps> = ({
     "What do you like?",
     "Let's create a content!",
   ];
-
-  useEffect(() => {
-    loadChatData(setMessages);
-  }, []);
-
-  useEffect(() => {
-    if (fetchedMessages.length) {
-      setMessages((prevMessages) => [...prevMessages, ...fetchedMessages]);
-      setLatestAIMessageIndex(messages.length);
-    }
-  }, [fetchedMessages]);
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(event.target.value);
-  };
-
-  const sendMessage = () => {
-    if (!input.trim()) {
-      return;
-    }
-
-    const userMessage = { sender: Sender.USER, text: input };
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
-    saveChatData(userMessage);
-    fetchResponse(input, "chatbox");
-    setInput("");
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    sendMessage();
-  };
 
   return (
     <div className="flex flex-col h-full bg-gray-800 text-white">
@@ -134,10 +91,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
           style={{
             color: "white",
           }}
-          onClick={() => {
-            removeLocalStorageData("chatHistory", () => setMessages([]));
-            setLatestAIMessageIndex(null);
-          }}
+          onClick={clearChatHistory}
         >
           Clear Chat History
         </button>
