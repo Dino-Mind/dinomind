@@ -14,8 +14,6 @@ interface ContentChatProps {
   id: string;
 }
 
-//we may use title description,tag later
-//Todo : sen summary to chatPrompt
 const ContentChat: React.FC<ContentChatProps> = ({ id, summary }) => {
   const {
     messages,
@@ -34,8 +32,6 @@ const ContentChat: React.FC<ContentChatProps> = ({ id, summary }) => {
     "What do you like?",
     "Let's create a content!",
   ];
-
-  console.log("messages", messages);
 
   return (
     <div className="flex flex-col h-full bg-gray-800 text-white">

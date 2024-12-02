@@ -48,7 +48,7 @@ export const loadChatData = (callback: (chatHistory: Message[]) => void) => {
   });
 };
 
-// Chat Data Management
+// Content Chat Data Management
 export const saveContentChatData = (newMessage: Message) => {
   chrome.storage.local.get("contentChatHistory", (result) => {
     const chatHistory = result.chatHistory || [];
@@ -104,17 +104,6 @@ export const loadInterestData = (
     callback(result.interestData || null);
   });
 };
-
-// // Content Data Management
-// export const saveContentData = (content: string[]) => {
-//   chrome.storage.local.set<StorageMap>({ contentData: content });
-// };
-
-// export const loadContentData = (callback: (content: string[]) => void) => {
-//   chrome.storage.local.get("contentData", (result) => {
-//     callback(result.contentData || "");
-//   });
-// };
 
 // Content Data Management
 export const saveContentData = (content: Content[]) => {
