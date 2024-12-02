@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { BackgroundBeamsFx } from "./fx/backgroundBeamsFx";
 import ContentChat from "./ContentChat";
 
 interface CardContentProps {
@@ -80,8 +79,6 @@ export const CardContent: React.FC<CardContentProps> = ({
           </div>
         )}
       </div>
-
-      <BackgroundBeamsFx />
     </div>
   );
 };
