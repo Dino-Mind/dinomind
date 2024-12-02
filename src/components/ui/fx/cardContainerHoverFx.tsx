@@ -8,6 +8,7 @@ interface HoverEffectProps {
   title: string;
   description: string;
   tag: string;
+  summary?: string;
   hovered: boolean;
 }
 
@@ -15,8 +16,8 @@ export const CardContainerHoverFx: React.FC<HoverEffectProps> = ({
   id,
   title,
   description,
-  tag,
   summary,
+  tag,
   hovered,
 }) => {
   return (
