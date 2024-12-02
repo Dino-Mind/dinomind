@@ -9,6 +9,7 @@ export const useFetchedHistory = () => {
   const [loading, setLoading] = useState(false);
   const { fetchGenerateContent, generatedContent } = useContentResponse();
 
+
   const syncAndGenerateContent = async () => {
     setLoading(true);
     try {
@@ -31,6 +32,7 @@ export const useFetchedHistory = () => {
   return {
     generatedContent,
     loading,
+    generatedContent,
     syncAndGenerateContent,
     clearInterestData,
   };
