@@ -10,7 +10,11 @@ import {
 import { abortCurrentPrompt, resetSession } from "@/utils/fetchGeminiResponse";
 import { ComponentType } from "@/types/componentType";
 
-export const useChatWithAi = (component: ComponentType) => {
+export const useChatWithAi = (
+  component: ComponentType,
+  id?: string,
+  summary?: string
+) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>("");
   const [latestAIMessageIndex, setLatestAIMessageIndex] = useState<
@@ -43,11 +47,12 @@ export const useChatWithAi = (component: ComponentType) => {
       return;
     }
 
+    //ADD here to check if UserComponent is Content Dont SaveChatData, else Save !!!
     const userMessage = { sender: Sender.USER, text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     saveChatData(userMessage);
 
-    fetchResponse(input, component);
+    fetchResponse(input, component, id, summary);
     setInput("");
   };
 

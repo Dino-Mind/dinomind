@@ -4,6 +4,7 @@ import ContentChat from "./ContentChat";
 
 interface CardContentProps {
   isOpen: boolean;
+  id: string;
   title: string;
   description: string;
   tag: string;
@@ -13,6 +14,7 @@ interface CardContentProps {
 
 export const CardContent: React.FC<CardContentProps> = ({
   isOpen,
+  id,
   title,
   description,
   summary,
@@ -71,6 +73,7 @@ export const CardContent: React.FC<CardContentProps> = ({
         {showChat && (
           <div className="max-h-[40%] bg-gray-800 border-t border-gray-700 overflow-hidden">
             <ContentChat
+              id={id}
               title={title}
               description={description}
               summary={summary}

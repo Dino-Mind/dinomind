@@ -6,6 +6,7 @@ import { Button } from "./button";
 import { CardContent } from "./CardContent";
 
 interface CardProps {
+  id: string;
   title: string;
   description: string;
   tag: string;
@@ -13,6 +14,7 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({
+  id,
   title,
   description,
   tag,
@@ -53,9 +55,16 @@ export const Card: React.FC<CardProps> = ({
 
         <MeteorsFx number={20} />
       </div>
+
+      <button className="border px-4 py-1 rounded-lg border-gray-500 text-gray-300">
+        Explore
+      </button>
+
+      <MeteorsFx number={20} />
       <CardContent
         isOpen={isOpen}
         title={title}
+        id={id}
         description={description}
         summary={summary}
         tag={tag}

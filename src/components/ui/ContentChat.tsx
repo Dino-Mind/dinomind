@@ -11,17 +11,12 @@ interface ContentChatProps {
   description: string;
   tag: string;
   summary?: string;
+  id: string;
 }
 
-interface ContentChatProps {
-  title: string;
-  description: string;
-  tag: string;
-  summary?: string;
-}
 //we may use title description,tag later
 //Todo : sen summary to chatPrompt
-const ContentChat: React.FC<ContentChatProps> = () => {
+const ContentChat: React.FC<ContentChatProps> = ({ id, summary }) => {
   const {
     messages,
     loading,
@@ -31,7 +26,7 @@ const ContentChat: React.FC<ContentChatProps> = () => {
     clearChatHistory,
     abortCurrentPrompt,
     resetSession,
-  } = useChatWithAi("chatbox");
+  } = useChatWithAi("content", id, summary);
 
   const placeholders = [
     "Type your interest...",

@@ -1,22 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentType } from "../types/componentType";
-import { Message } from "../types/messageType";
 import { promptConfig } from "./config/promptConfig";
-import {
-  loadSessionData,
-  loadSummaryData,
-  removeLocalStorageData,
-} from "./dataUtils";
+
 import { handleError } from "./error/errorHandler";
 
 let session: any | null = null;
 let clonedSession: any | null = null;
+let isFirstContentMessageProcessed = false;
 
 const controller = new AbortController();
 
 export const fetchGeminiResponse = async (
   userMessage: string,
-  component: ComponentType
+  component: ComponentType,
+  summary?: string,
+  id?: string
 ): Promise<string> => {
   if (!userMessage.trim()) {
     return handleError("No data available to generate content data.", {
@@ -24,10 +22,13 @@ export const fetchGeminiResponse = async (
     });
   }
 
-  const { promptTemplate, continuedPromptTemplate } = promptConfig[component];
-
+  const { promptTemplate } = promptConfig[component];
   let prompt: string;
   const isChatbox = component === "chatbox";
+  const isContent = component === "content";
+
+  // Track if this is the first message in the content conversation
+  const isFirstContentMessage = isContent && summary;
 
   try {
     if (!window.ai || !window.ai.languageModel) {
@@ -37,38 +38,37 @@ export const fetchGeminiResponse = async (
     }
 
     if (isChatbox) {
-      const sessionData = await new Promise<Message[]>((resolve) =>
-        loadSessionData((sessionData) => {
-          resolve(sessionData || []);
-        })
+      // Chatbox behavior: always use userMessage
+      prompt = promptTemplate.replace("{userMessage}", userMessage);
+      console.log(
+        "[fetchGeminiResponse] - Using chatbox promptTemplate:",
+        prompt
       );
-
-      if (!sessionData.length) {
-        prompt = promptTemplate.replace("{userMessage}", userMessage);
+    } else if (isContent) {
+      if (!isFirstContentMessageProcessed) {
+        // First message: include summary
+        prompt = promptTemplate.replace(
+          "{userMessage}",
+          `${summary} - ${userMessage}`
+        );
+        console.log(
+          `[fetchGeminiResponse] - Using content promptTemplate with summary (id: ${id}):`,
+          prompt
+        );
+        isFirstContentMessageProcessed = true; // Mark the first message as processed
       } else {
-        const savedSummary = await new Promise<string>((resolve) =>
-          loadSummaryData((summary) => {
-            resolve(summary || "");
-          })
-        );
-
-        prompt =
-          continuedPromptTemplate
-            ?.replace("{summaryData}", savedSummary)
-            .replace("{userMessage}", userMessage) ||
-          promptTemplate.replace("{userMessage}", userMessage);
-
-        removeLocalStorageData("sessionData", () =>
-          console.log("[fetchGeminiResponse] - Cleared sessionData")
-        );
-        removeLocalStorageData("chatSummary", () =>
-          console.log("[fetchGeminiResponse] - Cleared chatSummary")
+        // Subsequent messages: use only userMessage
+        prompt = promptTemplate.replace("{userMessage}", userMessage);
+        console.log(
+          `[fetchGeminiResponse] - Using content promptTemplate with userMessage only:`,
+          prompt
         );
       }
     } else {
+      // Default behavior for non-chatbox, non-content components
       prompt = promptTemplate.replace("{userMessage}", userMessage);
       console.log(
-        "[fetchGeminiResponse] - Using non-chatbox component promptTemplate:",
+        "[fetchGeminiResponse] - Using default promptTemplate:",
         prompt
       );
     }

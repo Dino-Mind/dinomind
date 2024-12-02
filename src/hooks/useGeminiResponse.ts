@@ -10,16 +10,31 @@ export const useGeminiResponse = () => {
 
   const fetchResponse = async (
     userMessage: string,
-    component: ComponentType
+    component: ComponentType,
+    id?: string,
+    summary?: string
   ) => {
     setLoading(true);
 
+    //try add ? to summary and id
     try {
-      const responseText = await fetchGeminiResponse(userMessage, component);
+      const responseText = await fetchGeminiResponse(
+        userMessage,
+        component,
+        summary,
+        id
+      );
 
       const { saveData } = promptConfig[component];
 
       if (component === "chatbox") {
+        const aiMessage: Message = { sender: Sender.AI, text: responseText };
+        setMessages((prevMessages) => [
+          ...prevMessages.filter((msg) => msg.sender !== Sender.AI),
+          aiMessage,
+        ]);
+        (saveData as (data: Message) => void)(aiMessage);
+      } else if (component === "content") {
         const aiMessage: Message = { sender: Sender.AI, text: responseText };
         setMessages((prevMessages) => [
           ...prevMessages.filter((msg) => msg.sender !== Sender.AI),
