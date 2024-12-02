@@ -11,7 +11,11 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      
+      zIndex: {
+        "-1": "-1",
+        "-10": "-10",
+        "-99": "-99",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -78,7 +82,11 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), addVariablesForColors],
+  plugins: [
+    require("tailwindcss-animate"),
+    addVariablesForColors,
+    require("@tailwindcss/typography"),
+  ],
 };
 
 // Custom plugin to generate CSS variables for all colors
