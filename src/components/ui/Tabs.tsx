@@ -8,10 +8,11 @@ import { RootState } from "@/redux/rootReducer";
 import { setActiveTab } from "@/redux/slices/uiSlice";
 import { TabName } from "@/types";
 
-type Tab = {
+export type Tab = {
   title: string;
   value: TabName;
   content?: string | React.ReactNode;
+  icon?: React.ElementType;
 };
 
 type TabsProps = {
@@ -19,7 +20,6 @@ type TabsProps = {
   containerClassName?: string;
   activeTabClassName?: string;
   tabClassName?: string;
-  contentClassName?: string;
 }
 
 export const Tabs: FC<TabsProps> = ({
@@ -27,7 +27,6 @@ export const Tabs: FC<TabsProps> = ({
   containerClassName,
   activeTabClassName,
   tabClassName,
-  contentClassName,
 }) => {
   const dispatch = useDispatch();
   const activeTab = useSelector((state: RootState) => state.ui.activeTab);
@@ -72,46 +71,7 @@ export const Tabs: FC<TabsProps> = ({
           </button>
         ))}
       </div>
-      <FadeInDiv
-        tabs={tabs}
-        activeTab={activeTab}
-        className={cn("mt-4", contentClassName)}
-      />
+
     </>
-  );
-};
-
-export const FadeInDiv = ({
-  className,
-  tabs,
-  activeTab,
-}: {
-  className?: string;
-  tabs: Tab[];
-  activeTab: string;
-}) => {
-  const activeIndex = tabs.findIndex((tab) => tab.value === activeTab);
-
-  return (
-    <div className="relative w-full h-full">
-      {tabs.map((tab, idx) => (
-        <motion.div
-          key={tab.value}
-          layoutId={tab.value}
-          style={{
-            zIndex: idx === activeIndex ? 1 : -idx,
-          }}
-          animate={{
-            y: idx === activeIndex ? [0, 40, 0] : 0,
-          }}
-          className={cn(
-            "flex justify-center w-full h-full absolute top-0 right-0",
-            className
-          )}
-        >
-          {tab.content}
-        </motion.div>
-      ))}
-    </div>
   );
 };

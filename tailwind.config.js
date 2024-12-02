@@ -11,6 +11,7 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -20,6 +21,10 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          100: "#1F3A5F",
+          200: "#4d648d",
+          300: "#acc2ef",
+          dark: "#0F1C2E",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

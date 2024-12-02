@@ -3,6 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -25,6 +31,7 @@
     --destructive-foreground: 210 40% 98%;
     --ring: 215 20.2% 65.1%;
     --radius: 0.5rem;
+
   }
 
   .dark {
@@ -67,6 +74,7 @@ html {
 }
 
 .sidepanel-container {
+  font-family: 'Poppins', sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -75,6 +83,10 @@ html {
   width: 100vw;
   height: 100vh;
   background: linear-gradient(50deg, #8360c3, #7fdad9);
+
+  * {
+    font-family: 'Poppins', sans-serif;
+  }
 
   .header-container {
     display: flex;
@@ -155,7 +167,6 @@ html {
 
   &:hover {
     background: vars.$highlight-color;
-    // right: -40px;
   }
 
   .content-button-logo {
@@ -180,5 +191,14 @@ html {
   to {
     box-shadow: -4px 0 10px vars.$glow-color-1, -6px 0 15px vars.$glow-color-2,
       -8px 0 20px vars.$glow-color-3;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

@@ -5,7 +5,7 @@
 
   width: 97%;
   height: 97%;
-  background: linear-gradient(20deg, #4f4f4f, #0f0f0f);
+  background: linear-gradient(20deg, #1F3A5F, #0F1C2E);
   border: none;
   border-radius: 1rem;
 
@@ -80,4 +80,8 @@
     width: 90%;
     height: 10%;
   }
+}
+
+.chatbox-background {
+  background: linear-gradient(20deg, #1F3A5F, #0F1C2E);
 }
