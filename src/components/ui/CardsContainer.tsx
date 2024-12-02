@@ -56,6 +56,7 @@ export function CardsContainer() {
               title={`Generated Content ${idx + 1}`}
               description={content.content}
               tag={content.tag}
+              summary={content.summary}
               hovered={hoveredIndex === idx}
             />
           </div>

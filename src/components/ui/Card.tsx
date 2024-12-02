@@ -9,9 +9,15 @@ interface CardProps {
   title: string;
   description: string;
   tag: string;
+  summary?: string;
 }
 
-export const Card: React.FC<CardProps> = ({ title, description, tag }) => {
+export const Card: React.FC<CardProps> = ({
+  title,
+  description,
+  tag,
+  summary,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openCardContent = () => setIsOpen(true);
@@ -51,6 +57,7 @@ export const Card: React.FC<CardProps> = ({ title, description, tag }) => {
         isOpen={isOpen}
         title={title}
         description={description}
+        summary={summary}
         tag={tag}
         onClose={closeCardContent}
       />
