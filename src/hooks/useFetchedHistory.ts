@@ -7,15 +7,14 @@ import { useContentResponse } from "./useContentResponse";
 
 export const useFetchedHistory = () => {
   const [loading, setLoading] = useState(false);
-  const { fetchGenerateContent } = useContentResponse();
-
+  const { fetchGenerateContent, generatedContent } = useContentResponse();
 
   const syncAndGenerateContent = async () => {
     setLoading(true);
     try {
-       const historyItems  = await fetchHistoryItems();
-       const interestData = await createInterestData(historyItems);
-       await fetchGenerateContent(interestData as string[])
+      const historyItems = await fetchHistoryItems();
+      const interestData = await createInterestData(historyItems);
+      await fetchGenerateContent(interestData as string[]);
     } catch (error) {
       handleError(error, {
         logToConsole: true,
@@ -26,19 +25,16 @@ export const useFetchedHistory = () => {
   };
 
   const clearInterestData = () => {
-    removeLocalStorageData("interestData",() => {})
+    removeLocalStorageData("interestData", () => {});
   };
 
-
   return {
+    generatedContent,
     loading,
     syncAndGenerateContent,
     clearInterestData,
   };
-
 };
-
-
 
 // const interestDataMapped = (interestData as string[]).reduce((acc, item, index) => {
 //   acc[`Item ${index + 1}`] = item;

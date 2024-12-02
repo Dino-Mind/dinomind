@@ -9,7 +9,8 @@ import { RootState } from "@/redux/rootReducer";
 import Dino from "../dino/Dino";
 
 const Content: React.FC = () => {
-  const { loading, syncAndGenerateContent } = useFetchedHistory();
+  const { loading, generatedContent, syncAndGenerateContent } =
+    useFetchedHistory();
 
   const isContentChanged = useSelector(
     (state: RootState) => state.ui.isContentChanged
@@ -17,7 +18,6 @@ const Content: React.FC = () => {
 
   return (
     <div className="content-container">
-
       <div className="temporary-div">
         <div className="temporary-buttons">
           <Button
@@ -27,19 +27,18 @@ const Content: React.FC = () => {
           >
             {loading ? "Syncing..." : "Sync with History"}
           </Button>
-
         </div>
         {!isContentChanged && (
           <p className="text-xs text-gray-500 w-[75%] m-4 text-center">
-            Hello 👋 We will sync your history and generate some content for you. All the
-            content will be stored in your browser. We won't store any of your
-            data on our servers. Because we don't have one. 😅
+            Hello 👋 We will sync your history and generate some content for
+            you. All the content will be stored in your browser. We won't store
+            any of your data on our servers. Because we don't have one. 😅
           </p>
         )}
         {loading && <Dino />}
       </div>
 
-      <CardsContainer />
+      <CardsContainer content={generatedContent} />
     </div>
   );
 };
