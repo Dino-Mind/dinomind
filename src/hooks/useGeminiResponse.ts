@@ -16,7 +16,6 @@ export const useGeminiResponse = () => {
   ) => {
     setLoading(true);
 
-    //try add ? to summary and id
     try {
       const responseText = await fetchGeminiResponse(
         userMessage,

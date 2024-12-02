@@ -35,7 +35,6 @@ export const fetchGeminiResponse = async (
     }
 
     if (isChatbox) {
-      // Chatbox behavior: always use userMessage
       prompt = promptTemplate.replace("{userMessage}", userMessage);
       console.log(
         "[fetchGeminiResponse] - Using chatbox promptTemplate:",
