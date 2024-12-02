@@ -1,14 +1,39 @@
-import React, { useState } from "react";
-import { Copy, WandSparkles, ArrowDown, ArrowUp, Languages } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Copy, WandSparkles, ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "./button";
+import { useTranslate } from "@/hooks/useTranslate";
+import { TranslateButton } from "./TranslateButton";
 
-export const ActionButtons: React.FC = () => {
+type ActionButtonProps = {
+  content: string;
+};
+
+export const ActionButtons: React.FC<ActionButtonProps> = ({ content }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [targetLanguage, setTargetLanguage] = useState<string | null>(null);
+  const [, setTranslated] = useState<string | null>(null); // TODO: orhun use translated text later
+  const translator = useTranslate(targetLanguage);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText("Copied content!");
+    navigator.clipboard.writeText(content);
     alert("Copied to clipboard!");
   };
+
+  const handleTranslate = async (language: string) => {
+    setTargetLanguage(language);
+  };
+
+  useEffect(() => {
+    const loadTranslated = async () => {
+      if (translator) {
+        const text = await translator.translate(content);
+        setTranslated(text);
+        alert(text);
+      }
+    };
+
+    loadTranslated();
+  }, [content, translator]);
 
   return (
     <div className="py-2 gap-2 flex items-start">
@@ -16,21 +41,21 @@ export const ActionButtons: React.FC = () => {
         onClick={handleCopy}
         className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-gray-800 hover:bg-gray-600"
       >
-        <Copy size={12}/>
+        <Copy size={12} />
       </Button>
 
       <Button
         onClick={() => setMenuOpen(!menuOpen)}
         className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition  bg-gray-800 hover:bg-gray-600"
       >
-        <WandSparkles size={12}/>
+        <WandSparkles size={12} />
       </Button>
 
       <Button
         onClick={() => setMenuOpen(!menuOpen)}
         className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition  bg-gray-800 hover:bg-gray-600"
       >
-        <ArrowDown size={12}/>
+        <ArrowDown size={12} />
         Shorten
       </Button>
 
@@ -41,17 +66,9 @@ export const ActionButtons: React.FC = () => {
         <ArrowUp size={12} />
         Lengthen
       </Button>
-
-      <Button
-        onClick={() => setMenuOpen(!menuOpen)}
-        className="bg-transparent border-none text-white px-2 py-1 text-xs rounded-md shadow transition  bg-gray-800 hover:bg-gray-600"
-      >
-        <Languages size={12} />
-        Translate
-      </Button>
+      <TranslateButton onTranslate={handleTranslate} />
     </div>
   );
 };
 
 export default ActionButtons;
-

@@ -63,7 +63,7 @@ export const CardContent: React.FC<CardContentProps> = ({
           </div>
 
           <div>
-            <ActionButtons />
+            <ActionButtons content={description } />
             {!showChat && (
               <Button
                 onClick={() => setShowChat(true)}
