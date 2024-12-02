@@ -22,13 +22,10 @@ export const fetchGeminiResponse = async (
     });
   }
 
-  const { promptTemplate } = promptConfig[component];
+  const { promptTemplate, contentPromptTemplate } = promptConfig[component];
   let prompt: string;
   const isChatbox = component === "chatbox";
-  const isContent = component === "content";
-
-  // Track if this is the first message in the content conversation
-  const isFirstContentMessage = isContent && summary;
+  const isContentChat = component === "contentChat";
 
   try {
     if (!window.ai || !window.ai.languageModel) {
@@ -44,29 +41,25 @@ export const fetchGeminiResponse = async (
         "[fetchGeminiResponse] - Using chatbox promptTemplate:",
         prompt
       );
-    } else if (isContent) {
-      if (!isFirstContentMessageProcessed) {
-        // First message: include summary
-        prompt = promptTemplate.replace(
-          "{userMessage}",
-          `${summary} - ${userMessage}`
-        );
+    } else if (isContentChat) {
+      if (contentPromptTemplate && !isFirstContentMessageProcessed) {
+        prompt = contentPromptTemplate
+          .replace("{summary}", summary || "No summary provided")
+          .replace("{userMessage}", userMessage);
         console.log(
-          `[fetchGeminiResponse] - Using content promptTemplate with summary (id: ${id}):`,
+          `[fetchGeminiResponse] - Using contentChat contentPromptTemplate with summary (id: ${id}):`,
           prompt
         );
-        isFirstContentMessageProcessed = true; // Mark the first message as processed
+        isFirstContentMessageProcessed = true;
       } else {
-        // Subsequent messages: use only userMessage
-        prompt = promptTemplate.replace("{userMessage}", userMessage);
+        prompt = promptTemplate?.replace("{userMessage}", userMessage) || "";
         console.log(
           `[fetchGeminiResponse] - Using content promptTemplate with userMessage only:`,
           prompt
         );
       }
     } else {
-      // Default behavior for non-chatbox, non-content components
-      prompt = promptTemplate.replace("{userMessage}", userMessage);
+      prompt = promptTemplate?.replace("{userMessage}", userMessage) || "";
       console.log(
         "[fetchGeminiResponse] - Using default promptTemplate:",
         prompt

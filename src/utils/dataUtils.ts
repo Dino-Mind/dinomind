@@ -4,6 +4,7 @@ import { Content } from "@/hooks/useContentResponse";
 
 type StorageKey =
   | "chatHistory"
+  | "contentChatHistory"
   | "historyData"
   | "interestData"
   | "contentData"
@@ -14,6 +15,7 @@ type StorageKey =
 
 type StorageMap = {
   chatHistory: Message[];
+  contentChatHistory: Message[];
   historyData: HistoryItem[];
   interestData: string;
   contentData: Content[];
@@ -41,6 +43,24 @@ export const saveChatData = (newMessage: Message) => {
 
 export const loadChatData = (callback: (chatHistory: Message[]) => void) => {
   chrome.storage.local.get("chatHistory", (result) => {
+    const chatHistory = result.chatHistory || [];
+    callback(chatHistory);
+  });
+};
+
+// Chat Data Management
+export const saveContentChatData = (newMessage: Message) => {
+  chrome.storage.local.get("contentChatHistory", (result) => {
+    const chatHistory = result.chatHistory || [];
+    chatHistory.push(newMessage);
+    chrome.storage.local.set({ chatHistory });
+  });
+};
+
+export const loadContentChatData = (
+  callback: (chatHistory: Message[]) => void
+) => {
+  chrome.storage.local.get("contentChatHistory", (result) => {
     const chatHistory = result.chatHistory || [];
     callback(chatHistory);
   });

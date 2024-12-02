@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import { Sender, Message } from "@/types/messageType";
 import { useGeminiResponse } from "./useGeminiResponse";
 import {
-  loadChatData,
+  loadContentChatData,
   removeLocalStorageData,
-  saveChatData,
+  saveContentChatData,
 } from "@/utils/dataUtils";
 import { abortCurrentPrompt, resetSession } from "@/utils/fetchGeminiResponse";
 import { ComponentType } from "@/types/componentType";
@@ -28,7 +28,7 @@ export const useChatWithAi = (
   } = useGeminiResponse();
 
   useEffect(() => {
-    loadChatData(setMessages);
+    loadContentChatData(setMessages);
   }, []);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const useChatWithAi = (
     //ADD here to check if UserComponent is Content Dont SaveChatData, else Save !!!
     const userMessage = { sender: Sender.USER, text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-    saveChatData(userMessage);
+    saveContentChatData(userMessage);
 
     fetchResponse(input, component, id, summary);
     setInput("");
@@ -62,7 +62,7 @@ export const useChatWithAi = (
   };
 
   const clearChatHistory = () => {
-    removeLocalStorageData("chatHistory", () => setMessages([]));
+    removeLocalStorageData("contentChatHistory", () => setMessages([]));
     setLatestAIMessageIndex(null);
   };
 

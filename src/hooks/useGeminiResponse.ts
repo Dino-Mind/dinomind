@@ -2,7 +2,7 @@ import { useState } from "react";
 import { fetchGeminiResponse } from "../utils/fetchGeminiResponse";
 import { promptConfig } from "../utils/config/promptConfig";
 import { Message, Sender } from "../types/messageType";
-import { ComponentType } from "../types/componentType";
+import { ComponentType, ComponentTypeEnum } from "../types/componentType";
 
 export const useGeminiResponse = () => {
   const [loading, setLoading] = useState(false);
@@ -27,14 +27,14 @@ export const useGeminiResponse = () => {
 
       const { saveData } = promptConfig[component];
 
-      if (component === "chatbox") {
+      if (component === ComponentTypeEnum.Chatbox) {
         const aiMessage: Message = { sender: Sender.AI, text: responseText };
         setMessages((prevMessages) => [
           ...prevMessages.filter((msg) => msg.sender !== Sender.AI),
           aiMessage,
         ]);
         (saveData as (data: Message) => void)(aiMessage);
-      } else if (component === "content") {
+      } else if (component === ComponentTypeEnum.ContentChat) {
         const aiMessage: Message = { sender: Sender.AI, text: responseText };
         setMessages((prevMessages) => [
           ...prevMessages.filter((msg) => msg.sender !== Sender.AI),

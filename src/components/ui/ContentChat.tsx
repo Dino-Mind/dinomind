@@ -26,7 +26,7 @@ const ContentChat: React.FC<ContentChatProps> = ({ id, summary }) => {
     clearChatHistory,
     abortCurrentPrompt,
     resetSession,
-  } = useChatWithAi("content", id, summary);
+  } = useChatWithAi("contentChat", id, summary);
 
   const placeholders = [
     "Type your interest...",
@@ -34,6 +34,8 @@ const ContentChat: React.FC<ContentChatProps> = ({ id, summary }) => {
     "What do you like?",
     "Let's create a content!",
   ];
+
+  console.log("messages", messages);
 
   return (
     <div className="flex flex-col h-full bg-gray-800 text-white">

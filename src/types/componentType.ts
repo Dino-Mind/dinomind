@@ -2,4 +2,13 @@ export type ComponentType =
   | "chatbox"
   | "interest"
   | "content"
-  | "summarizeChat";
+  | "summarizeChat"
+  | "contentChat";
+
+export enum ComponentTypeEnum {
+  Chatbox = "chatbox",
+  Interest = "interest",
+  Content = "content",
+  SummarizeChat = "summarizeChat",
+  ContentChat = "contentChat",
+}

@@ -1,5 +1,6 @@
 import {
   saveChatData,
+  saveContentChatData,
   saveContentData,
   saveInterestData,
   saveSummaryData,
@@ -10,6 +11,7 @@ import { Content } from "@/hooks/useContentResponse";
 
 type SaveDataFunction = {
   chatbox: (data: Message) => void;
+  contentChat: (data: Message) => void;
   interest: (data: string[]) => void;
   content: (data: Content[]) => void;
   summarizeChat: (data: string) => void;
@@ -19,14 +21,13 @@ export const promptConfig: Record<
   ComponentType,
   {
     promptTemplate: string;
-    continuedPromptTemplate?: string;
-    defaultPromptTemplate?: string;
+    contentPromptTemplate?: string;
     saveData: SaveDataFunction[ComponentType];
   }
 > = {
   chatbox: {
     promptTemplate: `Answer this message text that user wrote to you with helpful attitude. "{userMessage}". Generate short but concise messages Limit response to 100 words.`,
-    continuedPromptTemplate: `Based on this data "{summaryData}" respond "{userMessage}". Limit response to 100 words.`,
+    contentPromptTemplate: `Based on this data "{summary}" respond "{userMessage}". Limit response to 100 words.`,
     saveData: saveChatData,
   },
   interest: {
@@ -40,5 +41,11 @@ export const promptConfig: Record<
   summarizeChat: {
     promptTemplate: `Summarize the following conversation data in concise points: "{sessionData}" limit your response to 50 words`,
     saveData: saveSummaryData,
+  },
+  contentChat: {
+    // Introduced new component type for chatbox-like prompts needing a summary
+    promptTemplate: `Answer this message text that user wrote to you with helpful attitude. "{userMessage}". Generate short but concise messages Limit response to 100 words.`,
+    contentPromptTemplate: `Based on this data "{summary}" respond "{userMessage}". Limit response to 100 words.`,
+    saveData: saveContentChatData, // Associated with chatbox-like chat saving logic
   },
 };
