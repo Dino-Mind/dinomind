@@ -4,11 +4,13 @@ import { Sender, Message } from "@/types/messageType";
 import { useGeminiResponse } from "./useGeminiResponse";
 import {
   loadChatData,
+  loadContentChatData,
   removeLocalStorageData,
   saveChatData,
+  saveContentChatData,
 } from "@/utils/dataUtils";
 import { abortCurrentPrompt, resetSession } from "@/utils/fetchGeminiResponse";
-import { ComponentType } from "@/types/componentType";
+import { ComponentType, ComponentTypeEnum } from "@/types/componentType";
 
 export const useChatWithAi = (
   component: ComponentType,
@@ -28,8 +30,12 @@ export const useChatWithAi = (
   } = useGeminiResponse();
 
   useEffect(() => {
-    loadChatData(setMessages);
-  }, []);
+    if (component === ComponentTypeEnum.Chatbox) {
+      loadChatData(setMessages);
+    } else if (component === ComponentTypeEnum.ContentChat) {
+      loadContentChatData(setMessages);
+    }
+  }, [component]);
 
   useEffect(() => {
     if (fetchedMessages.length) {
@@ -47,10 +53,14 @@ export const useChatWithAi = (
       return;
     }
 
-    //ADD here to check if UserComponent is Content Dont SaveChatData, else Save !!!
     const userMessage = { sender: Sender.USER, text: input };
+    if (component === ComponentTypeEnum.Chatbox) {
+      saveChatData(userMessage);
+    } else if (component === ComponentTypeEnum.ContentChat) {
+      saveContentChatData(userMessage);
+    }
+
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-    saveChatData(userMessage);
 
     fetchResponse(input, component, id, summary);
     setInput("");
@@ -62,7 +72,11 @@ export const useChatWithAi = (
   };
 
   const clearChatHistory = () => {
-    removeLocalStorageData("chatHistory", () => setMessages([]));
+    if (component === ComponentTypeEnum.Chatbox) {
+      removeLocalStorageData("chatHistory", () => setMessages([]));
+    } else if (component === ComponentTypeEnum.ContentChat) {
+      removeLocalStorageData("contentChatHistory", () => setMessages([]));
+    }
     setLatestAIMessageIndex(null);
   };
 

@@ -36,7 +36,7 @@ const Content: React.FC = () => {
         {loading && <Dino />}
       </div>
 
-      <CardsContainer />
+      <CardsContainer content={generatedContent} />
     </div>
   );
 };
