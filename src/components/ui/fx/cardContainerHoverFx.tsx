@@ -7,12 +7,14 @@ interface HoverEffectProps {
   title: string;
   description: string;
   tag: string;
+  summary?: string;
   hovered: boolean;
 }
 
 export const CardContainerHoverFx: React.FC<HoverEffectProps> = ({
   title,
   description,
+  summary,
   tag,
   hovered,
 }) => {
@@ -35,7 +37,12 @@ export const CardContainerHoverFx: React.FC<HoverEffectProps> = ({
           />
         )}
       </AnimatePresence>
-      <Card title={title} description={description} tag={tag}/>
+      <Card
+        title={title}
+        description={description}
+        summary={summary}
+        tag={tag}
+      />
     </>
   );
 };
