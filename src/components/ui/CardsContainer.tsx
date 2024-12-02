@@ -54,6 +54,7 @@ export function CardsContainer() {
           >
             <CardContainerHoverFx
               title={`Generated Content ${idx + 1}`}
+              id={content.id}
               description={content.content}
               tag={content.tag}
               hovered={hoveredIndex === idx}

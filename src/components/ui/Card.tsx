@@ -2,12 +2,26 @@ import React from "react";
 import { MeteorsFx } from "./fx/meteorsFx";
 
 interface CardProps {
+  id: string;
   title: string;
   description: string;
   tag: string;
 }
 
-export const Card: React.FC<CardProps> = ({ title, description, tag }) => {
+export const Card: React.FC<CardProps> = ({
+  id,
+  title,
+  description,
+  tag,
+  summary,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openCardContent = () => setIsOpen(true);
+  const closeCardContent = () => setIsOpen(false);
+
+  const words = tag.split(/\s+/).slice(1, 6); // first one is "*" so ignored for now
+
   return (
     <div className="relative shadow-xl bg-gray-900 border border-gray-600 px-4 py-8 overflow-hidden rounded-2xl flex flex-col justify-end items-start z-20">
       <h1 className="font-bold text-xl text-white mb-4 relative z-50">
@@ -28,7 +42,17 @@ export const Card: React.FC<CardProps> = ({ title, description, tag }) => {
         Explore
       </button>
 
-      <MeteorsFx number={20} />
-    </div>
+        <MeteorsFx number={20} />
+      </div>
+      <CardContent
+        isOpen={isOpen}
+        title={title}
+        id={id}
+        description={description}
+        summary={summary}
+        tag={tag}
+        onClose={closeCardContent}
+      />
+    </>
   );
 };

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Card } from "../Card";
 
 interface HoverEffectProps {
+  id: string;
   title: string;
   description: string;
   tag: string;
@@ -11,9 +12,11 @@ interface HoverEffectProps {
 }
 
 export const CardContainerHoverFx: React.FC<HoverEffectProps> = ({
+  id,
   title,
   description,
   tag,
+  summary,
   hovered,
 }) => {
   return (
@@ -35,7 +38,13 @@ export const CardContainerHoverFx: React.FC<HoverEffectProps> = ({
           />
         )}
       </AnimatePresence>
-      <Card title={title} description={description} tag={tag}/>
+      <Card
+        id={id}
+        title={title}
+        description={description}
+        summary={summary}
+        tag={tag}
+      />
     </>
   );
 };
