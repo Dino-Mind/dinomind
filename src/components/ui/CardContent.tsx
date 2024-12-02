@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ContentChat from "./ContentChat";
+import { ActionButtons } from "./ActionButtons";
+import { Button } from "./button";
 
 interface CardContentProps {
   isOpen: boolean;
@@ -60,16 +62,18 @@ export const CardContent: React.FC<CardContentProps> = ({
             </div>
           </div>
 
-          {!showChat && (
-            <button
-              onClick={() => setShowChat(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition"
-            >
-              Chat with AI
-            </button>
-          )}
+          <div>
+            <ActionButtons />
+            {!showChat && (
+              <Button
+                onClick={() => setShowChat(true)}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition w-full"
+              >
+                Chat with AI
+              </Button>
+            )}
+          </div>
         </div>
-
         {showChat && (
           <div className="max-h-[40%] bg-gray-800 border-t border-gray-700 overflow-hidden">
             <ContentChat
