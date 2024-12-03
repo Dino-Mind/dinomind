@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/rootReducer";
 import { Tab } from "@/components/ui/Tabs";
 import { setActiveTab } from "@/redux/slices/uiSlice";
+import { color } from "framer-motion";
 
 interface BodyProps {
   componentMap: Record<TabName, JSX.Element>;
@@ -46,7 +47,10 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
       <div className="flex-1">
         <FadeInDiv tabs={tabs} activeTab={activeTab} />
       </div>
-      <nav className="w-[65px] flex flex-col justify-between bg-gray-900 border border-gray-600">
+      <nav className="w-[65px] flex flex-col justify-between bg-primary-xBackground border-2"
+       style={{
+          "borderColor": "#292929"
+      }}>
         <div className="space-y-4 mt-4">
           {tabs.map((tab) => (
             <NavbarButton

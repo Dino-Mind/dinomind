@@ -25,7 +25,7 @@ export const Card: React.FC<CardProps> = ({
 
   return (
     <>
-      <div className="relative shadow-xl bg-gray-900 border border-gray-600 px-4 py-8 overflow-hidden rounded-2xl flex flex-col justify-end items-start z-20">
+      <div className="relative shadow-xl bg-primary-xBackgroundCard px-4 py-8 overflow-hidden rounded-2xl flex flex-col justify-end items-start z-20">
         <ReactMarkdown className="prose prose-invert text-slate-400 mb-4 text-sm relative z-50">
           {description.substring(0, 200) + "..."}
         </ReactMarkdown>

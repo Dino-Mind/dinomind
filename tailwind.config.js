@@ -32,6 +32,12 @@ export default {
           200: "#4d648d",
           300: "#acc2ef",
           dark: "#0F1C2E",
+          xBackground: "#1A1A1A",
+          xBackgroundCard: "#292929",
+          xPrimary: "#6A00FF",
+          xSecondary: "#a64aff",
+          xTernary: "#ffb1ff", 
+
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
