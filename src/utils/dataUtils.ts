@@ -11,6 +11,7 @@ type StorageKey =
   | "chatSummary"
   | "chromeHistorySummary"
   | "contentSummary"
+  | "tagData"
   | "sessionData";
 
 type StorageMap = {
@@ -18,6 +19,7 @@ type StorageMap = {
   contentChatHistory: Message[];
   historyData: HistoryItem[];
   interestData: string;
+  tagData: string;
   contentData: Content[];
   chatSummary: string;
   chromeHistorySummary: string;
@@ -127,5 +129,17 @@ export const loadContentData = (callback: (content: Content[]) => void) => {
       );
       callback([]); // Provide a fallback empty array
     }
+  });
+};
+
+// Tag data Management
+//todo:ORHUN must add count and isClicked saving data utility Must look like content data managers
+export const saveTagData = (tagInput: string[]) => {
+  chrome.storage.local.set({ tagData: tagInput });
+};
+
+export const loadTagData = (callback: (tagInput: string[]) => void) => {
+  chrome.storage.local.get("tagData", (result) => {
+    callback(result.tagData || null);
   });
 };
