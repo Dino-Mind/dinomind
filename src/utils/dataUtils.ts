@@ -129,16 +129,3 @@ export const loadContentData = (callback: (content: Content[]) => void) => {
     }
   });
 };
-
-// Summary Data Management
-export const saveSummaryData = (chatSummaryData: string) => {
-  chrome.storage.local.set<StorageMap>({ chatSummary: chatSummaryData });
-};
-
-export const loadSummaryData = (
-  callback: (chatSummaryData: string) => void
-) => {
-  chrome.storage.local.get("chatSummary", (result) => {
-    callback(result.chatSummary || "");
-  });
-};
