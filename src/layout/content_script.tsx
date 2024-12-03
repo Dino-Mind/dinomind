@@ -15,8 +15,8 @@ function OpenSidePanelButton() {
     (state: RootState) => state.sidePanel.isOpen
   );
 
-  const aiLogo = chrome.runtime.getURL("src/assets/ai-logo.svg");
-  const aiLogoRed = chrome.runtime.getURL("src/assets/ai-logo-red.svg");
+  const aiLogo = chrome.runtime.getURL("src/assets/rex_magnified.png");
+  const aiLogoRed = chrome.runtime.getURL("src/assets/rex_magnified.png");
 
   const toggleSidePanel = () => {
     if (isSidePanelOpen) {

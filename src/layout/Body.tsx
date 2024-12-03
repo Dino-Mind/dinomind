@@ -52,6 +52,9 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
           "borderColor": "#292929"
       }}>
         <div className="space-y-4 mt-4">
+          <span > 
+            <img src="src/assets/rex_magnified.png" alt="logo" className="w-10 h-10 mx-auto" />
+          </span>
           {tabs.map((tab) => (
             <NavbarButton
               key={tab.value}

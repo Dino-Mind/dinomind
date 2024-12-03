@@ -5,8 +5,7 @@
   "action": {
     "default_title": "Ext Title while hover EXT's icon",
     "default_icon": {
-      "400": "src/assets/icons/icon400.png",
-      "401": "src/assets/icons/icon400red.png"
+      "400": "src/assets/icons/icon400.png"
     }
   },
   "background": {
