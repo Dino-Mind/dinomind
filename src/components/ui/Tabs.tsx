@@ -1,5 +1,3 @@
-"use client";
-
 import React, { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
@@ -20,7 +18,7 @@ type TabsProps = {
   containerClassName?: string;
   activeTabClassName?: string;
   tabClassName?: string;
-}
+};
 
 export const Tabs: FC<TabsProps> = ({
   tabs,
@@ -71,7 +69,6 @@ export const Tabs: FC<TabsProps> = ({
           </button>
         ))}
       </div>
-
     </>
   );
 };
