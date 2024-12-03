@@ -66,34 +66,34 @@ export const createInterestData = async (historyItems: HistoryItem[]) => {
       ) as string[];
       saveInterestData(successfulSummaries as string[]);
 
-      const tagsFromSummaries = await Promise.all(
-        successfulSummaries.map(async (interestItem) => {
-          try {
-            const { promptTemplate } = promptConfig["tag"];
+      // const tagsFromSummaries = await Promise.all(
+      //   successfulSummaries.map(async (interestItem) => {
+      //     try {
+      //       const { promptTemplate } = promptConfig["tag"];
 
-            const prompt = promptTemplate.replace(
-              "{userMessage}",
-              `${interestItem}`
-            );
+      //       const prompt = promptTemplate.replace(
+      //         "{userMessage}",
+      //         `${interestItem}`
+      //       );
 
-            const tag = await summarizeText(prompt);
+      //       const tag = await summarizeText(prompt);
 
-            console.log("tags from interestData:", tag);
-            return tag; // Return the generated tag
-          } catch (error) {
-            return handleError(error, {
-              logToConsole: true,
-              fallbackValue: "Error summarizing text.",
-            });
-          }
-        })
-      );
+      //       console.log("tags from interestData:", tag);
+      //       return tag; // Return the generated tag
+      //     } catch (error) {
+      //       return handleError(error, {
+      //         logToConsole: true,
+      //         fallbackValue: "Error summarizing text.",
+      //       });
+      //     }
+      //   })
+      // );
 
-      // Log all tags (if needed)
-      console.log(
-        ">>>>>>>>>>>>>>>>>>>>>>>>>>||||||||||||||||||||<<<<<<<<<<<<<<<All generated tags:",
-        tagsFromSummaries
-      );
+      // // Log all tags (if needed)
+      // console.log(
+      //   ">>>>>>>>>>>>>>>>>>>>>>>>>>||||||||||||||||||||<<<<<<<<<<<<<<<All generated tags:",
+      //   tagsFromSummaries
+      // );
 
       return successfulSummaries;
       // saveInterestData(successfulSummaries);

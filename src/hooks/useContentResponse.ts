@@ -50,7 +50,7 @@ export const useContentResponse = () => {
           id: generateId(),
           content: response,
           tag: tag,
-          summary: "This content is about Arsenal from Premier League and their invincible season.",
+          summary: "",
         });
       }
 

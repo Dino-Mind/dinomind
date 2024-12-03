@@ -23,8 +23,6 @@ export const Card: React.FC<CardProps> = ({
   const openCardContent = () => setIsOpen(true);
   const closeCardContent = () => setIsOpen(false);
 
-  const words = tag.split(/\s+/).slice(1, 6); // first one is "*" so ignored for now
-
   return (
     <>
       <div className="relative shadow-xl bg-gray-900 border border-gray-600 px-4 py-8 overflow-hidden rounded-2xl flex flex-col justify-end items-start z-20">
@@ -32,16 +30,9 @@ export const Card: React.FC<CardProps> = ({
           {description.substring(0, 200) + "..."}
         </ReactMarkdown>
 
-        <div className="flex flex-wrap gap-2 mb-4 relative z-50">
-          {words.map((word, idx) => (
-            <ReactMarkdown
-              key={idx}
-              className="prose prose-invert bg-gray-700 text-gray-300 px-3 py-0.5 text-sm rounded-xl"
-            >
-              {word}
-            </ReactMarkdown>
-          ))}
-        </div>
+        {/* <div className="flex flex-wrap gap-2 mb-4 relative z-50  bg-gray-700 text-gray-300 px-3 py-0.5 text-sm rounded-xl">
+          {tag.substring(0,10)}
+        </div> */}
 
         <Button variant={"secondary"} onClick={openCardContent}>
           Explore

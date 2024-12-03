@@ -36,14 +36,8 @@ const ContentChat: React.FC<ContentChatProps> = ({ id, summary, onClose }) => {
   ];
 
   return (
-    <div className="fixed top-[20%] right-0 h-[80%] w-[80%] bg-gray-800 text-white shadow-xl transition-transform duration-300 ease-in-out z-[9999]">
+    <div className="absolute bottom-0 right-0 left-0 h-20 w-full bg-gray-800 text-white shadow-xl transition-transform duration-300 ease-in-out z-[9999]">
       <div className="flex flex-col h-full">
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-200 hover:rotate-180 transition-transform duration-300 text-2xl p-3"
-        >
-          ✕
-        </button>
         <div className="flex-grow overflow-y-auto p-4 space-y-4">
           {messages.map((message, index) => (
             <div key={index} className={`message ${message.sender}`}>

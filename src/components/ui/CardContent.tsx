@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import ContentChat from "./ContentChat";
 import { ActionButtons } from "./ActionButtons";
 
 import { MeteorsFx } from "./fx/meteorsFx";
+import { createSummaryForContent } from "@/utils/createSummaryForContent";
 
 interface CardContentProps {
   isOpen: boolean;
@@ -29,6 +30,16 @@ export const CardContent: React.FC<CardContentProps> = ({
   const toggleChatHandler = () => {
     setShowChat((prev) => !prev);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isOpen) {
+        await createSummaryForContent(id, description);
+      }
+    };
+
+    fetchData();
+  }, [isOpen]);
 
   return (
     <div
@@ -70,15 +81,13 @@ export const CardContent: React.FC<CardContentProps> = ({
             <ActionButtons content={description} openChat={toggleChatHandler} />
           </div>
         </div>
-        {showChat && (
-          <ContentChat
-            id={id}
-            description={description}
-            tag={tag}
-            summary={summary}
-            onClose={toggleChatHandler}
-          />
-        )}
+        <ContentChat
+          id={id}
+          description={description}
+          tag={tag}
+          summary={summary}
+          onClose={toggleChatHandler}
+        />
       </div>
       <MeteorsFx number={20} />
     </div>

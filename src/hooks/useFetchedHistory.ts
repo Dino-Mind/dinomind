@@ -32,7 +32,6 @@ export const useFetchedHistory = () => {
   return {
     generatedContent,
     loading,
-    generatedContent,
     syncAndGenerateContent,
     clearInterestData,
   };
