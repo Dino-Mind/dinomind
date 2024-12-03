@@ -3,6 +3,7 @@ import {
   saveContentChatData,
   saveContentData,
   saveInterestData,
+  saveTagData,
 } from "../dataUtils";
 import { ComponentType } from "../../types/componentType";
 import { Message } from "../../types/messageType";
@@ -12,6 +13,7 @@ type SaveDataFunction = {
   chatbox: (data: Message) => void;
   contentChat: (data: Message) => void;
   interest: (data: string[]) => void;
+  tag: (data: string[]) => void;
   content: (data: Content[]) => void;
   summarizeChat: (data: string) => void;
 };
@@ -54,6 +56,14 @@ Output:
 A list of 3-5 specific and relevant tags tailored to the content.
 `,
     saveData: saveInterestData,
+  },
+  tag: {
+    promptTemplate: `"Analyze the following text and generate 1-2 specific and concise tags that are each 1-2 words long.
+    Focus on capturing the essence of the text without being too generic.
+    Avoid overly broad terms or platform names. Ensure that the tags are accurate and relevant.
+    Here is the text: "{userMessage}"."
+    `,
+    saveData: saveTagData,
   },
   content: {
     promptTemplate: `Write a detailed, engaging, and coherent 10-paragraph article based on the tag "{userMessage}". Each paragraph should explore a unique aspect or perspective related to the tag, starting with an introduction to the topic and gradually delving deeper into its various elements. Ensure the content is well-structured, informative, and interesting, with a logical flow connecting paragraphs. Avoid repetition and strive for originality in presenting ideas and insights. Maintain a tone that aligns with the topic's intended audience, whether professional, casual, or creative. Conclude with a compelling summary or call to action that ties the entire article together.
