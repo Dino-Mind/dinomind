@@ -5,7 +5,6 @@ import { Card } from "../Card";
 
 interface HoverEffectProps {
   id: string;
-  title: string;
   description: string;
   tag: string;
   summary?: string;
@@ -14,7 +13,6 @@ interface HoverEffectProps {
 
 export const CardContainerHoverFx: React.FC<HoverEffectProps> = ({
   id,
-  title,
   description,
   summary,
   tag,
@@ -39,13 +37,7 @@ export const CardContainerHoverFx: React.FC<HoverEffectProps> = ({
           />
         )}
       </AnimatePresence>
-      <Card
-        id={id}
-        title={title}
-        description={description}
-        summary={summary}
-        tag={tag}
-      />
+      <Card id={id} description={description} summary={summary} tag={tag} />
     </>
   );
 };

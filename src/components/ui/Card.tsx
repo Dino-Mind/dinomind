@@ -7,7 +7,6 @@ import { CardContent } from "./CardContent";
 
 interface CardProps {
   id: string;
-  title: string;
   description: string;
   tag: string;
   summary?: string;
@@ -15,7 +14,6 @@ interface CardProps {
 
 export const Card: React.FC<CardProps> = ({
   id,
-  title,
   description,
   tag,
   summary,
@@ -30,12 +28,8 @@ export const Card: React.FC<CardProps> = ({
   return (
     <>
       <div className="relative shadow-xl bg-gray-900 border border-gray-600 px-4 py-8 overflow-hidden rounded-2xl flex flex-col justify-end items-start z-20">
-        <h1 className="font-bold text-xl text-white mb-4 relative z-50">
-          {title}
-        </h1>
-
-        <ReactMarkdown className="prose prose-invert text-slate-400 mb-4 relative z-50">
-          {description.substring(0, 100) + "..."}
+        <ReactMarkdown className="prose prose-invert text-slate-400 mb-4 text-sm relative z-50">
+          {description.substring(0, 200) + "..."}
         </ReactMarkdown>
 
         <div className="flex flex-wrap gap-2 mb-4 relative z-50">
@@ -58,7 +52,6 @@ export const Card: React.FC<CardProps> = ({
 
       <CardContent
         isOpen={isOpen}
-        title={title}
         id={id}
         description={description}
         summary={summary}

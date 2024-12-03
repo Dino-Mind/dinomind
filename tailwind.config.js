@@ -23,6 +23,7 @@ export default {
         background: "hsl(var(--background))",
         bgGradientStart: "#213551",
         bgGradientEnd: "#0f1620",
+        chatText: "D1D5DB",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",

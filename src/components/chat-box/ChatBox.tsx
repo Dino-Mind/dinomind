@@ -1,9 +1,11 @@
 import React from "react";
+import ReactMarkdown from "react-markdown";
+
 import { useChatWithAi } from "../../hooks/useChatWithAi";
 import "./style.scss";
 import { TextGenerateEffectFx } from "../ui/fx/textGenerateEffectFx";
 import { VanishInputFx } from "../ui/fx/vanishInputFx";
-import { MessageLine } from "../message-line/MessageLine";
+
 import { BackgroundBeamsFx } from "../ui/fx/backgroundBeamsFx";
 import { Sender } from "@/types/messageType";
 
@@ -15,8 +17,8 @@ const ChatBox: React.FC = () => {
     handleInputChange,
     handleSubmit,
     clearChatHistory,
-    abortCurrentPrompt,
-    resetSession,
+    // abortCurrentPrompt,
+    // resetSession,
   } = useChatWithAi("chatbox");
 
   const placeholders = [
@@ -39,10 +41,14 @@ const ChatBox: React.FC = () => {
                   filter={false}
                 />
               ) : (
-                <MessageLine text={message.text} />
+                <ReactMarkdown className="prose prose-invert">
+                  {message.text}
+                </ReactMarkdown>
               )
             ) : (
-              <MessageLine text={message.text} />
+              <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl  px-2 max-w-fit ml-auto">
+                {message.text}
+              </ReactMarkdown>
             )}
           </div>
         ))}
@@ -59,8 +65,8 @@ const ChatBox: React.FC = () => {
 
       <div className="chat-actions">
         <button onClick={clearChatHistory}>Clear Chat History</button>
-        <button onClick={abortCurrentPrompt}>Stop Running Prompt</button>
-        <button onClick={resetSession}>Reset AI Session</button>
+        {/* <button onClick={abortCurrentPrompt}>Stop Running Prompt</button>
+        <button onClick={resetSession}>Reset AI Session</button> */}
       </div>
 
       <BackgroundBeamsFx />

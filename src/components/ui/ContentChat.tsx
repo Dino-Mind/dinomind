@@ -1,20 +1,22 @@
 import React from "react";
+import ReactMarkdown from "react-markdown";
+
 import { useChatWithAi } from "../../hooks/useChatWithAi";
 import "./style.scss";
 import { TextGenerateEffectFx } from "../ui/fx/textGenerateEffectFx";
 import { VanishInputFx } from "../ui/fx/vanishInputFx";
-import { MessageLine } from "../message-line/MessageLine";
+
 import { Sender } from "@/types/messageType";
 
 interface ContentChatProps {
-  title: string;
   description: string;
   tag: string;
   summary?: string;
   id: string;
+  onClose: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const ContentChat: React.FC<ContentChatProps> = ({ id, summary }) => {
+const ContentChat: React.FC<ContentChatProps> = ({ id, summary, onClose }) => {
   const {
     messages,
     loading,
@@ -22,88 +24,70 @@ const ContentChat: React.FC<ContentChatProps> = ({ id, summary }) => {
     handleInputChange,
     handleSubmit,
     clearChatHistory,
-    abortCurrentPrompt,
-    resetSession,
+    // abortCurrentPrompt,
+    // resetSession,
   } = useChatWithAi("contentChat", id, summary);
 
   const placeholders = [
-    "Type your interest...",
+    "Type your questions...",
     "Ask me anything!",
-    "What do you like?",
-    "Let's create a content!",
+    "What do you like about this content?",
+    "Let's find what you wonder about!",
   ];
 
   return (
-    <div className="flex flex-col h-full bg-gray-800 text-white">
-      <div className="flex-grow overflow-y-auto p-4 space-y-4">
-        {messages.map((message, index) => (
-          <div key={index} className={`message ${message.sender}`}>
-            {message.sender === Sender.AI ? (
-              // Apply TextGenerateEffect only to the latest AI message
-              index === latestAIMessageIndex ? (
-                <TextGenerateEffectFx
-                  words={message.text || ""}
-                  duration={2}
-                  filter={false}
-                />
+    <div className="fixed top-[20%] right-0 h-[80%] w-[80%] bg-gray-800 text-white shadow-xl transition-transform duration-300 ease-in-out z-[9999]">
+      <div className="flex flex-col h-full">
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-200 hover:rotate-180 transition-transform duration-300 text-2xl p-3"
+        >
+          ✕
+        </button>
+        <div className="flex-grow overflow-y-auto p-4 space-y-4">
+          {messages.map((message, index) => (
+            <div key={index} className={`message ${message.sender}`}>
+              {message.sender === Sender.AI ? (
+                index === latestAIMessageIndex ? (
+                  <TextGenerateEffectFx
+                    words={message.text || ""}
+                    duration={2}
+                    filter={false}
+                  />
+                ) : (
+                  <ReactMarkdown className="prose prose-invert">
+                    {message.text}
+                  </ReactMarkdown>
+                )
               ) : (
-                // TODO !!! correct style match with ai response with effect
-                // Render older AI messages with static MessageLine
-                <MessageLine text={message.text} />
-              )
-            ) : (
-              // Render user messages with MessageLine
-              <MessageLine text={message.text} />
-            )}
-          </div>
-        ))}
-      </div>
+                <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl  px-2 max-w-fit ml-auto">
+                  {message.text}
+                </ReactMarkdown>
+              )}
+            </div>
+          ))}
+        </div>
 
-      <div className="flex items-center border-t border-gray-700 bg-gray-900 p-4">
-        <VanishInputFx
-          loading={loading}
-          placeholders={placeholders}
-          onChange={handleInputChange}
-          onSubmit={handleSubmit}
-        />
-      </div>
+        <div className="flex items-center border-t border-gray-700 bg-gray-900 p-4">
+          <VanishInputFx
+            loading={loading}
+            placeholders={placeholders}
+            onChange={handleInputChange}
+            onSubmit={handleSubmit}
+          />
+        </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          justifyContent: "space-around",
-          alignContent: "space-around",
-          fontSize: "8px",
-          zIndex: "20",
-          height: "40px",
-        }}
-      >
-        <button
-          style={{
-            color: "white",
-          }}
-          onClick={clearChatHistory}
-        >
-          Clear Chat History
-        </button>
-        <button
-          style={{
-            color: "white",
-          }}
-          onClick={abortCurrentPrompt}
-        >
-          Stop Running Prompt
-        </button>
-        <button
-          style={{
-            color: "white",
-          }}
-          onClick={resetSession}
-        >
-          Reset AI Session
-        </button>
+        <div className="flex justify-around p-2 text-[10px]">
+          <button onClick={clearChatHistory} className="text-white">
+            Clear Chat History
+          </button>
+          {/* <button onClick={abortCurrentPrompt} className="text-white">
+            Stop Running Prompt
+          </button>
+          <button onClick={resetSession} className="text-white">
+            Reset AI Session
+          </button> */}
+        </div>
       </div>
     </div>
   );
