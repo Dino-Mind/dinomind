@@ -3,7 +3,6 @@ import {
   saveContentChatData,
   saveContentData,
   saveInterestData,
-  saveSummaryData,
 } from "../dataUtils";
 import { ComponentType } from "../../types/componentType";
 import { Message } from "../../types/messageType";
@@ -37,10 +36,6 @@ export const promptConfig: Record<
   content: {
     promptTemplate: `Generate a content about the user entered this web page a lot "{userMessage}" look at the title and definition for to create interesting and short content. Limit your response to 50 words.`,
     saveData: saveContentData,
-  },
-  summarizeChat: {
-    promptTemplate: `Summarize the following conversation data in concise points: "{sessionData}" limit your response to 50 words`,
-    saveData: saveSummaryData,
   },
   contentChat: {
     // Introduced new component type for chatbox-like prompts needing a summary

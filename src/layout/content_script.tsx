@@ -6,8 +6,6 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 import "../styles/style.scss";
 import { RootState } from "../redux/rootReducer";
 import { closeSidePanel, openSidePanel } from "../redux/slices/sidePanelSlice";
-import { summarizeText } from "../utils/fetchGeminiSummarize";
-import { Message } from "../types/messageType";
 
 const proxyStore = new Store();
 
@@ -31,27 +29,6 @@ function OpenSidePanelButton() {
       });
     }
   };
-
-  useEffect(() => {
-    const messageListener = (
-      message: Message & { action?: string },
-      sender: chrome.runtime.MessageSender,
-      sendResponse: (response: { summary?: string; error?: string }) => void // Explicit type for sendResponse
-    ) => {
-      if (message.action === "summarizeText") {
-        const { text } = message;
-        summarizeText(text)
-          .then((summary) => sendResponse({ summary }))
-          .catch((error) => sendResponse({ error: error.message }));
-        return true;
-      }
-    };
-
-    chrome.runtime.onMessage.addListener(messageListener);
-    return () => {
-      chrome.runtime.onMessage.removeListener(messageListener);
-    };
-  }, []);
 
   useEffect(() => {
     proxyStore.ready().then(() => {

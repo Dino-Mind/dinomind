@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "manifest_version": 3,
   "action": {
-    "default_popup": "index.html",
     "default_title": "Ext Title while hover EXT's icon",
     "default_icon": {
       "400": "src/assets/icons/icon400.png",
