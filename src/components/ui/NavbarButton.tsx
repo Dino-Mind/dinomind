@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { Button } from "./button";
 
 type NavbarButtonProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
