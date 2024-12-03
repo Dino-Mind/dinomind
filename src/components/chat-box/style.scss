@@ -5,13 +5,14 @@
 
   width: 97%;
   height: 97%;
-  background: linear-gradient(20deg, #1F3A5F, #0F1C2E);
+  background: linear-gradient(20deg, #1f3a5f, #0f1c2e);
   border: none;
   border-radius: 1rem;
 
   .chat-messages {
     z-index: 20;
     overflow-y: auto;
+    color: #d1d5db;
     width: 90%;
     height: 100%;
     margin-top: 1.5em;
@@ -83,5 +84,11 @@
 }
 
 .chatbox-background {
-  background: linear-gradient(20deg, #1F3A5F, #0F1C2E);
+  background: linear-gradient(20deg, #1f3a5f, #0f1c2e);
+}
+
+.chat-actions {
+  padding-bottom: 8px;
+  color: white;
+  font-size: 10px;
 }
