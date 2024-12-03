@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import ContentChat from "./ContentChat";
 import { ActionButtons } from "./ActionButtons";
 import { Button } from "./button";
+import { MeteorsFx } from "./fx/meteorsFx";
 
 interface CardContentProps {
   isOpen: boolean;
@@ -28,7 +29,7 @@ export const CardContent: React.FC<CardContentProps> = ({
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-full sm:w-1/2 bg-gray-900 shadow-xl transform transition-all duration-300 ease-in-out z-50 ${
+      className={`fixed top-0 right-0 h-full w-[100vw] bg-gradient-to-b from-bgGradientStart to-bgGradientEnd shadow-xl transform transition-all duration-300 ease-in-out z-50 ${
         isOpen
           ? "translate-x-0 opacity-100 visibility-visible"
           : "translate-x-full opacity-0 visibility-hidden"
@@ -39,7 +40,7 @@ export const CardContent: React.FC<CardContentProps> = ({
           <div>
             <button
               onClick={onClose}
-              className="self-end text-gray-400 hover:text-gray-200 text-lg mb-4"
+              className="self-end text-gray-400 hover:text-gray-200 hover:rotate-180 transition-transform duration-300 text-2xl mb-4"
             >
               ✕
             </button>
@@ -63,7 +64,7 @@ export const CardContent: React.FC<CardContentProps> = ({
           </div>
 
           <div>
-            <ActionButtons content={description } />
+            <ActionButtons content={description} />
             {!showChat && (
               <Button
                 onClick={() => setShowChat(true)}
@@ -86,6 +87,7 @@ export const CardContent: React.FC<CardContentProps> = ({
           </div>
         )}
       </div>
+      <MeteorsFx number={20} />
     </div>
   );
 };

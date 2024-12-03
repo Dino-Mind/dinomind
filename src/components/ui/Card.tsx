@@ -56,11 +56,6 @@ export const Card: React.FC<CardProps> = ({
         <MeteorsFx number={20} />
       </div>
 
-      <button className="border px-4 py-1 rounded-lg border-gray-500 text-gray-300">
-        Explore
-      </button>
-
-      <MeteorsFx number={20} />
       <CardContent
         isOpen={isOpen}
         title={title}

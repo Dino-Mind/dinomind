@@ -21,6 +21,8 @@ export default {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
+        bgGradientStart: "#213551",
+        bgGradientEnd: "#0f1620",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -89,7 +91,6 @@ export default {
   ],
 };
 
-// Custom plugin to generate CSS variables for all colors
 function addVariablesForColors({ addBase, theme }) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
