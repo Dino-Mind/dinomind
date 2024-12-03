@@ -13,10 +13,9 @@ interface ContentChatProps {
   tag: string;
   summary?: string;
   id: string;
-  onClose: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const ContentChat: React.FC<ContentChatProps> = ({ id, summary, onClose }) => {
+const ContentChat: React.FC<ContentChatProps> = ({ id, summary }) => {
   const {
     messages,
     loading,
@@ -36,52 +35,44 @@ const ContentChat: React.FC<ContentChatProps> = ({ id, summary, onClose }) => {
   ];
 
   return (
-    <div className="absolute bottom-0 right-0 left-0 h-20 w-full bg-gray-800 text-white shadow-xl transition-transform duration-300 ease-in-out z-[9999]">
-      <div className="flex flex-col h-full">
-        <div className="flex-grow overflow-y-auto p-4 space-y-4">
-          {messages.map((message, index) => (
-            <div key={index} className={`message ${message.sender}`}>
-              {message.sender === Sender.AI ? (
-                index === latestAIMessageIndex ? (
-                  <TextGenerateEffectFx
-                    words={message.text || ""}
-                    duration={2}
-                    filter={false}
-                  />
-                ) : (
-                  <ReactMarkdown className="prose prose-invert">
-                    {message.text}
-                  </ReactMarkdown>
-                )
+    <div className="flex justify-between bottom-0 w-full flex-col h-[30vh]">
+      <div className="flex flex-col w-full h-full overflow-y-auto p-4 space-y-4 ">
+        {messages.map((message, index) => (
+          <div key={index} className={`message ${message.sender}`}>
+            {message.sender === Sender.AI ? (
+              index === latestAIMessageIndex ? (
+                <TextGenerateEffectFx
+                  words={message.text || ""}
+                  duration={2}
+                  filter={false}
+                />
               ) : (
-                <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl  px-2 max-w-fit ml-auto">
+                <ReactMarkdown className="prose prose-invert text-white">
                   {message.text}
                 </ReactMarkdown>
-              )}
-            </div>
-          ))}
-        </div>
+              )
+            ) : (
+              <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl px-2 max-w-fit ml-auto">
+                {message.text}
+              </ReactMarkdown>
+            )}
+          </div>
+        ))}
+      </div>
 
-        <div className="flex items-center border-t border-gray-700 bg-gray-900 p-4">
-          <VanishInputFx
-            loading={loading}
-            placeholders={placeholders}
-            onChange={handleInputChange}
-            onSubmit={handleSubmit}
-          />
-        </div>
-
-        <div className="flex justify-around p-2 text-[10px]">
-          <button onClick={clearChatHistory} className="text-white">
-            Clear Chat History
-          </button>
-          {/* <button onClick={abortCurrentPrompt} className="text-white">
-            Stop Running Prompt
-          </button>
-          <button onClick={resetSession} className="text-white">
-            Reset AI Session
-          </button> */}
-        </div>
+      <div className="flex flex-col items-center justify-center bg-gray-900 p-2 border-t border-blue-500">
+        <VanishInputFx
+          loading={loading}
+          placeholders={placeholders}
+          onChange={handleInputChange}
+          onSubmit={handleSubmit}
+        />
+        <button
+          onClick={clearChatHistory}
+          className="text-white border-b border-gray-400"
+        >
+          Clear Chat History
+        </button>
       </div>
     </div>
   );

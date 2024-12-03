@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import ContentChat from "./ContentChat";
 import { ActionButtons } from "./ActionButtons";
@@ -23,13 +23,7 @@ export const CardContent: React.FC<CardContentProps> = ({
   tag,
   onClose,
 }) => {
-  const [showChat, setShowChat] = useState(false);
-
   const words = tag.split(/\s+/).slice(1, 9); // Ignore the first "*"
-
-  const toggleChatHandler = () => {
-    setShowChat((prev) => !prev);
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +44,7 @@ export const CardContent: React.FC<CardContentProps> = ({
       }`}
     >
       <div className="flex flex-col h-full z-[9999]">
-        <div className="flex flex-col justify-between flex-grow p-6 text-white overflow-y-auto">
+        <div className="h-[80vh] flex flex-col justify-between p-6 text-white overflow-y-auto">
           <div className="flex flex-row justify-between items-center h-12">
             <button
               onClick={onClose}
@@ -71,14 +65,14 @@ export const CardContent: React.FC<CardContentProps> = ({
             </div>
           </div>
 
-          <div className="h-[85vh] py-4 overflow-auto">
+          <div className="h-full py-4 overflow-auto">
             <ReactMarkdown className="prose prose-invert text-gray-300">
               {description}
             </ReactMarkdown>
           </div>
 
           <div>
-            <ActionButtons content={description} openChat={toggleChatHandler} />
+            <ActionButtons content={description} />
           </div>
         </div>
         <ContentChat
@@ -86,7 +80,6 @@ export const CardContent: React.FC<CardContentProps> = ({
           description={description}
           tag={tag}
           summary={summary}
-          onClose={toggleChatHandler}
         />
       </div>
       <MeteorsFx number={20} />
