@@ -29,7 +29,7 @@ export const TextGenerateEffectFx = ({
       },
       {
         duration: duration || 1,
-        delay: stagger(0.2),
+        delay: stagger(0.05),
       }
     ).then(() => {
       // Trigger state change to show Markdown after animation
@@ -52,7 +52,7 @@ export const TextGenerateEffectFx = ({
             animate={{ opacity: 1 }}
             transition={{
               duration: duration || 1,
-              delay: idx * 0.2,
+              delay: idx * 0.05,
             }}
           >
             {word}{" "}

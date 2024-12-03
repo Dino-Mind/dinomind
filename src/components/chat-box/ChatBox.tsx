@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
 import { useChatWithAi } from "../../hooks/useChatWithAi";
@@ -28,6 +28,18 @@ const ChatBox: React.FC = () => {
     "Let's create a content!",
   ];
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      scrollToBottom();
+    });
+  }, [messages]);
+
   return (
     <div className="chatbox-container">
       <div className="chat-messages">
@@ -37,7 +49,7 @@ const ChatBox: React.FC = () => {
               index === latestAIMessageIndex ? (
                 <TextGenerateEffectFx
                   words={message.text || ""}
-                  duration={2}
+                  duration={0.3}
                   filter={false}
                 />
               ) : (
@@ -52,6 +64,7 @@ const ChatBox: React.FC = () => {
             )}
           </div>
         ))}
+         <div ref={messagesEndRef} />
       </div>
 
       <div className="chat-input">

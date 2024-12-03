@@ -43,10 +43,10 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
 
   return (
     <div className="flex h-screen w-full">
-      <div className="flex-1 bg-gradient-to-t from-bgGradientStart to-bgGradientEnd py-4 px-2">
+      <div className="flex-1">
         <FadeInDiv tabs={tabs} activeTab={activeTab} />
       </div>
-      <nav className="w-[65px] flex flex-col justify-between chatbox-background">
+      <nav className="w-[65px] flex flex-col justify-between bg-gray-900 border border-gray-600">
         <div className="space-y-4 mt-4">
           {tabs.map((tab) => (
             <NavbarButton
