@@ -43,7 +43,7 @@ const ContentChat: React.FC<ContentChatProps> = ({ id, summary }) => {
               index === latestAIMessageIndex ? (
                 <TextGenerateEffectFx
                   words={message.text || ""}
-                  duration={2}
+                  duration={1}
                   filter={false}
                 />
               ) : (
