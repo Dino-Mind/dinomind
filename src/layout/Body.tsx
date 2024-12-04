@@ -42,20 +42,26 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
 
   const handleRefresh = () => {
     alert("Refreshing...");
-  }
+  };
 
   return (
     <div className="flex h-screen w-full">
       <div className="flex-1">
         <FadeInDiv tabs={tabs} activeTab={activeTab} />
       </div>
-      <nav className="w-[65px] flex flex-col justify-between bg-primary-xBackground border-2"
-       style={{
-          "borderColor": "#292929"
-      }}>
+      <nav
+        className="w-[65px] flex flex-col justify-between bg-primary-xBackground border-l-2"
+        style={{
+          borderColor: "#292929",
+        }}
+      >
         <div className="space-y-4 mt-4">
-          <div className="h-[42px]" > 
-            <img src="src/assets/rex_magnified.png" alt="logo" className="w-8 h-8 mx-auto mb-4" />
+          <div className="h-[42px]">
+            <img
+              src="src/assets/rex_magnified.png"
+              alt="logo"
+              className="w-8 h-8 mx-auto mb-4"
+            />
           </div>
           {tabs.map((tab) => (
             <NavbarButton
@@ -67,7 +73,7 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
           ))}
         </div>
         <div className="mb-4">
-          <NavbarButton icon={RefreshCw} title="Sync" onClick={handleRefresh}/>
+          <NavbarButton icon={RefreshCw} title="Sync" onClick={handleRefresh} />
         </div>
       </nav>
     </div>
