@@ -117,7 +117,7 @@ const Content: React.FC = () => {
           <CardsContainer
             content={visibleRecommendations}
           />
-          <div className="temporary-buttons">
+          <div className="temporary-buttons p-4">
             <Button
               variant={"secondary"}
               onClick={syncAndGenerateContentFromTags}
@@ -130,9 +130,9 @@ const Content: React.FC = () => {
       )}
 
       {recoLoading && (
-        <div className="mt-5  text-center">
+        <div className="mt-5 text-left">
           <Dino />
-          <p className="text-sm text-gray-500 w-[75%] m-4 text-center">
+          <p className="text-sm text-gray-500 w-[75%] m-4 text-left">
             We are also generating some content based on our recommender system.
             It will take some time. Please be patient. 😊
           </p>

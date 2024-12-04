@@ -19,6 +19,7 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
   const activeTab = useSelector((state: RootState) => state.ui.activeTab);
   const dispatch = useDispatch();
 
+
   const tabs: Tab[] = [
     {
       title: "Content",
@@ -40,9 +41,6 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
     }
   };
 
-  const handleRefresh = () => {
-    alert("Refreshing...");
-  };
 
   return (
     <div className="flex h-screen w-full">
@@ -72,9 +70,9 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
             />
           ))}
         </div>
-        <div className="mb-4">
-          <NavbarButton icon={RefreshCw} title="Sync" onClick={handleRefresh} />
-        </div>
+        {/* <div className="mb-4">
+          <NavbarButton icon={RefreshCw} title="Sync" onClick={() => handleRefresh()} disabled={loading} />
+        </div> */}
       </nav>
     </div>
   );

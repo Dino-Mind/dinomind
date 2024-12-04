@@ -28,6 +28,7 @@ export const useFetchedHistory = () => {
   const clearInterestData = () => {
     removeLocalStorageData("interestData", () => {});
   };
+  
 
   return {
     generatedContent,
