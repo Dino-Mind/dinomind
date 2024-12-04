@@ -23,7 +23,6 @@ export const CardContent: React.FC<CardContentProps> = ({
   tag,
   onClose,
 }) => {
-  const words = tag.split(/\s+/).slice(1, 9); // Ignore the first "*"
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,17 +51,10 @@ export const CardContent: React.FC<CardContentProps> = ({
             >
               ✕
             </button>
-{/* 
+
             <div className="flex gap-2 w-[80vw] items-center overflow-x-auto whitespace-nowrap">
-              {words.map((word, idx) => (
-                <ReactMarkdown
-                  key={idx}
-                  className="prose prose-invert bg-gray-700 text-gray-300 px-3 py-0.5 text-sm rounded-xl"
-                >
-                  {word}
-                </ReactMarkdown>
-              ))}
-            </div> */}
+              {tag}
+            </div>
           </div>
 
           {/* <div className="h-full py-4 overflow-auto">
