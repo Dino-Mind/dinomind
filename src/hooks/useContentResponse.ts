@@ -48,14 +48,14 @@ export const useContentResponse = () => {
         const response = await fetchContentResponse(tag, "content");
         contentArray.push({
           id: generateId(),
-          content: response,
-          tag: tag,
+          content: response, 
+          tag: tag?.split("\n")?.[0] || tag,
           summary: "",
         });
       }
 
       saveContentData(contentArray);
-      console.log(">>>>>>>>>>FINAL Contents_ARRAY :", contentArray);
+      // console.log(">>>>>>>>>>FINAL Contents_ARRAY :", contentArray);
 
       setGeneratedContent(contentArray);
 

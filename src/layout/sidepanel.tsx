@@ -46,8 +46,6 @@ const SidepanelRoot = () => {
 
   useEffect(() => {
     proxyStore.ready().then(() => {
-      console.log("Initial proxyStore state:", proxyStore.getState());
-
       setIsStoreReady(true);
     });
   }, []);

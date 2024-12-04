@@ -14,7 +14,6 @@ export const createSummaryForContent = async (id: string, content: string) => {
       }
       return contentItem;
     });
-    console.log("Updated content data: ", updatedContentData);
     saveContentData(updatedContentData);
   });
 

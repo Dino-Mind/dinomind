@@ -38,8 +38,8 @@ export const fetchContentResponse = async (
       responseText = chunk.trim();
     }
 
-    console.log("[fetchContentResponse] PROMPT >>>>>>>>>>>>:", prompt);
-    console.log("[fetchContentResponse] RESPONSE >>>>>>>>>>:", responseText);
+    // console.log("[fetchContentResponse] PROMPT >>>>>>>>>>>>:", prompt);
+    // console.log("[fetchContentResponse] RESPONSE >>>>>>>>>>:", responseText);
 
     session = null;
 

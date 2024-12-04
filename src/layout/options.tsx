@@ -2,8 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 function Options() {
-  console.log(`this is options page`);
-
   return (
     <div>
       <header>

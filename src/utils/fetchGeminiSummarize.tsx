@@ -48,8 +48,6 @@ export const createInterestData = async (historyItems: HistoryItem[]) => {
 
           const summary = await summarizeText(prompt);
 
-          console.log("from_GEMINI_SUMMARIZE:", summary);
-
           return summary;
         } catch (error) {
           return handleError(error, {
@@ -64,38 +62,40 @@ export const createInterestData = async (historyItems: HistoryItem[]) => {
       const successfulSummaries = summaries.filter(
         (summary) => summary !== null
       ) as string[];
-      saveInterestData(successfulSummaries as string[]);
 
-      // const tagsFromSummaries = await Promise.all(
-      //   successfulSummaries.map(async (interestItem) => {
-      //     try {
-      //       const { promptTemplate } = promptConfig["tag"];
+      const tagsFromSummaries = await Promise.all(
+        successfulSummaries.map(async (interestItem) => {
+          try {
+            const { promptTemplate } = promptConfig["tag"];
 
-      //       const prompt = promptTemplate.replace(
-      //         "{userMessage}",
-      //         `${interestItem}`
-      //       );
+            const prompt = promptTemplate.replace(
+              "{userMessage}",
+              `${interestItem}`
+            );
 
-      //       const tag = await summarizeText(prompt);
+            const tag = await summarizeText(prompt);
 
-      //       console.log("tags from interestData:", tag);
-      //       return tag; // Return the generated tag
-      //     } catch (error) {
-      //       return handleError(error, {
-      //         logToConsole: true,
-      //         fallbackValue: "Error summarizing text.",
-      //       });
-      //     }
-      //   })
-      // );
+            console.log("tags from interestData:", tag);
+            return tag; // Return the generated tag
+          } catch (error) {
+            return handleError(error, {
+              logToConsole: true,
+              fallbackValue: "Error summarizing text.",
+            });
+          }
+        })
+      );
 
-      // // Log all tags (if needed)
-      // console.log(
-      //   ">>>>>>>>>>>>>>>>>>>>>>>>>>||||||||||||||||||||<<<<<<<<<<<<<<<All generated tags:",
-      //   tagsFromSummaries
-      // );
+      saveInterestData(tagsFromSummaries as string[]);
 
-      return successfulSummaries;
+
+      // Log all tags (if needed)
+      console.log(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>||||||||||||||||||||<<<<<<<<<<<<<<<All generated tags:",
+        tagsFromSummaries
+      );
+
+      return tagsFromSummaries;
       // saveInterestData(successfulSummaries);
     } catch (error) {
       console.error(

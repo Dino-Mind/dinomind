@@ -91,7 +91,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     sendResponse({ status: "success", isOpen: true });
     store.dispatch(openSidePanel());
 
-    console.log("opened with 4");
   } else if (message.action === "closeSidePanel") {
     chrome.sidePanel.setOptions({
       tabId,
