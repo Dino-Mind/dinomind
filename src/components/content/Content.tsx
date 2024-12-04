@@ -17,7 +17,7 @@ const Content: React.FC = () => {
           <>
             <div className="temporary-buttons">
               <Button
-                className="sync-button"
+                variant={"secondary"}
                 onClick={syncAndGenerateContent}
                 disabled={loading}
               >
@@ -25,7 +25,7 @@ const Content: React.FC = () => {
               </Button>
             </div>
 
-            <p className="text-xs text-gray-500 w-[75%] m-4 text-center">
+            <p className="text-sm text-gray-500 w-[75%] m-4 text-center">
               Hello 👋 We will sync your history and generate some content for
               you. All the content will be stored in your browser. We won't
               store any of your data on our servers. Because we don't have one.

@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/rootReducer";
 import { Tab } from "@/components/ui/Tabs";
 import { setActiveTab } from "@/redux/slices/uiSlice";
-import { color } from "framer-motion";
 
 interface BodyProps {
   componentMap: Record<TabName, JSX.Element>;
@@ -52,9 +51,9 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
           "borderColor": "#292929"
       }}>
         <div className="space-y-4 mt-4">
-          <span > 
-            <img src="src/assets/rex_magnified.png" alt="logo" className="w-10 h-10 mx-auto" />
-          </span>
+          <div className="h-[42px]" > 
+            <img src="src/assets/rex_magnified.png" alt="logo" className="w-8 h-8 mx-auto mb-4" />
+          </div>
           {tabs.map((tab) => (
             <NavbarButton
               key={tab.value}
