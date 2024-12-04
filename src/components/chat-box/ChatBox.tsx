@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 import { useChatWithAi } from "../../hooks/useChatWithAi";
@@ -8,8 +8,13 @@ import { VanishInputFx } from "../ui/fx/vanishInputFx";
 
 import { BackgroundBeamsFx } from "../ui/fx/backgroundBeamsFx";
 import { Sender } from "@/types/messageType";
+import DinoResponse from "../dino/DinoResponse";
 
 const ChatBox: React.FC = () => {
+  const [activeAiMessageIndex, setActiveAiMessageIndex] = useState<
+    number | null
+  >(null);
+
   const {
     messages,
     loading,
@@ -17,8 +22,6 @@ const ChatBox: React.FC = () => {
     handleInputChange,
     handleSubmit,
     clearChatHistory,
-    // abortCurrentPrompt,
-    // resetSession,
   } = useChatWithAi("chatbox");
 
   const placeholders = [
@@ -35,6 +38,17 @@ const ChatBox: React.FC = () => {
   };
 
   useEffect(() => {
+    if (loading && messages.length > 0) {
+      const lastIndex = messages.length - 1;
+      if (messages[lastIndex].sender === Sender.AI) {
+        setActiveAiMessageIndex(lastIndex);
+      }
+    } else {
+      setActiveAiMessageIndex(null); // Reset when not loading
+    }
+  }, [loading, messages]);
+
+  useEffect(() => {
     requestAnimationFrame(() => {
       scrollToBottom();
     });
@@ -45,26 +59,34 @@ const ChatBox: React.FC = () => {
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
-            {message.sender === Sender.AI ? (
-              index === latestAIMessageIndex ? (
-                <TextGenerateEffectFx
-                  words={message.text || ""}
-                  duration={0.3}
-                  filter={false}
+            {message.sender === Sender.AI && (
+              <>
+                {/* Render DinoResponse for every AI message */}
+                <DinoResponse
+                  isLoading={index === activeAiMessageIndex && loading}
                 />
-              ) : (
-                <ReactMarkdown className="prose prose-invert">
-                  {message.text}
-                </ReactMarkdown>
-              )
-            ) : (
+
+                {index === activeAiMessageIndex && loading ? (
+                  <TextGenerateEffectFx
+                    words={message.text || ""}
+                    duration={0.3}
+                    filter={false}
+                  />
+                ) : (
+                  <ReactMarkdown className="prose prose-invert">
+                    {message.text}
+                  </ReactMarkdown>
+                )}
+              </>
+            )}
+            {message.sender !== Sender.AI && (
               <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl  px-2 max-w-fit ml-auto">
                 {message.text}
               </ReactMarkdown>
             )}
           </div>
         ))}
-         <div ref={messagesEndRef} />
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="chat-input">
@@ -78,8 +100,6 @@ const ChatBox: React.FC = () => {
 
       <div className="chat-actions">
         <button onClick={clearChatHistory}>Clear Chat History</button>
-        {/* <button onClick={abortCurrentPrompt}>Stop Running Prompt</button>
-        <button onClick={resetSession}>Reset AI Session</button> */}
       </div>
 
       <BackgroundBeamsFx />

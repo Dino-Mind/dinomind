@@ -8,6 +8,7 @@ import { VanishInputFx } from "../ui/fx/vanishInputFx";
 
 import { Sender } from "@/types/messageType";
 import ActionButtons from "./ActionButtons";
+import DinoResponse from "../dino/DinoResponse";
 
 interface ContentChatProps {
   description: string;
@@ -72,12 +73,13 @@ const ContentChat: React.FC<ContentChatProps> = ({
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
             {message.sender === Sender.AI && (
-              <div className="flex flex-row items-center text-center gap-2">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                  <img src="src/assets/rex_magnified.png" alt="AI Avatar" />
-                </div>
-                <span className="text-base text-white mt-1">Dinomind</span>
-              </div>
+              // <div className="flex flex-row items-center text-center gap-2">
+              //   <div className="w-8 h-8 rounded-full flex items-center justify-center">
+              //     <img src="src/assets/rex_magnified.png" alt="AI Avatar" />
+              //   </div>
+              //   <span className="text-base text-white mt-1">Dinomind</span>
+              // </div>
+              <DinoResponse isLoading={loading} />
             )}
 
             {message.sender === Sender.AI ? (
@@ -103,7 +105,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
       </div>
 
       <div className="flex flex-col items-center justify-center bg-primary-xBackground p-2 border-t border-primary-xPrimary">
-        <ActionButtons content={description} tag={tag}/>
+        <ActionButtons content={description} tag={tag} />
         <VanishInputFx
           loading={combinedLoading}
           placeholders={placeholders}
