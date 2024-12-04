@@ -36,7 +36,6 @@ const ContentChat: React.FC<ContentChatProps> = ({
     // resetSession,
   } = useChatWithAi("contentChat", id, summary);
 
-  console.log("loading, loadingSummary", loading, loadingSummary);
   const combinedLoading = loading || loadingSummary;
 
   const [messages, setMessages] = React.useState(() => {
