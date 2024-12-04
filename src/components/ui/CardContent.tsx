@@ -19,15 +19,22 @@ export const CardContent: React.FC<CardContentProps> = ({
   isOpen,
   id,
   description,
-  summary,
+  summary: initialSummary,
   tag,
   onClose,
 }) => {
+  const [summary, setSummary] = useState<string | undefined>(initialSummary);
+  const [loadingSummary, setLoadingSummary] = useState<boolean>(true);
+
+  // const words = tag.split(/\s+/).slice(1, 9); // Ignore the first "*"
 
   useEffect(() => {
     const fetchData = async () => {
-      if (isOpen) {
-        await createSummaryForContent(id, description);
+      if (isOpen && !summary) {
+        setLoadingSummary(true);
+        const generatedSummary = await createSummaryForContent(id, description);
+        setSummary(generatedSummary);
+        setLoadingSummary(false);
       }
     };
 
@@ -62,13 +69,13 @@ export const CardContent: React.FC<CardContentProps> = ({
               {description}
             </ReactMarkdown>
           </div> */}
-
         </div>
         <ContentChat
           id={id}
           description={description}
           tag={tag}
           summary={summary}
+          loadingSummary={loadingSummary}
         />
       </div>
       <MeteorsFx number={20} />

@@ -14,6 +14,7 @@ interface ContentChatProps {
   tag: string;
   summary?: string;
   id: string;
+  loadingSummary: boolean;
 }
 
 const ContentChat: React.FC<ContentChatProps> = ({
@@ -21,6 +22,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
   summary,
   description,
   tag,
+  loadingSummary,
 }) => {
   const {
     messages: messagesFromChat,
@@ -32,6 +34,8 @@ const ContentChat: React.FC<ContentChatProps> = ({
     // abortCurrentPrompt,
     // resetSession,
   } = useChatWithAi("contentChat", id, summary);
+
+  const combinedLoading = loading || loadingSummary;
 
   const messages = React.useMemo(() => {
     const initialMessage = {
@@ -53,12 +57,14 @@ const ContentChat: React.FC<ContentChatProps> = ({
     });
   }, [messages]);
 
-  const placeholders = [
-    "Type your questions...",
-    "Ask me anything!",
-    "What do you like about this content?",
-    "Let's find what you wonder about!",
-  ];
+  const placeholders = combinedLoading
+    ? ["Please wait...", "Creating summary...", "Summarizing your content..."]
+    : [
+        "Type your questions...",
+        "Ask me anything!",
+        "What do you like about this content?",
+        "Let's find what you wonder about!",
+      ];
 
   return (
     <div className="flex justify-between bottom-0 w-full flex-col h-[90vh]">
@@ -99,7 +105,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
       <div className="flex flex-col items-center justify-center bg-primary-xBackground p-2 border-t border-primary-xPrimary">
         <ActionButtons content={description} tag={tag}/>
         <VanishInputFx
-          loading={loading}
+          loading={combinedLoading}
           placeholders={placeholders}
           onChange={handleInputChange}
           onSubmit={handleSubmit}
