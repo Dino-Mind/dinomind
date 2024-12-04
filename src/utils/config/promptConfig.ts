@@ -58,9 +58,9 @@ A list of 3-5 specific and relevant tags tailored to the content.
     saveData: saveInterestData,
   },
   tag: {
-    promptTemplate: `"Analyze the following text and generate 1 specific and concise category of the content that is only one word.
+    promptTemplate: `"Analyze the following text and generate one specific and concise category of the content that is only one word.
     Focus on capturing the essence of the text without being too generic.
-    Avoid overly broad terms or platform names. Ensure that the tags are accurate and relevant.
+    Avoid overly broad terms or platform names. Ensure that the tag are accurate and relevant.
     Here is the text: "{userMessage}"."
     `,
     saveData: saveTagData,

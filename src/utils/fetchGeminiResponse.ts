@@ -36,33 +36,18 @@ export const fetchGeminiResponse = async (
 
     if (isChatbox) {
       prompt = promptTemplate.replace("{userMessage}", userMessage);
-      console.log(
-        "[fetchGeminiResponse] - Using chatbox promptTemplate:",
-        prompt
-      );
     } else if (isContentChat) {
       if (contentPromptTemplate && !isFirstContentMessageProcessed) {
         prompt = contentPromptTemplate
           .replace("{summary}", summary || "No summary provided")
           .replace("{userMessage}", userMessage);
-        console.log(
-          `[fetchGeminiResponse] - Using contentChat contentPromptTemplate with summary (id: ${id}):`,
-          prompt
-        );
         isFirstContentMessageProcessed = true;
       } else {
         prompt = promptTemplate?.replace("{userMessage}", userMessage) || "";
-        console.log(
-          `[fetchGeminiResponse] - Using content promptTemplate with userMessage only:`,
-          prompt
-        );
       }
     } else {
       prompt = promptTemplate?.replace("{userMessage}", userMessage) || "";
-      console.log(
-        "[fetchGeminiResponse] - Using default promptTemplate:",
-        prompt
-      );
+
     }
 
     if (!session) {
