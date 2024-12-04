@@ -62,6 +62,8 @@ export const useContentResponse = () => {
           tag: tag.split("\n")[0],
           like: 0,
           dislike: 0,
+          ctr: 0,
+          totalCount: 0,
         };
       })
 
