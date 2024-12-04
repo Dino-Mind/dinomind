@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import {
   loadContentData,
   saveContentData,
+  saveTagStats,
 } from "../utils/dataUtils";
 import { fetchContentResponse } from "../utils/fetchContentResponse";
 import { handleError } from "../utils/error/errorHandler";
@@ -54,6 +55,17 @@ export const useContentResponse = () => {
         });
       }
 
+      // Add extra interest stats
+
+      const tagStats = interestData.map((tag) => {
+        return {
+          tag: tag.split("\n")[0],
+          like: 0,
+          dislike: 0,
+        };
+      })
+
+      saveTagStats(tagStats);
       saveContentData(contentArray);
       // console.log(">>>>>>>>>>FINAL Contents_ARRAY :", contentArray);
 

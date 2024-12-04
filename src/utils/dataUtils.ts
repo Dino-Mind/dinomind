@@ -25,6 +25,15 @@ type StorageMap = {
   chromeHistorySummary: string;
   contentSummary: string;
   sessionData: Message[];
+  tagStat: TagStat[];
+};
+
+export type TagStat = {
+  tag: string;
+  like: number;
+  dislike: number;
+  ctr: number;
+  totalCount: number;
 };
 
 export const removeLocalStorageData = (
@@ -116,6 +125,14 @@ export const saveContentData = (content: Content[]) => {
   }
 };
 
+export const saveTagStats = (data: TagStat[]) => {
+  if (Array.isArray(data)) {
+    chrome.storage.local.set<StorageMap>({ tagStat: data });
+  } else {
+    console.error("Invalid content data provided. Expected an array:", data);
+  }
+};
+
 export const loadContentData = (callback: (content: Content[]) => void) => {
   chrome.storage.local.get("contentData", (result) => {
     const content = result.contentData;
@@ -143,3 +160,15 @@ export const loadTagData = (callback: (tagInput: string[]) => void) => {
     callback(result.tagData || null);
   });
 };
+
+export const saveTagStatData = (tagInput: TagStat[]) => {
+  chrome.storage.local.set({ tagStat: tagInput });
+};
+
+export const loadTagStatData = (callback: (tagInput: TagStat[]) => void) => {
+  chrome.storage.local.get("tagStat", (result) => {
+    callback(result.tagStat || null);
+  });
+};
+
+

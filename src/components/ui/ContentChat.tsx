@@ -20,6 +20,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
   id,
   summary,
   description,
+  tag,
 }) => {
   const {
     messages: messagesFromChat,
@@ -96,7 +97,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
       </div>
 
       <div className="flex flex-col items-center justify-center bg-primary-xBackground p-2 border-t border-primary-xPrimary">
-        <ActionButtons content={description} />
+        <ActionButtons content={description} tag={tag}/>
         <VanishInputFx
           loading={loading}
           placeholders={placeholders}

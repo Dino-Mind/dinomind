@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Button } from "../ui/button";
 import { useFetchedHistory } from "@/hooks/useFetchedHistory";
 import { CardsContainer } from "../ui/CardsContainer";
 import "./style.scss";
 import Dino from "../dino/Dino";
+import { saveTagStatData } from "@/utils/dataUtils";
+import defaultTags from './TagStat.json'
 
 const Content: React.FC = () => {
   const { loading, generatedContent, syncAndGenerateContent } =
     useFetchedHistory();
+
+  useEffect(() => {
+    saveTagStatData(defaultTags);
+  }, []);
 
   return (
     <div className="content-container">
