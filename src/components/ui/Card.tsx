@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { MeteorsFx } from "./fx/meteorsFx";
 import { Button } from "./button";
 import { CardContent } from "./CardContent";
+import Nugget from "./Nugget";
 
 interface CardProps {
   id: string;
@@ -30,9 +31,9 @@ export const Card: React.FC<CardProps> = ({
           {description.substring(0, 200) + "..."}
         </ReactMarkdown>
 
-        {/* <div className="flex flex-wrap gap-2 mb-4 relative z-50  bg-gray-700 text-gray-300 px-3 py-0.5 text-sm rounded-xl">
-          {tag.substring(0,10)}
-        </div> */}
+        <div className="flex gap-2 w-[80vw] my-2 items-center overflow-x-auto whitespace-nowrap">
+          <Nugget tagItem={tag} />
+        </div>
 
         <Button variant={"secondary"} onClick={openCardContent}>
           Explore
