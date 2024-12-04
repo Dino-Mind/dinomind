@@ -8,8 +8,14 @@ import Dino from "../dino/Dino";
 import { saveTagStatData } from "@/utils/dataUtils";
 import defaultTags from "./TagStat.json";
 import { useContentFromTags } from "@/hooks/useContentFromTags";
+import { TagChips } from "./TagChips";
+import { Content as ContentType} from "@/hooks/useContentResponse";
 
 const Content: React.FC = () => {
+  const [visibleRecommendations, setVisibleRecommendations] = React.useState<
+  ContentType[]
+  >([]);
+
   useEffect(() => {
     saveTagStatData(defaultTags);
   }, []);
@@ -23,6 +29,24 @@ const Content: React.FC = () => {
     syncAndGenerateContentFromTags,
   } = useContentFromTags();
 
+  useEffect(() => {
+    if(recommendedContent.length > 0) {
+      setVisibleRecommendations(recommendedContent);
+    } else {
+      setVisibleRecommendations([]);
+    }
+  }, [recommendedContent]);
+
+
+  const handleSelect = (tags: string[]) => {
+    console.log("tags", tags);
+    if(tags.length === 0) {
+      setVisibleRecommendations(recommendedContent);
+      return;
+    }
+    const filtered = recommendedContent.filter((content) => tags.includes(content.tag))
+    setVisibleRecommendations(filtered);
+  };
 
   return (
     <div className="content-container">
@@ -79,16 +103,19 @@ const Content: React.FC = () => {
               </p>
             )}
             {recommendedContent.length > 0 && (
-              <div className="text-sm text-gray-500 mt-4">
-                Here are the content generated from your likes. You can like and
-                dislike and sync with again to get more relevant content.
-              </div>
+              <>
+                <div className="text-sm text-gray-500 mt-4">
+                  Here are the content generated from your likes. You can like
+                  and dislike and sync with again to get more relevant content.
+                </div>
+                <div>
+                  <TagChips onTagSelect={handleSelect} />
+                </div>
+              </>
             )}
           </div>
           <CardsContainer
-            content={recommendedContent.filter(
-              (content) => content.recommended
-            )}
+            content={visibleRecommendations}
           />
           <div className="temporary-buttons">
             <Button
@@ -103,7 +130,7 @@ const Content: React.FC = () => {
       )}
 
       {recoLoading && (
-        <div className="pt-5">
+        <div className="mt-5  text-center">
           <Dino />
           <p className="text-sm text-gray-500 w-[75%] m-4 text-center">
             We are also generating some content based on our recommender system.

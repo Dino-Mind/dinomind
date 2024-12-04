@@ -9,6 +9,7 @@ import { handleError } from "../utils/error/errorHandler";
 import { Content } from "./useContentResponse";
 import { fetchContentResponse } from "@/utils/fetchContentResponse";
 import { generateId } from "@/utils/generateId";
+import { getMostLikedTags } from "@/utils/getMostLikedTags";
 
 export const useContentFromTags = () => {
   const [loading, setLoading] = useState(false);
@@ -32,10 +33,7 @@ export const useContentFromTags = () => {
     const contentArray: Content[] = [];
     try {
       loadTagStatData(async (tagData) => {
-        const sortedTagData = tagData.sort((a, b) => b.ctr - a.ctr);
-        const topTags = sortedTagData.slice(0, 4);
-        const randomTag = sortedTagData[Math.floor(Math.random() * sortedTagData.length)];
-        const interestData = [...topTags.map(tag => tag.tag), randomTag.tag];
+        const interestData = getMostLikedTags(tagData);
 
         for (const tag of interestData) {
           const response = await fetchContentResponse(tag, "content");
