@@ -16,6 +16,7 @@ export type Content = {
   content: string;
   tag: string;
   summary?: string;
+  recommended?: boolean;
 }
 
 export const useContentResponse = () => {

@@ -6,15 +6,35 @@ import { CardsContainer } from "../ui/CardsContainer";
 import "./style.scss";
 import Dino from "../dino/Dino";
 import { saveTagStatData } from "@/utils/dataUtils";
-import defaultTags from './TagStat.json'
+import defaultTags from "./TagStat.json";
+import { useContentFromTags } from "@/hooks/useContentFromTags";
 
 const Content: React.FC = () => {
   const { loading, generatedContent, syncAndGenerateContent } =
     useFetchedHistory();
 
+  const {
+    loading: recoLoading,
+    recommendedContent,
+    syncAndGenerateContentFromTags,
+  } = useContentFromTags();
+
+  console.log("recoLoading", recoLoading);
+
   useEffect(() => {
     saveTagStatData(defaultTags);
   }, []);
+
+  useEffect(() => {
+    if (generatedContent.length > 0) {
+      syncAndGenerateContentFromTags();
+    //   const callSync = async () => {
+    //     await 
+    //   }
+    //   callSync();
+    // }
+    }
+  }, [generatedContent]);
 
   return (
     <div className="content-container">
@@ -41,8 +61,59 @@ const Content: React.FC = () => {
         )}
         {loading && <Dino />}
       </div>
+      {generatedContent.length > 0 && (
+        <>
+          <div className="text-left pl-8">
+            <div className="text-xl text-white font-bold mt-4">Based on your web history ⭐️</div>
+            <div className="text-sm text-gray-500 mt-4">
+              Here are the content generated from your history. You can interact
+              with them, ask questions, or just chat with them. If you want to
+              generate more content, you can sync with your history again.
+            </div>
+          </div>
+          <CardsContainer
+            content={generatedContent.filter((content) => !content.recommended)}
+          />
+        </>
+      )}
 
-      <CardsContainer content={generatedContent} />
+      {/* {generatedContent.length > 0 && (
+        <div className="temporary-buttons">
+          <Button
+            variant={"secondary"}
+            onClick={syncAndGenerateContentFromTags}
+            disabled={recoLoading}
+          >
+            {recoLoading ? "Syncing..." : "Sync with Recommended Content"}
+          </Button>
+        </div>
+      )} */}
+      {recoLoading && (
+        <>
+          <Dino />
+          <p className="text-sm text-gray-500 w-[75%] m-4 text-center">
+            We are also generating some content based on our recommender system. It will take some
+            time. Please be patient. 😊
+          </p>
+        </>
+      )}
+      {recommendedContent.length > 0 && (
+        <>
+          <div className="text-left pl-8">
+            <div className="text-xl text-white font-bold mt-4">
+              Recommendations ✨
+            </div>
+            <div className="text-sm text-gray-500 mt-4">
+              Here are the content generated from your likes. You can like and dislike and sync with again to get more relevant content.
+            </div>
+          </div>
+          <CardsContainer
+            content={recommendedContent.filter(
+              (content) => content.recommended
+            )}
+          />
+        </>
+      )}
     </div>
   );
 };
