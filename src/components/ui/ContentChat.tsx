@@ -87,7 +87,9 @@ const ContentChat: React.FC<ContentChatProps> = ({
       ...prevMessages,
       {
         sender: Sender.USER,
-        text: `Translate to ${languageEmojiMap[targetLanguage as keyof typeof languageEmojiMap]}`,
+        text: `Translate to ${
+          languageEmojiMap[targetLanguage as keyof typeof languageEmojiMap]
+        }`,
       },
       {
         sender: Sender.AI,
@@ -96,11 +98,11 @@ const ContentChat: React.FC<ContentChatProps> = ({
     ]);
   };
 
-  const lastAIMessage = messages
-  .slice()
-  .reverse()
-  .find((message) => message.sender === Sender.AI)?.text || ""
-  
+  const lastAIMessage =
+    messages
+      .slice()
+      .reverse()
+      .find((message) => message.sender === Sender.AI)?.text || "";
 
   return (
     <div className="flex justify-between bottom-0 w-full flex-col h-[90vh]">
@@ -123,7 +125,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
               )
             ) : (
               <>
-                <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl  px-2 max-w-[70vw] ml-auto">
+                <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl text-right px-2 max-w-[70vw] w-fit ml-auto">
                   {message.text}
                 </ReactMarkdown>
                 {loading && (
