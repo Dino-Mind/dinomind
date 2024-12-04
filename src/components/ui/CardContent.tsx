@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import ReactMarkdown from "react-markdown";
 import ContentChat from "./ContentChat";
 // import { ActionButtons } from "./ActionButtons";
