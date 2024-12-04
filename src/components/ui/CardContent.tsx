@@ -25,7 +25,7 @@ export const CardContent: React.FC<CardContentProps> = ({
   onClose,
 }) => {
   const [summary, setSummary] = useState<string | undefined>(initialSummary);
-  const [loadingSummary, setLoadingSummary] = useState<boolean>(true);
+  const [loadingSummary, setLoadingSummary] = useState<boolean>(false);
 
   // const words = tag.split(/\s+/).slice(1, 9); // Ignore the first "*"
 

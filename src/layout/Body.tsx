@@ -3,7 +3,7 @@ import React from "react";
 // import { Tabs } from "../components/ui/Tabs";
 import { TabName } from "../types";
 import "../styles/style.scss";
-import { FileText, MessageCircle, User } from "lucide-react";
+import { FileText, MessageCircle, RefreshCw } from "lucide-react";
 import { NavbarButton } from "@/components/ui/NavbarButton";
 import { FadeInDiv } from "@/components/ui/FadeInDiv";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,6 +40,10 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
     }
   };
 
+  const handleRefresh = () => {
+    alert("Refreshing...");
+  }
+
   return (
     <div className="flex h-screen w-full">
       <div className="flex-1">
@@ -63,7 +67,7 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
           ))}
         </div>
         <div className="mb-4">
-          <NavbarButton icon={User} title="Profile" />
+          <NavbarButton icon={RefreshCw} title="Sync" onClick={handleRefresh}/>
         </div>
       </nav>
     </div>
