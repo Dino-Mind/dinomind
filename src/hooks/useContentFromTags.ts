@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   loadContentData,
   loadTagStatData,
@@ -15,16 +15,16 @@ export const useContentFromTags = () => {
   const [recommendedContent, setRecommendedContent] = useState<Content[]>([]);
 
 
-  useEffect(() => {
-    loadContentData((content: Content[]) => {
-      const recommendedContent = content.filter((item) => item.recommended);
-      if (recommendedContent.length) {
-        setLoading(false);
-        setRecommendedContent(recommendedContent);
-        console.log("Recommended Content", recommendedContent);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   loadContentData((content: Content[]) => {
+  //     const recommendedContent = content.filter((item) => item.recommended);
+  //     if (recommendedContent.length) {
+  //       setLoading(false);
+  //       setRecommendedContent(recommendedContent);
+  //       console.log("Recommended Content", recommendedContent);
+  //     }
+  //   });
+  // }, []);
 
 
   const syncAndGenerateContentFromTags = () => {
@@ -32,7 +32,11 @@ export const useContentFromTags = () => {
     const contentArray: Content[] = [];
     try {
       loadTagStatData(async (tagData) => {
-        const interestData = tagData.map((tag) => tag.tag).splice(0, 5);
+        const sortedTagData = tagData.sort((a, b) => b.ctr - a.ctr);
+        const topTags = sortedTagData.slice(0, 4);
+        const randomTag = sortedTagData[Math.floor(Math.random() * sortedTagData.length)];
+        const interestData = [...topTags.map(tag => tag.tag), randomTag.tag];
+
         for (const tag of interestData) {
           const response = await fetchContentResponse(tag, "content");
           contentArray.push({

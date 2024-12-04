@@ -10,6 +10,10 @@ import defaultTags from "./TagStat.json";
 import { useContentFromTags } from "@/hooks/useContentFromTags";
 
 const Content: React.FC = () => {
+  useEffect(() => {
+    saveTagStatData(defaultTags);
+  }, []);
+
   const { loading, generatedContent, syncAndGenerateContent } =
     useFetchedHistory();
 
@@ -19,9 +23,7 @@ const Content: React.FC = () => {
     syncAndGenerateContentFromTags,
   } = useContentFromTags();
 
-  useEffect(() => {
-    saveTagStatData(defaultTags);
-  }, []);
+ 
 
   // useEffect(() => {
   //   if (generatedContent.length > 0) {
@@ -113,13 +115,13 @@ const Content: React.FC = () => {
       )}
 
       {recoLoading && (
-        <>
+        <div className="pt-5">
           <Dino />
           <p className="text-sm text-gray-500 w-[75%] m-4 text-center">
             We are also generating some content based on our recommender system.
             It will take some time. Please be patient. 😊
           </p>
-        </>
+        </div>
       )}
     </div>
   );
