@@ -23,16 +23,16 @@ const Content: React.FC = () => {
     saveTagStatData(defaultTags);
   }, []);
 
-  useEffect(() => {
-    if (generatedContent.length > 0) {
-      syncAndGenerateContentFromTags();
-    //   const callSync = async () => {
-    //     await 
-    //   }
-    //   callSync();
-    // }
-    }
-  }, [generatedContent]);
+  // useEffect(() => {
+  //   if (generatedContent.length > 0) {
+  //     syncAndGenerateContentFromTags();
+  //   //   const callSync = async () => {
+  //   //     await
+  //   //   }
+  //   //   callSync();
+  //   // }
+  //   }
+  // }, [generatedContent]);
 
   return (
     <div className="content-container">
@@ -62,7 +62,9 @@ const Content: React.FC = () => {
       {generatedContent.length > 0 && (
         <>
           <div className="text-left pl-8">
-            <div className="text-xl text-white font-bold mt-4">Based on your web history ⭐️</div>
+            <div className="text-xl text-white font-bold mt-4">
+              Based on your web history ⭐️
+            </div>
             <div className="text-sm text-gray-500 mt-4">
               Here are the content generated from your history. You can interact
               with them, ask questions, or just chat with them. If you want to
@@ -75,41 +77,48 @@ const Content: React.FC = () => {
         </>
       )}
 
-      {/* {generatedContent.length > 0 && (
-        <div className="temporary-buttons">
-          <Button
-            variant={"secondary"}
-            onClick={syncAndGenerateContentFromTags}
-            disabled={recoLoading}
-          >
-            {recoLoading ? "Syncing..." : "Sync with Recommended Content"}
-          </Button>
-        </div>
-      )} */}
-      {recoLoading && (
+      {generatedContent.length > 0 && (
         <>
-          <Dino />
-          <p className="text-sm text-gray-500 w-[75%] m-4 text-center">
-            We are also generating some content based on our recommender system. It will take some
-            time. Please be patient. 😊
-          </p>
-        </>
-      )}
-      {recommendedContent.length > 0 && (
-        <>
-          <div className="text-left pl-8">
+          <div className="text-left pl-8 w-full">
             <div className="text-xl text-white font-bold mt-4">
               Recommendations ✨
             </div>
-            <div className="text-sm text-gray-500 mt-4">
-              Here are the content generated from your likes. You can like and dislike and sync with again to get more relevant content.
-            </div>
+            {recommendedContent.length === 0 && (
+              <p className="text-sm text-gray-500 w-[75%] my-4 text-left">
+                We may generate some content randomly as well 🎉
+              </p>
+            )}
+            {recommendedContent.length > 0 && (
+              <div className="text-sm text-gray-500 mt-4">
+                Here are the content generated from your likes. You can like and
+                dislike and sync with again to get more relevant content.
+              </div>
+            )}
           </div>
           <CardsContainer
             content={recommendedContent.filter(
               (content) => content.recommended
             )}
           />
+          <div className="temporary-buttons">
+            <Button
+              variant={"secondary"}
+              onClick={syncAndGenerateContentFromTags}
+              disabled={recoLoading}
+            >
+              {recoLoading ? "Syncing..." : "Load more content"}
+            </Button>
+          </div>
+        </>
+      )}
+
+      {recoLoading && (
+        <>
+          <Dino />
+          <p className="text-sm text-gray-500 w-[75%] m-4 text-center">
+            We are also generating some content based on our recommender system.
+            It will take some time. Please be patient. 😊
+          </p>
         </>
       )}
     </div>

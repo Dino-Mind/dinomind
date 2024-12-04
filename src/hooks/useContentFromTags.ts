@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   loadContentData,
   loadTagStatData,
@@ -13,6 +13,19 @@ import { generateId } from "@/utils/generateId";
 export const useContentFromTags = () => {
   const [loading, setLoading] = useState(false);
   const [recommendedContent, setRecommendedContent] = useState<Content[]>([]);
+
+
+  useEffect(() => {
+    loadContentData((content: Content[]) => {
+      const recommendedContent = content.filter((item) => item.recommended);
+      if (recommendedContent.length) {
+        setLoading(false);
+        setRecommendedContent(recommendedContent);
+        console.log("Recommended Content", recommendedContent);
+      }
+    });
+  }, []);
+
 
   const syncAndGenerateContentFromTags = () => {
     setLoading(true);
@@ -34,7 +47,7 @@ export const useContentFromTags = () => {
           contentArray.push(...content);
           saveContentData(contentArray);
           setRecommendedContent(contentArray);
-         setLoading(false);
+          setLoading(false);
         });
       });
     } catch (error) {
