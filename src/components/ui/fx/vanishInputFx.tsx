@@ -239,7 +239,7 @@ export function VanishInputFx({
               strokeDashoffset: value ? 0 : "50%",
             }}
             transition={{
-              duration: 0.3,
+              duration: 0.05,
               ease: "linear",
             }}
           />

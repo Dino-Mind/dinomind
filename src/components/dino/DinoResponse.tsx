@@ -14,7 +14,7 @@ const DinoResponse: React.FC<DinoResponseProps> = ({ isLoading }) => {
 
       {/* AI Name and Loading State */}
       <div className="text-base text-white mt-1">
-        <span className="font-semibold">Dinomind</span>
+        <span className="font-semibold">DinoMind</span>
         {isLoading && (
           <span className="ml-2 animate-pulse text-gray-300">
             is preparing a response...

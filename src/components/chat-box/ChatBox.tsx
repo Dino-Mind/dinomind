@@ -18,7 +18,6 @@ const ChatBox: React.FC = () => {
   const {
     messages,
     loading,
-    latestAIMessageIndex,
     handleInputChange,
     handleSubmit,
     clearChatHistory,
@@ -62,9 +61,7 @@ const ChatBox: React.FC = () => {
             {message.sender === Sender.AI && (
               <>
                 {/* Render DinoResponse for every AI message */}
-                <DinoResponse
-                  isLoading={index === activeAiMessageIndex && loading}
-                />
+                <DinoResponse isLoading={false} />
 
                 {index === activeAiMessageIndex && loading ? (
                   <TextGenerateEffectFx
@@ -80,9 +77,16 @@ const ChatBox: React.FC = () => {
               </>
             )}
             {message.sender !== Sender.AI && (
-              <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl  px-2 max-w-fit ml-auto">
-                {message.text}
-              </ReactMarkdown>
+              <>
+                <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl px-2 max-w-[70vw] ml-auto">
+                  {message.text}
+                </ReactMarkdown>
+                {loading && (
+                  <DinoResponse
+                    isLoading={index + 1 === messages.length && loading}
+                  />
+                )}
+              </>
             )}
           </div>
         ))}

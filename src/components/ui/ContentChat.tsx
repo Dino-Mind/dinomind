@@ -48,12 +48,11 @@ const ContentChat: React.FC<ContentChatProps> = ({
   });
 
   useEffect(() => {
-    if(messagesFromChat.length === 0) return;
+    if (messagesFromChat.length === 0) return;
     setMessages((prev) => {
       return [prev[0], ...messagesFromChat];
     });
-  }
-  , [messagesFromChat]);
+  }, [messagesFromChat]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -67,8 +66,10 @@ const ContentChat: React.FC<ContentChatProps> = ({
     });
   }, [messages]);
 
-  const placeholders = combinedLoading
-    ? ["Please wait...", "Creating summary...", "Summarizing your content..."]
+  const placeholders = loading
+    ? ["Please wait...", "I'm thinking...", "Just a moment..."]
+    : combinedLoading
+    ? ["Updating memory...", "Please wait..."]
     : [
         "Type your questions...",
         "Ask me anything!",
@@ -95,15 +96,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
       <div className="flex flex-col w-full h-full overflow-y-auto p-4 space-y-4 ">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
-            {message.sender === Sender.AI && (
-              // <div className="flex flex-row items-center text-center gap-2">
-              //   <div className="w-8 h-8 rounded-full flex items-center justify-center">
-              //     <img src="src/assets/rex_magnified.png" alt="AI Avatar" />
-              //   </div>
-              //   <span className="text-base text-white mt-1">Dinomind</span>
-              // </div>
-              <DinoResponse isLoading={loading} />
-            )}
+            {message.sender === Sender.AI && <DinoResponse isLoading={false} />}
 
             {message.sender === Sender.AI ? (
               index === latestAIMessageIndex ? (
@@ -118,9 +111,16 @@ const ContentChat: React.FC<ContentChatProps> = ({
                 </ReactMarkdown>
               )
             ) : (
-              <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl px-2 max-w-fit ml-auto">
-                {message.text}
-              </ReactMarkdown>
+              <>
+                <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl  px-2 max-w-[70vw] ml-auto">
+                  {message.text}
+                </ReactMarkdown>
+                {loading && (
+                  <DinoResponse
+                    isLoading={index + 1 === messages.length && loading}
+                  />
+                )}
+              </>
             )}
           </div>
         ))}
