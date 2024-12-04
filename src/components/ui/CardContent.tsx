@@ -5,6 +5,7 @@ import ContentChat from "./ContentChat";
 
 import { MeteorsFx } from "./fx/meteorsFx";
 import { createSummaryForContent } from "@/utils/createSummaryForContent";
+import Nugget from "./Nugget";
 
 interface CardContentProps {
   isOpen: boolean;
@@ -60,7 +61,7 @@ export const CardContent: React.FC<CardContentProps> = ({
             </button>
 
             <div className="flex gap-2 w-[80vw] items-center overflow-x-auto whitespace-nowrap">
-              {tag}
+              <Nugget tagItem={tag} />
             </div>
           </div>
 
