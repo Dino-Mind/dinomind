@@ -23,18 +23,6 @@ const Content: React.FC = () => {
     syncAndGenerateContentFromTags,
   } = useContentFromTags();
 
- 
-
-  // useEffect(() => {
-  //   if (generatedContent.length > 0) {
-  //     syncAndGenerateContentFromTags();
-  //   //   const callSync = async () => {
-  //   //     await
-  //   //   }
-  //   //   callSync();
-  //   // }
-  //   }
-  // }, [generatedContent]);
 
   return (
     <div className="content-container">
