@@ -53,6 +53,11 @@ const ChatBox: React.FC = () => {
     });
   }, [messages]);
 
+  const lastAIMessage = messages
+  .slice()
+  .reverse()
+  .find((message) => message.sender === Sender.AI)?.text || ""
+
   return (
     <div className="chatbox-container">
       <div className="chat-messages">

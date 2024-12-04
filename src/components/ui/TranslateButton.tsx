@@ -17,34 +17,36 @@ export const TranslateButton: React.FC<TranslateButtonProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button className="bg-transparent border-none text-white px-2 py-1 text-xs rounded-md shadow transition  bg-gray-800 hover:bg-gray-600">
+        <Button 
+          className="bg-transparent px-2 py-1 text-xs rounded-md shadow transition border border-primary-xPrimary hover:border-primary-xSecondary"
+        >
           <Languages size={12} />
           Translate
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-primary-100 text-white p-2 rounded-md shadow-md">
+      <DropdownMenuContent className="bg-primary-xBackground text-white p-2 rounded-md shadow-md border-primary-xPrimary">
         <DropdownMenuItem>
           <Button
             onClick={() => onTranslate("es")}
-            className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-gray-800 hover:bg-gray-600"
+            className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-primary-xBackgroundCard"
           >
-            Spanish
+            Spanish 🇪🇸
           </Button>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onTranslate("ko")}>
           <Button
             onClick={() => onTranslate("ko")}
-            className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-gray-800 hover:bg-gray-600"
+            className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-primary-xBackgroundCard"
           >
-            Korean
+            Korean 🇰🇷
           </Button>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onTranslate("tr")}>
           <Button
             onClick={() => onTranslate("tr")}
-            className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-gray-800 hover:bg-gray-600"
+            className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-primary-xBackgroundCard"
           >
-            Turkish
+            Turkish 🇹🇷
           </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>

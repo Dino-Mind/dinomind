@@ -8,12 +8,14 @@ import { loadTagStatData, saveTagStatData } from "@/utils/dataUtils";
 type ActionButtonProps = {
   content: string;
   tag: string;
+  lastMessage?: string;
   onTranslate?: (targetLanguage: string, result: string) => void;
 };
 
 export const ActionButtons: React.FC<ActionButtonProps> = ({
   content,
   tag: tagProp,
+  lastMessage,
   onTranslate,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -33,7 +35,7 @@ export const ActionButtons: React.FC<ActionButtonProps> = ({
   useEffect(() => {
     const loadTranslated = async () => {
       if (translator) {
-        const result = await translator.translate(content);
+        const result = await translator.translate(lastMessage);
         setTranslated(result);
         onTranslate?.(targetLanguage!, result);
       }
@@ -68,14 +70,14 @@ export const ActionButtons: React.FC<ActionButtonProps> = ({
       <div className="flex gap-2">
         <Button
           onClick={handleCopy}
-          className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-gray-800 hover:bg-gray-600"
+          className="bg-transparent px-2 py-1 text-xs rounded-md shadow transition border border-primary-xPrimary hover:border-primary-xSecondary"
         >
           <Copy size={12} />
         </Button>
 
         <Button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition  bg-gray-800 hover:bg-gray-600"
+          className="bg-transparent px-2 py-1 text-xs rounded-md shadow transition border border-primary-xPrimary hover:border-primary-xSecondary"
         >
           <WandSparkles size={12} />
         </Button>
@@ -86,13 +88,14 @@ export const ActionButtons: React.FC<ActionButtonProps> = ({
       <div className="flex gap-2">
         <Button
           onClick={handleLike("like")}
-          className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-gray-800 hover:bg-gray-600"
+          className="bg-transparent px-2 py-1 text-xs rounded-md shadow transition border border-primary-xPrimary hover:border-primary-xSecondary"
+
         >
           <ThumbsUp size={12} />
         </Button>
         <Button
           onClick={handleLike("dislike")}
-          className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-gray-800 hover:bg-gray-600"
+          className="bg-transparent px-2 py-1 text-xs rounded-md shadow transition border border-primary-xPrimary hover:border-primary-xSecondary"
         >
           <ThumbsDown size={12} />
         </Button>

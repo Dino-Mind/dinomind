@@ -76,12 +76,18 @@ const ContentChat: React.FC<ContentChatProps> = ({
         "Let's find what you wonder about!",
       ];
 
+  const languageEmojiMap = {
+    tr: "🇹🇷",
+    ko: "🇰🇷",
+    es: "🇪🇸",
+  };
+
   const handleTranslate = (targetLanguage: string, result: string) => {
     setMessages((prevMessages) => [
       ...prevMessages,
       {
         sender: Sender.USER,
-        text: `Translate to ${targetLanguage}`,
+        text: `Translate to ${languageEmojiMap[targetLanguage as keyof typeof languageEmojiMap]}`,
       },
       {
         sender: Sender.AI,
@@ -89,6 +95,12 @@ const ContentChat: React.FC<ContentChatProps> = ({
       },
     ]);
   };
+
+  const lastAIMessage = messages
+  .slice()
+  .reverse()
+  .find((message) => message.sender === Sender.AI)?.text || ""
+  
 
   return (
     <div className="flex justify-between bottom-0 w-full flex-col h-[90vh]">
@@ -130,6 +142,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
         <ActionButtons
           content={description}
           tag={tag}
+          lastMessage={lastAIMessage}
           onTranslate={handleTranslate}
         />
         <VanishInputFx
