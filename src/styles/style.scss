@@ -157,7 +157,7 @@ html {
   right: -0px;
   height: 40px;
   width: 50px;
-  background: rgb(210, 210, 210);
+  background: rgb(30, 30, 30);
   border: none;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
@@ -165,7 +165,7 @@ html {
     right vars.$transition-duration ease;
 
   &:hover {
-    background: rgb(240, 240, 240);
+    background: rgb(50, 50, 50);
   }
 
   .content-button-logo {
