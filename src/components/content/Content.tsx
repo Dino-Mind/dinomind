@@ -19,8 +19,6 @@ const Content: React.FC = () => {
     syncAndGenerateContentFromTags,
   } = useContentFromTags();
 
-  console.log("recoLoading", recoLoading);
-
   useEffect(() => {
     saveTagStatData(defaultTags);
   }, []);

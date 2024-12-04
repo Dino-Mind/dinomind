@@ -49,8 +49,6 @@ export const useContentFromTags = () => {
     removeLocalStorageData("interestData", () => {});
   };
 
-  console.log("looading", loading);
-
   return {
     recommendedContent,
     loading,

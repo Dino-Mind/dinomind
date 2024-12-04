@@ -35,15 +35,24 @@ const ContentChat: React.FC<ContentChatProps> = ({
     // resetSession,
   } = useChatWithAi("contentChat", id, summary);
 
+  console.log("loading, loadingSummary", loading, loadingSummary);
   const combinedLoading = loading || loadingSummary;
 
-  const messages = React.useMemo(() => {
+  const [messages, setMessages] = React.useState(() => {
     const initialMessage = {
       sender: Sender.AI,
       text: description,
     };
     return [initialMessage, ...messagesFromChat];
-  }, [description, messagesFromChat]);
+  });
+
+  useEffect(() => {
+    if(messagesFromChat.length === 0) return;
+    setMessages((prev) => {
+      return [prev[0], ...messagesFromChat];
+    });
+  }
+  , [messagesFromChat]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -65,6 +74,20 @@ const ContentChat: React.FC<ContentChatProps> = ({
         "What do you like about this content?",
         "Let's find what you wonder about!",
       ];
+
+  const handleTranslate = (targetLanguage: string, result: string) => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        sender: Sender.USER,
+        text: `Translate to ${targetLanguage}`,
+      },
+      {
+        sender: Sender.AI,
+        text: result,
+      },
+    ]);
+  };
 
   return (
     <div className="flex justify-between bottom-0 w-full flex-col h-[90vh]">
@@ -103,7 +126,11 @@ const ContentChat: React.FC<ContentChatProps> = ({
       </div>
 
       <div className="flex flex-col items-center justify-center bg-primary-xBackground p-2 border-t border-primary-xPrimary">
-        <ActionButtons content={description} tag={tag}/>
+        <ActionButtons
+          content={description}
+          tag={tag}
+          onTranslate={handleTranslate}
+        />
         <VanishInputFx
           loading={combinedLoading}
           placeholders={placeholders}
