@@ -53,10 +53,11 @@ const ChatBox: React.FC = () => {
     });
   }, [messages]);
 
-  const lastAIMessage = messages
-  .slice()
-  .reverse()
-  .find((message) => message.sender === Sender.AI)?.text || ""
+  // const lastAIMessage =
+  //   messages
+  //     .slice()
+  //     .reverse()
+  //     .find((message) => message.sender === Sender.AI)?.text || "";
 
   return (
     <div className="chatbox-container">
@@ -83,7 +84,7 @@ const ChatBox: React.FC = () => {
             )}
             {message.sender !== Sender.AI && (
               <>
-                <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl px-2 max-w-[70vw] ml-auto">
+                <ReactMarkdown className="prose prose-invert border border-gray-500 rounded-xl text-right px-2 max-w-[70vw] w-fit ml-auto">
                   {message.text}
                 </ReactMarkdown>
                 {loading && (

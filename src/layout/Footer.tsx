@@ -30,9 +30,6 @@ const Footer: React.FC = () => {
           </motion.p>
         </AnimatePresence>
       </div>
-      <div className="footer-buttons">
-        <Button shape="circle" icon={<SettingOutlined />} />
-      </div>
     </div>
   );
 };
