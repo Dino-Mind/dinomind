@@ -46,7 +46,7 @@ export const fetchGeminiResponse = async (
           .replace("{summary}", summary || "No summary provided")
           .replace("{userMessage}", userMessage);
         console.log(
-          `[fetchGeminiResponse] - Using contentChat contentPromptTemplate with summary (id: ${id}):`,
+          `CONTENTCHAT_PROMPTWITH SUMMARY >>>>>>> (id: ${id}):`,
           prompt
         );
         isFirstContentMessageProcessed = true;

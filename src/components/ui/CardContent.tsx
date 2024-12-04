@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import ReactMarkdown from "react-markdown";
+import React, { useEffect, useState } from "react";
+
 import ContentChat from "./ContentChat";
-import { ActionButtons } from "./ActionButtons";
 
 import { MeteorsFx } from "./fx/meteorsFx";
 import { createSummaryForContent } from "@/utils/createSummaryForContent";
@@ -19,16 +18,22 @@ export const CardContent: React.FC<CardContentProps> = ({
   isOpen,
   id,
   description,
-  summary,
+  summary: initialSummary,
   tag,
   onClose,
 }) => {
-  const words = tag.split(/\s+/).slice(1, 9); // Ignore the first "*"
+  const [summary, setSummary] = useState<string | undefined>(initialSummary);
+  const [loadingSummary, setLoadingSummary] = useState<boolean>(true);
+
+  // const words = tag.split(/\s+/).slice(1, 9); // Ignore the first "*"
 
   useEffect(() => {
     const fetchData = async () => {
-      if (isOpen) {
-        await createSummaryForContent(id, description);
+      if (isOpen && !summary) {
+        setLoadingSummary(true);
+        const generatedSummary = await createSummaryForContent(id, description);
+        setSummary(generatedSummary);
+        setLoadingSummary(false);
       }
     };
 
@@ -52,7 +57,7 @@ export const CardContent: React.FC<CardContentProps> = ({
             >
               ✕
             </button>
-{/* 
+            {/* 
             <div className="flex gap-2 w-[80vw] items-center overflow-x-auto whitespace-nowrap">
               {words.map((word, idx) => (
                 <ReactMarkdown
@@ -70,13 +75,13 @@ export const CardContent: React.FC<CardContentProps> = ({
               {description}
             </ReactMarkdown>
           </div> */}
-
         </div>
         <ContentChat
           id={id}
           description={description}
           tag={tag}
           summary={summary}
+          loadingSummary={loadingSummary}
         />
       </div>
       <MeteorsFx number={20} />

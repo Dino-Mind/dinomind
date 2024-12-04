@@ -82,7 +82,7 @@ html {
   overflow: hidden;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(20deg, #1A1A1A, #1A1A1A);
+  background: linear-gradient(20deg, #1a1a1a, #1a1a1a);
 
   * {
     font-family: "Poppins", sans-serif;
@@ -151,34 +151,32 @@ html {
   align-items: center;
   position: fixed;
   z-index: 9999;
-  margin: 5px !important;
+  margin: 0px !important;
   padding: 5px !important;
-  bottom: 20px;
-  right: -100px;
-  height: vars.$content-buttons-height;
-  width: vars.$content-buttons-width;
-  background: vars.$highlight-color;
+  bottom: 120px;
+  right: -0px;
+  height: 40px;
+  width: 50px;
+  background: rgb(210, 210, 210);
   border: none;
-  border-radius: vars.$border-radius 0 0 vars.$border-radius;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
   transition: vars.$transition-duration ease,
     right vars.$transition-duration ease;
 
-  animation: glow vars.$glow-animation-duration infinite alternate;
-
   &:hover {
-    background: vars.$highlight-color;
+    background: rgb(240, 240, 240);
   }
 
   .content-button-logo {
     display: flex;
-    width: 40px;
+    width: 30px;
     margin-left: 10px;
     transition: vars.$transition-duration ease,
       right vars.$transition-duration ease;
     cursor: pointer;
 
     &:hover {
-      width: 50px;
     }
   }
 }
