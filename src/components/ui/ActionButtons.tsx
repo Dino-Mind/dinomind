@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
 import { Copy, WandSparkles, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "./button";
 import { useTranslate } from "@/hooks/useTranslate";
@@ -20,7 +22,9 @@ export const ActionButtons: React.FC<ActionButtonProps> = ({
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [targetLanguage, setTargetLanguage] = useState<string | null>(null);
-  const [, setTranslated] = useState<string | null>(null); // TODO: orhun use translated text later
+  const [, setTranslated] = useState<string | null>(null);
+  const [liked, setLiked] = useState<"like" | "dislike" | null>(null);
+
   const translator = useTranslate(targetLanguage);
 
   const handleCopy = () => {
@@ -45,6 +49,8 @@ export const ActionButtons: React.FC<ActionButtonProps> = ({
   }, [content, translator]);
 
   const handleLike = (type: "like" | "dislike") => () => {
+    setLiked(type);
+
     loadTagStatData((tagData) => {
       const tag = tagData.find((tag) => tag.tag === tagProp);
       if (tag) {
@@ -86,19 +92,40 @@ export const ActionButtons: React.FC<ActionButtonProps> = ({
       </div>
 
       <div className="flex gap-2">
-        <Button
-          onClick={handleLike("like")}
-          className="bg-transparent px-2 py-1 text-xs rounded-md shadow transition border border-primary-xPrimary hover:border-primary-xSecondary"
-
+        <motion.div
+          animate={{
+            scale: liked === "like" ? 1.1 : 1,
+          }}
+          transition={{ duration: 0.3 }}
+          className="inline-flex"
         >
-          <ThumbsUp size={12} />
-        </Button>
-        <Button
-          onClick={handleLike("dislike")}
-          className="bg-transparent px-2 py-1 text-xs rounded-md shadow transition border border-primary-xPrimary hover:border-primary-xSecondary"
+          <Button
+            onClick={handleLike("like")}
+            className="bg-transparent px-2 py-1 text-xs rounded-md shadow transition border border-primary-xPrimary hover:border-primary-xSecondary"
+          >
+            <ThumbsUp
+              size={12}
+              color={liked === "like" ? "green" : "currentColor"}
+            />
+          </Button>
+        </motion.div>
+        <motion.div
+          animate={{
+            scale: liked === "dislike" ? 1.1 : 1,
+          }}
+          transition={{ duration: 0.3 }}
+          className="inline-flex"
         >
-          <ThumbsDown size={12} />
-        </Button>
+          <Button
+            onClick={handleLike("dislike")}
+            className="bg-transparent px-2 py-1 text-xs rounded-md shadow transition border border-primary-xPrimary hover:border-primary-xSecondary"
+          >
+            <ThumbsDown
+              size={12}
+              color={liked === "dislike" ? "red" : "currentColor"}
+            />
+          </Button>
+        </motion.div>
       </div>
     </div>
   );
