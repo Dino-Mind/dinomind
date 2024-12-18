@@ -3,7 +3,7 @@ import React from "react";
 // import { Tabs } from "../components/ui/Tabs";
 import { TabName } from "../types";
 import "../styles/style.scss";
-import { FileText, MessageCircle, RefreshCw } from "lucide-react";
+import { FileText, MessageCircle } from "lucide-react";
 import { NavbarButton } from "@/components/ui/NavbarButton";
 import { FadeInDiv } from "@/components/ui/FadeInDiv";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,6 @@ interface BodyProps {
 const Body: React.FC<BodyProps> = ({ componentMap }) => {
   const activeTab = useSelector((state: RootState) => state.ui.activeTab);
   const dispatch = useDispatch();
-
 
   const tabs: Tab[] = [
     {
@@ -40,7 +39,6 @@ const Body: React.FC<BodyProps> = ({ componentMap }) => {
       dispatch(setActiveTab(tabValue));
     }
   };
-
 
   return (
     <div className="flex h-screen w-full">

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Sender, Message } from "@/types/messageType";
 import { useGeminiResponse } from "./useGeminiResponse";
 import {
+  clearContentChatData,
   loadChatData,
   loadContentChatData,
   removeLocalStorageData,
@@ -33,9 +34,9 @@ export const useChatWithAi = (
     if (component === ComponentTypeEnum.Chatbox) {
       loadChatData(setMessages);
     } else if (component === ComponentTypeEnum.ContentChat) {
-      loadContentChatData(setMessages);
+      loadContentChatData(id, setMessages);
     }
-  }, [component]);
+  }, [component, id]);
 
   useEffect(() => {
     if (fetchedMessages.length) {
@@ -57,7 +58,7 @@ export const useChatWithAi = (
     if (component === ComponentTypeEnum.Chatbox) {
       saveChatData(userMessage);
     } else if (component === ComponentTypeEnum.ContentChat) {
-      saveContentChatData(userMessage);
+      saveContentChatData(id, userMessage);
     }
 
     setMessages((prevMessages) => [...prevMessages, userMessage]);
@@ -74,8 +75,8 @@ export const useChatWithAi = (
   const clearChatHistory = () => {
     if (component === ComponentTypeEnum.Chatbox) {
       removeLocalStorageData("chatHistory", () => setMessages([]));
-    } else if (component === ComponentTypeEnum.ContentChat) {
-      removeLocalStorageData("contentChatHistory", () => setMessages([]));
+    } else if (component === ComponentTypeEnum.ContentChat && id) {
+      clearContentChatData(id, () => setMessages([]));
     }
     setLatestAIMessageIndex(null);
   };

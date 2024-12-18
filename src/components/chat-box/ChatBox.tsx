@@ -43,7 +43,7 @@ const ChatBox: React.FC = () => {
         setActiveAiMessageIndex(lastIndex);
       }
     } else {
-      setActiveAiMessageIndex(null); // Reset when not loading
+      setActiveAiMessageIndex(null);
     }
   }, [loading, messages]);
 
@@ -52,12 +52,6 @@ const ChatBox: React.FC = () => {
       scrollToBottom();
     });
   }, [messages]);
-
-  // const lastAIMessage =
-  //   messages
-  //     .slice()
-  //     .reverse()
-  //     .find((message) => message.sender === Sender.AI)?.text || "";
 
   return (
     <div className="chatbox-container">

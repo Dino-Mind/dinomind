@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 import { MeteorsFx } from "./fx/meteorsFx";
@@ -23,6 +23,10 @@ export const Card: React.FC<CardProps> = ({
 
   const openCardContent = () => setIsOpen(true);
   const closeCardContent = () => setIsOpen(false);
+
+  useEffect(() => {
+    console.log(isOpen);
+  }, [isOpen]);
 
   return (
     <>

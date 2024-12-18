@@ -15,7 +15,6 @@ export const useContentFromTags = () => {
   const [loading, setLoading] = useState(false);
   const [recommendedContent, setRecommendedContent] = useState<Content[]>([]);
 
-
   // useEffect(() => {
   //   loadContentData((content: Content[]) => {
   //     const recommendedContent = content.filter((item) => item.recommended);
@@ -26,7 +25,6 @@ export const useContentFromTags = () => {
   //     }
   //   });
   // }, []);
-
 
   const syncAndGenerateContentFromTags = () => {
     setLoading(true);
@@ -57,7 +55,7 @@ export const useContentFromTags = () => {
         logToConsole: true,
       });
       setLoading(false);
-    } 
+    }
   };
 
   const clearInterestData = () => {

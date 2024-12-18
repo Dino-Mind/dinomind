@@ -98,6 +98,36 @@ const ContentChat: React.FC<ContentChatProps> = ({
     ]);
   };
 
+  /**
+     const handleTranslate = (targetLanguage: string, result: string) => {
+    const userMessage: Message = {
+      sender: Sender.USER,
+      text: `Translate to ${
+        languageEmojiMap[targetLanguage as keyof typeof languageEmojiMap]
+      }`,
+    };
+    const aiMessage: Message = {
+      sender: Sender.AI,
+      text: result,
+    };
+    setMessages((prevMessages) => [...prevMessages, userMessage, aiMessage]);
+    if (id) {
+      saveContentChatData(id, userMessage);
+      saveContentChatData(id, aiMessage);
+    }
+  };
+   */
+
+  const handleClearChat = () => {
+    clearChatHistory(); // Clear the storage
+    setMessages([
+      {
+        sender: Sender.AI,
+        text: description, // Reset messages to the initial state
+      },
+    ]);
+  };
+
   const lastAIMessage =
     messages
       .slice()
@@ -154,7 +184,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
           onSubmit={handleSubmit}
         />
         <button
-          onClick={clearChatHistory}
+          onClick={handleClearChat}
           className="text-white border-b border-gray-400"
         >
           Clear Chat History

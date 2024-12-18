@@ -60,20 +60,57 @@ export const loadChatData = (callback: (chatHistory: Message[]) => void) => {
 };
 
 // Content Chat Data Management
-export const saveContentChatData = (newMessage: Message) => {
-  chrome.storage.local.get("contentChatHistory", (result) => {
-    const chatHistory = result.chatHistory || [];
-    chatHistory.push(newMessage);
-    chrome.storage.local.set({ chatHistory });
+export const saveContentChatData = (
+  id: string | undefined,
+  newMessage: Message
+) => {
+  chrome.storage.local.get("contentData", (result) => {
+    const contentData: Content[] = result.contentData || [];
+    const contentIndex = contentData.findIndex((content) => content.id === id);
+
+    if (contentIndex !== -1) {
+      const contentItem = contentData[contentIndex];
+      if (!contentItem.content_chat) {
+        contentItem.content_chat = [];
+      }
+      contentItem.content_chat.push(newMessage);
+      chrome.storage.local.set({ contentData });
+    } else {
+      console.error(`Content with id ${id} not found.`);
+    }
   });
 };
 
 export const loadContentChatData = (
-  callback: (chatHistory: Message[]) => void
+  id: string | undefined,
+  callback: (messages: Message[]) => void
 ) => {
-  chrome.storage.local.get("contentChatHistory", (result) => {
-    const chatHistory = result.chatHistory || [];
-    callback(chatHistory);
+  chrome.storage.local.get("contentData", (result) => {
+    const contentData: Content[] = result.contentData || [];
+    const contentItem = contentData.find((content) => content.id === id);
+
+    if (contentItem) {
+      callback(contentItem.content_chat || []);
+    } else {
+      console.error(`Content with id ${id} not found.`);
+      callback([]);
+    }
+  });
+};
+
+export const clearContentChatData = (id: string, callback?: () => void) => {
+  chrome.storage.local.get("contentData", (result) => {
+    const contentData: Content[] = result.contentData || [];
+    const contentIndex = contentData.findIndex((content) => content.id === id);
+
+    if (contentIndex !== -1) {
+      contentData[contentIndex].content_chat = [];
+      chrome.storage.local.set({ contentData }, () => {
+        if (callback) callback();
+      });
+    } else {
+      console.error(`Content with id ${id} not found.`);
+    }
   });
 };
 
@@ -137,20 +174,18 @@ export const loadContentData = (callback: (content: Content[]) => void) => {
   chrome.storage.local.get("contentData", (result) => {
     const content = result.contentData;
 
-    // Ensure the returned data is always an array
     if (Array.isArray(content)) {
       callback(content);
     } else {
       console.warn(
         "Invalid content data found in storage. Defaulting to empty array."
       );
-      callback([]); // Provide a fallback empty array
+      callback([]);
     }
   });
 };
 
 // Tag data Management
-//todo:ORHUN must add count and isClicked saving data utility Must look like content data managers
 export const saveTagData = (tagInput: string[]) => {
   chrome.storage.local.set({ tagData: tagInput });
 };
@@ -170,5 +205,3 @@ export const loadTagStatData = (callback: (tagInput: TagStat[]) => void) => {
     callback(result.tagStat || null);
   });
 };
-
-

@@ -36,8 +36,7 @@ export default {
           xBackgroundCard: "#292929",
           xPrimary: "#6A00FF",
           xSecondary: "#a64aff",
-          xTernary: "#ffb1ff", 
-
+          xTernary: "#ffb1ff",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

@@ -1,7 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
 
-import { SettingOutlined } from "@ant-design/icons";
-import { Button } from "antd";
 import { usePlaceholderAnimation } from "@/hooks/usePlaceholderAnimation";
 
 const Footer: React.FC = () => {

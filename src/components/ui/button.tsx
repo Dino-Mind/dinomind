@@ -37,7 +37,7 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement | HTMLDivElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean; // Enables using custom elements instead of default "button"
+  asChild?: boolean;
 }
 
 const Button = React.forwardRef<

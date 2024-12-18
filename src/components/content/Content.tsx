@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { Button } from "../ui/button";
 import { useFetchedHistory } from "@/hooks/useFetchedHistory";
@@ -9,16 +9,14 @@ import { saveTagStatData } from "@/utils/dataUtils";
 import defaultTags from "./TagStat.json";
 import { useContentFromTags } from "@/hooks/useContentFromTags";
 import { TagChips } from "./TagChips";
-import { Content as ContentType} from "@/hooks/useContentResponse";
+import { Content as ContentType } from "@/hooks/useContentResponse";
 
 const Content: React.FC = () => {
   const [visibleRecommendations, setVisibleRecommendations] = React.useState<
-  ContentType[]
+    ContentType[]
   >([]);
 
-  useEffect(() => {
-    saveTagStatData(defaultTags);
-  }, []);
+  const loadingRef = useRef<HTMLDivElement>(null);
 
   const { loading, generatedContent, syncAndGenerateContent } =
     useFetchedHistory();
@@ -30,23 +28,43 @@ const Content: React.FC = () => {
   } = useContentFromTags();
 
   useEffect(() => {
-    if(recommendedContent.length > 0) {
+    saveTagStatData(defaultTags);
+  }, []);
+
+  useEffect(() => {
+    if (recommendedContent.length > 0) {
       setVisibleRecommendations(recommendedContent);
     } else {
       setVisibleRecommendations([]);
     }
   }, [recommendedContent]);
 
-
   const handleSelect = (tags: string[]) => {
     console.log("tags", tags);
-    if(tags.length === 0) {
+    if (tags.length === 0) {
       setVisibleRecommendations(recommendedContent);
       return;
     }
-    const filtered = recommendedContent.filter((content) => tags.includes(content.tag))
+    const filtered = recommendedContent.filter((content) =>
+      tags.includes(content.tag)
+    );
     setVisibleRecommendations(filtered);
   };
+
+  const scrollToBottom = () => {
+    if (loadingRef.current) {
+      loadingRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    if (recoLoading) {
+      console.log("recoLoad changed :", recoLoading);
+      requestAnimationFrame(() => {
+        scrollToBottom();
+      });
+    }
+  }, [recoLoading]);
 
   return (
     <div className="content-container">
@@ -93,18 +111,18 @@ const Content: React.FC = () => {
 
       {generatedContent.length > 0 && (
         <>
-          <div className="text-left pl-8 w-full">
+          <div className="flex flex-col items-center justify-center w-full py-8">
             <div className="text-xl text-white font-bold mt-4">
               Recommendations ✨
             </div>
             {recommendedContent.length === 0 && (
-              <p className="text-sm text-gray-500 w-[75%] my-4 text-left">
+              <p className="text-center text-sm text-gray-500 w-full my-4">
                 We may generate some content randomly as well 🎉
               </p>
             )}
             {recommendedContent.length > 0 && (
               <>
-                <div className="text-sm text-gray-500 mt-4">
+                <div className="text-center w-full text-sm text-gray-500 mt-4">
                   Here are the content generated from your likes. You can like
                   and dislike and sync with again to get more relevant content.
                 </div>
@@ -114,9 +132,7 @@ const Content: React.FC = () => {
               </>
             )}
           </div>
-          <CardsContainer
-            content={visibleRecommendations}
-          />
+          <CardsContainer content={visibleRecommendations} />
           <div className="temporary-buttons p-4">
             <Button
               variant={"secondary"}
@@ -130,7 +146,10 @@ const Content: React.FC = () => {
       )}
 
       {recoLoading && (
-        <div className="mt-5 text-left">
+        <div
+          ref={loadingRef}
+          className="mt-5 flex flex-col items-center justify-center text-center"
+        >
           <Dino />
           <p className="text-sm text-gray-500 w-[75%] m-4 text-left">
             We are also generating some content based on our recommender system.

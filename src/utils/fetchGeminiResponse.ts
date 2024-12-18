@@ -6,15 +6,13 @@ import { handleError } from "./error/errorHandler";
 
 let session: any | null = null;
 let clonedSession: any | null = null;
-let isFirstContentMessageProcessed = false;
 
 const controller = new AbortController();
 
 export const fetchGeminiResponse = async (
   userMessage: string,
   component: ComponentType,
-  summary?: string,
-  id?: string
+  summary?: string
 ): Promise<string> => {
   if (!userMessage.trim()) {
     return handleError("No data available to generate content data.", {
@@ -22,32 +20,31 @@ export const fetchGeminiResponse = async (
     });
   }
 
-  const { promptTemplate, contentPromptTemplate } = promptConfig[component];
+  const { promptTemplate } = promptConfig[component];
   let prompt: string;
   const isChatbox = component === "chatbox";
   const isContentChat = component === "contentChat";
 
   try {
+    if (isChatbox) {
+      prompt = promptTemplate.replace("{userMessage}", userMessage);
+    } else if (isContentChat) {
+      prompt =
+        promptTemplate
+          ?.replace("{summary}", summary || "No summary provided")
+          .replace("{userMessage}", userMessage) || "";
+      console.log("PROMPT :", prompt, "Summary__:", summary);
+    } else {
+      prompt = promptTemplate?.replace("{userMessage}", userMessage) || "";
+    }
+    /*Because of isFirstContentmessageProcessed;
+    other components isint engaging first message prompt (contentPromptTemplate)
+    we should tie it to content id, somehow..
+    */
     if (!window.ai || !window.ai.languageModel) {
       return handleError("Gemini Nano is not available in this browser.", {
         fallbackValue: "Error: AI service unavailable.",
       });
-    }
-
-    if (isChatbox) {
-      prompt = promptTemplate.replace("{userMessage}", userMessage);
-    } else if (isContentChat) {
-      if (contentPromptTemplate && !isFirstContentMessageProcessed) {
-        prompt = contentPromptTemplate
-          .replace("{summary}", summary || "No summary provided")
-          .replace("{userMessage}", userMessage);
-        isFirstContentMessageProcessed = true;
-      } else {
-        prompt = promptTemplate?.replace("{userMessage}", userMessage) || "";
-      }
-    } else {
-      prompt = promptTemplate?.replace("{userMessage}", userMessage) || "";
-
     }
 
     if (!session) {

@@ -3,6 +3,7 @@ import { fetchGeminiResponse } from "../utils/fetchGeminiResponse";
 import { promptConfig } from "../utils/config/promptConfig";
 import { Message, Sender } from "../types/messageType";
 import { ComponentType, ComponentTypeEnum } from "../types/componentType";
+import { saveContentChatData } from "@/utils/dataUtils";
 
 export const useGeminiResponse = () => {
   const [loading, setLoading] = useState(false);
@@ -20,8 +21,7 @@ export const useGeminiResponse = () => {
       const responseText = await fetchGeminiResponse(
         userMessage,
         component,
-        summary,
-        id
+        summary
       );
 
       const { saveData } = promptConfig[component];
@@ -39,7 +39,7 @@ export const useGeminiResponse = () => {
           ...prevMessages.filter((msg) => msg.sender !== Sender.AI),
           aiMessage,
         ]);
-        (saveData as (data: Message) => void)(aiMessage);
+        saveContentChatData(id, aiMessage);
       } else {
         (saveData as (data: string[]) => void)([responseText]);
       }

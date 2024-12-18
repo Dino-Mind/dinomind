@@ -62,7 +62,7 @@ code {
     @apply border-border;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background;
   }
 }
 
@@ -177,25 +177,5 @@ html {
 
     &:hover {
     }
-  }
-}
-
-@keyframes glow {
-  from {
-    box-shadow: 2px 0 10px vars.$glow-color-1, -4px 0 15px vars.$glow-color-2,
-      -6px 0 20px vars.$glow-color-3;
-  }
-  to {
-    box-shadow: -4px 0 10px vars.$glow-color-1, -6px 0 15px vars.$glow-color-2,
-      -8px 0 20px vars.$glow-color-3;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }

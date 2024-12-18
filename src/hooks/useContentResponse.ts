@@ -10,6 +10,7 @@ import { fetchContentResponse } from "../utils/fetchContentResponse";
 import { handleError } from "../utils/error/errorHandler";
 import { setIsContentChanged } from "@/redux/slices/uiSlice";
 import { generateId } from "@/utils/generateId";
+import { Message } from "@/types/messageType";
 
 export type Content = {
   id: string;
@@ -17,14 +18,13 @@ export type Content = {
   tag: string;
   summary?: string;
   recommended?: boolean;
-}
+  content_chat?: Message[];
+};
 
 export const useContentResponse = () => {
   const dispatch = useDispatch();
   const [generatedContent, setGeneratedContent] = useState<Content[]>([]);
   const [loading, setLoading] = useState(false);
-
-
 
   useEffect(() => {
     loadContentData((content: Content[]) => {
@@ -50,7 +50,7 @@ export const useContentResponse = () => {
         const response = await fetchContentResponse(tag, "content");
         contentArray.push({
           id: generateId(),
-          content: response, 
+          content: response,
           tag: tag?.split("\n")?.[0] || tag,
           summary: "",
         });
@@ -66,7 +66,7 @@ export const useContentResponse = () => {
           ctr: 0,
           totalCount: 0,
         };
-      })
+      });
 
       saveTagStats(tagStats);
       saveContentData(contentArray);
