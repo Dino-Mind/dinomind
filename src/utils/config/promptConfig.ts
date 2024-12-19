@@ -46,31 +46,53 @@ export const promptConfig: Record<
     saveData: saveChatData,
   },
   interest: {
-    promptTemplate: `You are a content tag generator. Given a URL or website history link, analyze its context, metadata, and content. Generate specific and highly relevant tags or keywords that reflect the unique and core aspects of the content associated with the link. Avoid generic terms for common or popular sites like "YouTube" or "WhatsApp." Instead, focus on uncovering niche topics, categories, or trends that would interest a highly specific audience. For example:
+    promptTemplate: `
+    Here is the URL I visited: "{userMessage}". 
+    The purpose of this analysis is to create relevant content tags for this URL.
 
-    If the link is a YouTube video about "the physics of black holes," generate tags like "black hole physics," "event horizon," "astrophysics basics."
-    If it's a blog post on "modern minimalist interior design," generate tags like "minimalist decor," "modern interiors," "space-saving furniture."
-    Aim for precision and user relevance with every tag.
-    Input:
-    "{userMessage}"
-
-    Output:
-    A list of 3-5 specific and relevant tags tailored to the content.
-    `,
+    The URL's title and metadata provide hints about its focus. Generate a summary that captures:
+    1. The essence of the URL's content and purpose.
+    2. A list of relevant tags that describe its core aspects.
+`,
     saveData: saveInterestData,
   },
 
   tag: {
-    promptTemplate: `"Analyze the following text and generate one specific and concise category of the content that is only one word.
-    Focus on capturing the essence of the text without being too generic.
-    Avoid overly broad terms or platform names. Ensure that the tag are accurate and relevant.
-    Here is the text: "{userMessage}"."
-    `,
+    promptTemplate: `
+    You are content tag generator. You generate tags from given input with few words.
+    Analyze the given text and generate one specific and concise category or tag that is highly relevant to the content, consisting of one to three words.
+    Focus on accurately capturing the essence of the text without being overly generic or broad.
+    Avoid platform names unless integral to the content, and ensure the tags are engaging, actionable, and relevant.
+
+    - Examples:
+      - If the link is about video contents output: "trending video ideas," "educational video ideas," or "popular tutorials about video making."
+      - If the link is about social networking (like Facebook, instagram): "trending community discussions," "trending memes," or "trending social debates."
+      - If the link is about instant messaging - chatting (like Whatsapp, Discord): "chat hacks," "trending discussions," or "daily buzz."
+      - If the link is about a blog post : "interesting decorations," "parenting ideas," "photography tricks," or "food trends."
+      - If the link is about a news website: "trending news," "interesting news," or "trending updates in sport."
+
+    Input:
+    "{userMessage}"
+`,
     saveData: saveTagData,
   },
 
   content: {
-    promptTemplate: `Write a detailed, engaging, and coherent 2-paragraph article based on the tag "{userMessage}". Each paragraph should explore a unique aspect or perspective related to the tag, starting with an introduction to the topic and gradually delving deeper into its various elements. Ensure the content is well-structured, informative, and interesting, with a logical flow connecting paragraphs. Avoid repetition and strive for originality in presenting ideas and insights. Maintain a tone that aligns with the topic's intended audience, whether professional, casual, or creative. Conclude with a compelling summary or call to action that ties the entire article together.
+    promptTemplate: `
+    You are a creative content generator, skilled at crafting engaging and intriguing articles. 
+      Write a captivating and original 2-paragraph article Based on the tags in this text:
+      "{userMessage}"
+
+      1. Begin with a compelling title that captures attention and aligns with the content's essence. 
+      2. In the first paragraph, introduce the topic with an engaging hook or question, and provide context or background to intrigue the reader. 
+      3. In the second paragraph, explore a unique perspective, practical applications, or fascinating insights related to the topic, delving deeper into its significance or appeal. 
+
+      Ensure the content is:
+      - Well-structured, with a logical flow between paragraphs.
+      - Informative, creative, and tailored to captivate the intended audience.
+      - Original and free from repetition.
+
+      Conclude with a thought-provoking statement, actionable advice, or a call to action that leaves the reader inspired to learn more or take action.
   `,
     saveData: saveContentData,
   },

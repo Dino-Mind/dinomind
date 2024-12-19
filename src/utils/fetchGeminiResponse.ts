@@ -37,10 +37,7 @@ export const fetchGeminiResponse = async (
     } else {
       prompt = promptTemplate?.replace("{userMessage}", userMessage) || "";
     }
-    /*Because of isFirstContentmessageProcessed;
-    other components isint engaging first message prompt (contentPromptTemplate)
-    we should tie it to content id, somehow..
-    */
+
     if (!window.ai || !window.ai.languageModel) {
       return handleError("Gemini Nano is not available in this browser.", {
         fallbackValue: "Error: AI service unavailable.",
@@ -69,7 +66,6 @@ export const fetchGeminiResponse = async (
       const newChunk = chunk.startsWith(previousChunk)
         ? chunk.slice(previousChunk.length)
         : chunk;
-      console.log("chunk:", newChunk);
       responseText += newChunk;
       previousChunk = chunk;
     }

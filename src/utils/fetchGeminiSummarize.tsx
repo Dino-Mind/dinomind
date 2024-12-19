@@ -41,12 +41,11 @@ export const createInterestData = async (historyItems: HistoryItem[]) => {
         try {
           const prompt = promptTemplate.replace(
             "{userMessage}",
-            `Title: ${item.title || "No Title"}, Visit Count: ${
-              item.visitCount
-            }`
+            `url title: ${item.title || "No url Title"}, url: ${item.simpleUrl}`
           );
-
+          console.log(prompt);
           const summary = await summarizeText(prompt);
+          console.log(summary);
 
           return summary;
         } catch (error) {
@@ -76,7 +75,7 @@ export const createInterestData = async (historyItems: HistoryItem[]) => {
             const tag = await summarizeText(prompt);
 
             console.log("tags from interestData:", tag);
-            return tag; // Return the generated tag
+            return tag;
           } catch (error) {
             return handleError(error, {
               logToConsole: true,
@@ -88,15 +87,7 @@ export const createInterestData = async (historyItems: HistoryItem[]) => {
 
       saveInterestData(tagsFromSummaries as string[]);
 
-
-      // Log all tags (if needed)
-      console.log(
-        ">>>>>>>>>>>>>>>>>>>>>>>>>>||||||||||||||||||||<<<<<<<<<<<<<<<All generated tags:",
-        tagsFromSummaries
-      );
-
       return tagsFromSummaries;
-      // saveInterestData(successfulSummaries);
     } catch (error) {
       console.error(
         "Unexpected error during the summarization process:",
@@ -112,68 +103,3 @@ export const createInterestData = async (historyItems: HistoryItem[]) => {
       .catch((error) => reject(error));
   });
 };
-
-// process for maintaining the chat continuity
-// export const processChatHistory = async (): Promise<string | null | undefined> => {
-//   const sessionData = await new Promise<Message[]>((resolve) =>
-//     loadSessionData((data) => resolve(data || []))
-//   );
-
-//   if (!sessionData.length) {
-//     console.log(
-//       "[fetchGeminiSummarize-processChatHistory] - No sessionData found. Skipping summarization."
-//     );
-//     return null;
-//   }
-
-//   const formattedSessionData = sessionData
-//     .map((entry) => `${entry.sender}: ${entry.text}`)
-//     .join(" ");
-
-//   console.log(
-//     "[fetchGeminiSummarize-processChatHistory] - Formatted session data:",
-//     formattedSessionData
-//   );
-
-//   // Check Summarizer API availability
-//   const canSummarize = await self.ai.summarizer.capabilities();
-//   if (!canSummarize || canSummarize.available === "no") {
-//     console.log("[processChatHistory] - Summarizer API is not available.");
-//     return "Summarization is currently unavailable.";
-//   }
-
-//   if (canSummarize.available === "readily") {
-//     const { promptTemplate } = promptConfig.summarize;
-//     const prompt = promptTemplate.replace(
-//       "{sessionData}",
-//       formattedSessionData
-//     );
-
-//     console.log(
-//       "[fetchGeminiSummarize-processChatHistory] - Generated prompt for AI:",
-//       prompt
-//     );
-
-//     try {
-//       const summary = await summarizeText(prompt);
-//       console.log(
-//         "[fetchGeminiSummarize-processChatHistory] - AI-generated summary:",
-//         summary
-//       );
-
-//       saveSummaryData(summary);
-//       console.log(
-//         "[fetchGeminiSummarize-processChatHistory] - Summary saved:",
-//         summary
-//       );
-
-//       return summary;
-//     } catch (error) {
-//       console.error(
-//         "[fetchGeminiSummarize-processChatHistory] - Error summarizing text:",
-//         error
-//       );
-//       return "Unable to summarize at this time.";
-//     }
-//   }
-// };
