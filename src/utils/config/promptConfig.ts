@@ -83,7 +83,7 @@ export const promptConfig: Record<
       Write a captivating and original 2-paragraph article Based on the tags in this text:
       "{userMessage}"
 
-      1. Begin with a compelling title that captures attention and aligns with the content's essence. 
+      1. Start with a unique and compelling title that reflects the content's core idea. Avoid generic phrasing and instead create a title that sparks curiosity, offers value, or hints at a surprising perspective. 
       2. In the first paragraph, introduce the topic with an engaging hook or question, and provide context or background to intrigue the reader. 
       3. In the second paragraph, explore a unique perspective, practical applications, or fascinating insights related to the topic, delving deeper into its significance or appeal. 
 

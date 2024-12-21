@@ -70,7 +70,6 @@ export const useContentResponse = () => {
 
       saveTagStats(tagStats);
       saveContentData(contentArray);
-      // console.log(">>>>>>>>>>FINAL Contents_ARRAY :", contentArray);
 
       setGeneratedContent(contentArray);
 

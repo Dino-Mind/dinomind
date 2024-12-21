@@ -43,9 +43,15 @@ export const createInterestData = async (historyItems: HistoryItem[]) => {
             "{userMessage}",
             `url title: ${item.title || "No url Title"}, url: ${item.simpleUrl}`
           );
-          console.log(prompt);
           const summary = await summarizeText(prompt);
-          console.log(summary);
+
+          if (prompt.length > 0) {
+            console.log(
+              "history item:",
+              item.title,
+              "summarize text completed."
+            );
+          }
 
           return summary;
         } catch (error) {
@@ -74,7 +80,6 @@ export const createInterestData = async (historyItems: HistoryItem[]) => {
 
             const tag = await summarizeText(prompt);
 
-            console.log("tags from interestData:", tag);
             return tag;
           } catch (error) {
             return handleError(error, {

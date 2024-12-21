@@ -33,14 +33,15 @@ export const fetchContentResponse = async (
     const stream = await session.promptStreaming(prompt);
 
     let responseText = "";
+    let previousChunk = "";
 
     for await (const chunk of stream) {
-      responseText = chunk.trim();
+      const newChunk = chunk.startsWith(previousChunk)
+        ? chunk.slice(previousChunk.length)
+        : chunk;
+      responseText += newChunk;
+      previousChunk = chunk;
     }
-
-    // console.log("[fetchContentResponse] PROMPT >>>>>>>>>>>>:", prompt);
-    // console.log("[fetchContentResponse] RESPONSE >>>>>>>>>>:", responseText);
-
     session = null;
 
     return responseText;

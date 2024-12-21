@@ -31,7 +31,6 @@ export const Tabs: FC<TabsProps> = ({
 
   const handleTabSelect = (tabValue: TabName) => {
     if (tabValue !== activeTab) {
-      console.log("Tab selected in UI:", tabValue);
       dispatch(setActiveTab(tabValue));
     }
   };

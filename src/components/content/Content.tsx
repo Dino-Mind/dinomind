@@ -40,7 +40,6 @@ const Content: React.FC = () => {
   }, [recommendedContent]);
 
   const handleSelect = (tags: string[]) => {
-    console.log("tags", tags);
     if (tags.length === 0) {
       setVisibleRecommendations(recommendedContent);
       return;
@@ -59,7 +58,6 @@ const Content: React.FC = () => {
 
   useEffect(() => {
     if (recoLoading) {
-      console.log("recoLoad changed :", recoLoading);
       requestAnimationFrame(() => {
         scrollToBottom();
       });

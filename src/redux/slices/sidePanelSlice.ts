@@ -30,25 +30,17 @@ const sidePanelSlice = createSlice({
   initialState,
   reducers: {
     openSidePanel(state) {
-      console.log("[sidePanelSlice] Side panel opened.");
-
       state.isOpen = true;
     },
     closeSidePanel(state) {
-      console.log("[sidePanelSlice] Side panel closed.");
-
       state.isOpen = false;
     },
     setSidePanelState(state, action: PayloadAction<boolean>) {
-      console.log("[sidePanelSlice] Side panel state set to:", action.payload);
-
       state.isOpen = action.payload;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(saveChatHistory.fulfilled, () => {
-      console.log("[sidePanelSlice] Chat history successfully saved.");
-    });
+    builder.addCase(saveChatHistory.fulfilled, () => {});
   },
 });
 

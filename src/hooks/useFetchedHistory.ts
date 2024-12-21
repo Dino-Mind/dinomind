@@ -9,7 +9,6 @@ export const useFetchedHistory = () => {
   const [loading, setLoading] = useState(false);
   const { fetchGenerateContent, generatedContent } = useContentResponse();
 
-
   const syncAndGenerateContent = async () => {
     setLoading(true);
     try {
@@ -28,7 +27,6 @@ export const useFetchedHistory = () => {
   const clearInterestData = () => {
     removeLocalStorageData("interestData", () => {});
   };
-  
 
   return {
     generatedContent,

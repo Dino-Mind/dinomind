@@ -2,7 +2,6 @@ import { loadContentData, saveContentData } from "./dataUtils";
 import { summarizeText } from "./fetchGeminiSummarize";
 
 export const createSummaryForContent = async (id: string, content: string) => {
-  console.log("Creating summary for content with id: ", id);
   const contentDataSummary = await summarizeText(content);
   loadContentData((contentData) => {
     const updatedContentData = contentData.map((contentItem) => {
@@ -17,6 +16,6 @@ export const createSummaryForContent = async (id: string, content: string) => {
     saveContentData(updatedContentData);
   });
 
-  console.log("Summary created: ", contentDataSummary);
+  console.log("Summary created: ", id);
   return contentDataSummary;
 };

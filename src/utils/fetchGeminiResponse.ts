@@ -33,7 +33,6 @@ export const fetchGeminiResponse = async (
         promptTemplate
           ?.replace("{summary}", summary || "No summary provided")
           .replace("{userMessage}", userMessage) || "";
-      console.log("PROMPT :", prompt, "Summary__:", summary);
     } else {
       prompt = promptTemplate?.replace("{userMessage}", userMessage) || "";
     }
