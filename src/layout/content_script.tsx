@@ -6,6 +6,7 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 import "../styles/style.scss";
 import { RootState } from "../redux/rootReducer";
 import { closeSidePanel, openSidePanel } from "../redux/slices/sidePanelSlice";
+import SummarizeModal from "@/components/ui/SummarizeModal";
 
 const proxyStore = new Store();
 
@@ -65,4 +66,26 @@ proxyStore.ready().then(() => {
       </React.StrictMode>
     </Provider>
   );
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === "openSummarizeModal" && message.text) {
+    const modalContainer = document.createElement("div");
+    modalContainer.id = "summarize-modal-container";
+    document.body.appendChild(modalContainer);
+
+    ReactDOM.createRoot(modalContainer).render(
+      <SummarizeModal
+        text={message.text}
+        onClose={() => {
+          modalContainer.remove();
+        }}
+      />
+    );
+  }
+
+  if (message.action === "closeSummarizeModal") {
+    const modalContainer = document.getElementById("summarize-modal-container");
+    modalContainer?.remove();
+  }
 });

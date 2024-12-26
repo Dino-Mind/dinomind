@@ -90,7 +90,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     chrome.sidePanel.open({ tabId });
     sendResponse({ status: "success", isOpen: true });
     store.dispatch(openSidePanel());
-
   } else if (message.action === "closeSidePanel") {
     chrome.sidePanel.setOptions({
       tabId,
@@ -103,6 +102,34 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 
   return true;
+});
+
+// Context Menu for Summarize It
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: "summarizeIt",
+    title: "Explain",
+    contexts: ["selection"],
+  });
+});
+
+// Handle context menu clicks
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === "summarizeIt" && info.selectionText && tab?.id) {
+    chrome.tabs.sendMessage(tab.id, {
+      action: "openSummarizeModal",
+      text: info.selectionText,
+    });
+  }
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "closeSummarizeModal" && sender.tab?.id) {
+    chrome.tabs.sendMessage(sender.tab.id, {
+      action: "closeSummarizeModal",
+    });
+    sendResponse({ status: "success" });
+  }
 });
 
 export {};

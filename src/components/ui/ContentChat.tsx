@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 import { useChatWithAi } from "../../hooks/useChatWithAi";
@@ -25,6 +25,8 @@ const ContentChat: React.FC<ContentChatProps> = ({
   tag,
   loadingSummary,
 }) => {
+  const [isTranslating, setIsTranslating] = useState(false);
+
   const {
     messages: messagesFromChat,
     loading,
@@ -36,7 +38,7 @@ const ContentChat: React.FC<ContentChatProps> = ({
     // resetSession,
   } = useChatWithAi("contentChat", id, summary);
 
-  const combinedLoading = loading || loadingSummary;
+  const combinedLoading = loading || loadingSummary || isTranslating;
 
   const [messages, setMessages] = React.useState(() => {
     const initialMessage = {
@@ -78,11 +80,12 @@ const ContentChat: React.FC<ContentChatProps> = ({
 
   const languageEmojiMap = {
     tr: "🇹🇷",
-    ko: "🇰🇷",
+    ja: "🇯🇵",
     es: "🇪🇸",
   };
 
   const handleTranslate = (targetLanguage: string, result: string) => {
+    setIsTranslating(true);
     setMessages((prevMessages) => [
       ...prevMessages,
       {
@@ -93,37 +96,20 @@ const ContentChat: React.FC<ContentChatProps> = ({
       },
       {
         sender: Sender.AI,
-        text: result,
+        text: result.replace(/^#+\s/gm, "\\$&"),
       },
     ]);
-  };
+    setIsTranslating(false);
 
-  /**
-     const handleTranslate = (targetLanguage: string, result: string) => {
-    const userMessage: Message = {
-      sender: Sender.USER,
-      text: `Translate to ${
-        languageEmojiMap[targetLanguage as keyof typeof languageEmojiMap]
-      }`,
-    };
-    const aiMessage: Message = {
-      sender: Sender.AI,
-      text: result,
-    };
-    setMessages((prevMessages) => [...prevMessages, userMessage, aiMessage]);
-    if (id) {
-      saveContentChatData(id, userMessage);
-      saveContentChatData(id, aiMessage);
-    }
+    console.log(result);
   };
-   */
 
   const handleClearChat = () => {
-    clearChatHistory(); // Clear the storage
+    clearChatHistory();
     setMessages([
       {
         sender: Sender.AI,
-        text: description, // Reset messages to the initial state
+        text: description,
       },
     ]);
   };

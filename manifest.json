@@ -8,6 +8,9 @@
       "400": "src/assets/icons/icon400.png"
     }
   },
+  "icons": {
+    "16": "src/assets/icons/icon16.png"
+  },
   "background": {
     "service_worker": "src/background.ts"
   },
@@ -28,14 +31,14 @@
     "background",
     "tabs",
     "storage",
-    "history"
+    "history",
+    "contextMenus"
   ],
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjiipEopMwBjVWy3I5+Q+e0CQT/6QtR9XgafEWmyZCRSc1yCJJdjCzyfdIyQLJYgwTZploPrDRkbVClYLi4UOFuJph0GCZe+q+BjCE/g1KuRmoxGNxsPSjBieWMxU95kuUrGoD1QF2S9Gl8bB7cS9mw5DF78GJDec1Jhdqio3EQ5Cy8U7gp+wq8KMQJtEVc2B8ZsQWVTAr9Q4OnrDUzxoxKIpQxwfD+hVGvEAlrFvdI176SKfVvmjCv35blRCJEe5QI61HpvDPyZJ0TpA1oNjzPIWrjOJUmLUEPHes+mX0tmSSgxlsPG2HLbWzvk1UzXMo+nOYnCFKD4xvB/8J2uhgwIDAQAB",
   "trial_tokens": [
     "ApIa7Otg7tflyDdUDNYZKPKoy6S9ItY1Pb5eQgnJwOdF89NUbSZ0WyT2o3ocTS+vu997eYazVDO+Plvq22ETTQcAAAB4eyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vZWlsamNhbHBiZmJqa2hobG1kamthZ29kb2lrYmpoaWMiLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElGb3JFeHRlbnNpb24iLCJleHBpcnkiOjE3NjA0ODYzOTl9"
   ],
   "minimum_chrome_version": "131",
-
   "host_permissions": ["https://generativeai.googleapis.com/*"],
   "web_accessible_resources": [
     {

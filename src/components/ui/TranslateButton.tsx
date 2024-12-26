@@ -36,7 +36,7 @@ export const TranslateButton: React.FC<TranslateButtonProps> = ({
             onClick={() => onTranslate("ko")}
             className="bg-transparent border-none px-2 py-1 text-xs rounded-md shadow transition bg-primary-xBackgroundCard"
           >
-            Korean 🇰🇷
+            japanese 🇯🇵
           </Button>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
