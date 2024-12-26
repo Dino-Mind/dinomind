@@ -1,6 +1,6 @@
-# Chrome Extension: Gemini Nano Assistant
+# Dinomind
 
-Gemini Nano Assistant is a smart Chrome extension designed to enhance your browsing experience by leveraging user habits and interests. Whether you’re online or offline, Gemini Nano Assistant provides personalized insights, tips, and resources tailored to your preferences, helping you get the most out of Chrome.
+Dinomind is a smart Chrome extension designed to enhance your browsing experience by leveraging user habits and interests. Whether you’re online or offline, Gemini Nano Assistant provides personalized insights, tips, and resources tailored to your preferences, helping you get the most out of Chrome.
 
 ## Inspiration
 
@@ -9,7 +9,7 @@ Styled as a homage to Chrome's classic offline "Lonely T-Rex" game, this extensi
 
 ## Video Demonstration
 
-[![Watch the video](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](YOUR_VIDEO_URL)
+[![Watch the video](https://img.youtube.com/vi/bcCTZNDeJqg/0.jpg)](https://youtu.be/bcCTZNDeJqg)
 
 
 ## Features

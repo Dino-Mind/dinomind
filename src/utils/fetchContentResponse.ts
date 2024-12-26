@@ -14,7 +14,7 @@ export const fetchContentResponse = async (
 
   try {
     console.log(
-      "[fetchContentResponse] >>>>>>>>>>>>>>< Content creation started"
+      "[fetchContentResponse] >< Content creation started"
     );
 
     if (!window.ai || !window.ai.languageModel) {
